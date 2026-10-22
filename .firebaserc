@@ -1,0 +1,8 @@
+{
+  "projects": { "default": "wostcloud1" },
+  "targets": {
+    "wostcloud1": {
+      "hosting": { "bettrack": ["bettrack-wostcloud1"] }
+    }
+  }
+}

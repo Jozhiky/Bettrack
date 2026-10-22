@@ -1,0 +1,12 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env*
+!.env.example
+public/ocr/
+*.log
+*.tsbuildinfo
+artifacts/
+supabase/.temp/
+.firebase/

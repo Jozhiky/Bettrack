@@ -1,0 +1,9 @@
+# Próximo gol por minuto · 21/10/2026
+
+Capturas reales bet (44).png y bet (45).png: Lille OSC vs. Galatasaray SK, mercados «Próximo gol antes de 70:00 (Gol 5)» y «Próximo gol antes de 60:00 (Gol 5)». Los originales locales coinciden por SHA-256 con las imágenes de la cuenta. El OCR ya leía el texto correctamente; el catálogo reconocía goles pero no próximo gol singular y lo incluía entre los equipos, dejando evento/mercado vacíos.
+
+Se amplía la familia goals con contextos singulares próximo/siguiente/primer/último gol y tiempo/minuto del gol. No se agrega una coincidencia indiscriminada sobre gol: los picks «Gol antes del minuto…», «Sin gol» y el nombre Gol Gohar FC siguen sin clasificarse como mercados. Se conservan minuto y ordinal, sin inferir equipos ni resultados. El reloj y el marcador siguen excluidos por geometría.
+
+Verificación real mediante scripts/diagnose-ticket.mjs: original, lectura mejorada y WebP almacenado de ambas capturas pasan selección completa. Evidencia artifacts/ocr/timed-goal-44.json y timed-goal-45.json. Stake S/10 en ambas, cuotas 1.60 y 2.22, retornos S/16 y S/22.20. La lectura original/almacenada conserva ofertas cashout S/8.90 y S/8.49, sin liquidarlas; el modo mejorado no lee el rótulo cashout, pero readCapture mantiene la primera interpretación completa en empate. No se cambió esa selección de resultados.
+
+173 unitarias pasan (11 nuevas comprobaciones de vocabulario/layout); TypeScript/build correctos. Publicación exclusiva hosting:bettrack, bundle index-CsEh_VW7.js. No hay migración ni cambios de permisos. Se activó la actualización en la pestaña real y se pulsó Reintentar 2 lecturas: ambas quedaron saved, con selección e importes exactos comprobados en Supabase. La interfaz muestra dos pendientes, S/20 en riesgo y S/0 realizado. Ninguna liquidación ejecutada. Evidencia artifacts/ocr/timed-goals-live.jpg; ocho recursos de hosting coinciden con dist y login/signup responsive sin errores.

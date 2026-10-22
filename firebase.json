@@ -1,0 +1,37 @@
+{
+  "emulators": {
+    "hosting": { "host": "127.0.0.1", "port": 5190 },
+    "ui": { "enabled": false }
+  },
+  "hosting": {
+    "target": "bettrack",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.map", "_redirects"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [{ "key": "Cache-Control", "value": "public,max-age=31536000,immutable" }]
+      },
+      {
+        "source": "/ocr/**",
+        "headers": [{ "key": "Cache-Control", "value": "public,max-age=86400" }]
+      },
+      {
+        "source": "/bettrack-sw.js",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache,no-store,must-revalidate" },
+          { "key": "Service-Worker-Allowed", "value": "/" }
+        ]
+      }
+    ]
+  }
+}
