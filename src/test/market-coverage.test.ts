@@ -171,11 +171,14 @@ describe('Market coverage through the Betano layout parser', () => {
     'does not invent a market for %s',
     (market) => {
       const p = ticket([market], 'Más de 2.5');
-      expect(p.selections[0].market).toBe('');
+      expect(p.selections[0].market).toBe(market);
+      expect(p.selections[0].event).toBe('Equipo Norte vs. Equipo Sur');
       expect(
         selectionSchema.safeParse({ ...p.selections[0], id: 'test', betId: 'test' }).success,
-      ).toBe(false);
-      expect(p.warnings.some((w) => w.includes('incompleto'))).toBe(true);
+      ).toBe(true);
+      // Valid raw strings are not proof of a recognized meaning.
+      expect(p.confidence['selections[0].market']).toBe('review');
+      expect(p.reviewReasons?.length).toBeGreaterThan(0);
     },
   );
 

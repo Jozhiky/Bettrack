@@ -1,0 +1,117 @@
+{
+  "player-builders": {
+    "reason": "Pérdida de diéresis: München → Munchen. Error de transcripción; evento preservado estructuralmente.",
+    "signatures": ["selections[1].event:wrong"],
+    "observed": {
+      "selections[1].event": "FC Bayern Munchen vs. Arsenal FC"
+    }
+  },
+  "first-half-corners": {
+    "reason": "Pérdida de tildes en Más/Menos y Más de 4.5. No cambia la línea numérica.",
+    "signatures": ["selections[0].market:wrong", "selections[0].pick:wrong"],
+    "observed": {
+      "selections[0].market": "Córners en Primer Tiempo Mas/Menos",
+      "selections[0].pick": "Mas de 4.5"
+    }
+  },
+  "mixed-builders": {
+    "reason": "Pérdida de tilde en Sí. La comparación literal debe detectarla.",
+    "signatures": ["selections[1].builderMarkets[1].pick:wrong"],
+    "observed": {
+      "selections[1].builderMarkets[1].pick": "Si"
+    }
+  },
+  "injected-missing-odds": {
+    "reason": "Inyección controlada sobre OCR real: retirar 1.33 omite la primera selección y desplaza las restantes.",
+    "signatures": [
+      "selections.length:wrong",
+      "selections[0].event:wrong",
+      "selections[0].market:wrong",
+      "selections[0].odds:wrong",
+      "selections[0].pick:wrong",
+      "selections[0].promotion:missing",
+      "selections[1].event:wrong",
+      "selections[1].market:wrong",
+      "selections[1].odds:wrong",
+      "selections[1].pick:wrong",
+      "selections[2].event:missing",
+      "selections[2].market:missing",
+      "selections[2].odds:missing",
+      "selections[2].pick:missing",
+      "selections[2].promotion:missing"
+    ],
+    "observed": {
+      "selections.length": 2,
+      "selections[0].event": "Deportivo Toluca FC vs. Club Tijuana",
+      "selections[0].market": "Hándicap Resultado del Partido",
+      "selections[0].pick": "Club Tijuana +3",
+      "selections[0].odds": 1.5,
+      "selections[0].promotion": null,
+      "selections[1].event": "Independiente Santa Fe vs. Jaguares de Córdoba",
+      "selections[1].market": "Resultado del partido",
+      "selections[1].pick": "Independiente Santa Fe",
+      "selections[1].odds": 1.3,
+      "selections[2].event": null,
+      "selections[2].market": null,
+      "selections[2].pick": null,
+      "selections[2].odds": null,
+      "selections[2].promotion": null
+    }
+  },
+  "injected-unknown-market": {
+    "reason": "Inyección controlada sobre OCR real: etiqueta fuera de catálogo vacía evento y mercado.",
+    "signatures": ["selections[1].event:missing", "selections[1].market:missing"],
+    "observed": {
+      "selections[1].event": "",
+      "selections[1].market": ""
+    }
+  },
+  "unknown-market": {
+    "reason": "Geometría sintética: la etiqueta desconocida es tratada como parte de los equipos.",
+    "signatures": ["selections[0].event:missing", "selections[0].market:missing"],
+    "observed": {
+      "selections[0].event": "",
+      "selections[0].market": ""
+    }
+  },
+  "unknown-builder-market": {
+    "reason": "Geometría sintética: una etiqueta desconocida crea un tercer submercado y pierde asociaciones.",
+    "signatures": [
+      "selections[0].builderMarkets.length:wrong",
+      "selections[0].builderMarkets[0].market:missing",
+      "selections[0].builderMarkets[1].market:missing",
+      "selections[0].builderMarkets[1].pick:wrong"
+    ],
+    "observed": {
+      "selections[0].builderMarkets.length": 3,
+      "selections[0].builderMarkets[0].market": "",
+      "selections[0].builderMarkets[1].market": "",
+      "selections[0].builderMarkets[1].pick": "Mercado experimental no catalogado"
+    }
+  },
+  "missing-odds": {
+    "reason": "Geometría sintética: al faltar cuota se omite la primera selección.",
+    "signatures": [
+      "selections.length:wrong",
+      "selections[0].event:wrong",
+      "selections[0].market:wrong",
+      "selections[0].odds:wrong",
+      "selections[0].pick:wrong",
+      "selections[1].event:missing",
+      "selections[1].market:missing",
+      "selections[1].odds:missing",
+      "selections[1].pick:missing"
+    ],
+    "observed": {
+      "selections.length": 1,
+      "selections[0].event": "Equipo Este vs. Equipo Oeste",
+      "selections[0].market": "Equipo Este - Goles totales Más/Menos en Primer Tiempo",
+      "selections[0].pick": "Más de 1.5",
+      "selections[0].odds": 2,
+      "selections[1].event": null,
+      "selections[1].market": null,
+      "selections[1].pick": null,
+      "selections[1].odds": null
+    }
+  }
+}

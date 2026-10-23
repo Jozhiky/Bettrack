@@ -1,7 +1,8 @@
 // Recognition vocabulary only, never settlement rules. Preserve the original
 // market text: player/team, period, Asian line and qualifiers are significant.
 // Sources and coverage boundaries: docs/OCR_MARKETS.md.
-const normalized = (text: string) =>
+// Matching only. Never use this value to replace a displayed name or an ID.
+export const normalized = (text: string) =>
   text
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -66,7 +67,7 @@ export const marketFamilies = [
   {
     id: 'points',
     pattern:
-      /\b(?:total de puntos|puntos (?:del|de|totales)|puntos\s*\+|(?:cuarto|mitad|periodo) con mas puntos)|^puntos$/,
+      /\b(?:total de puntos|puntos (?:del|de|totales|en)|puntos\s*\+|(?:cuarto|mitad|periodo) con mas puntos)|\bpuntos$/,
   },
   { id: 'rebounds', pattern: /\brebotes?\b/ },
   { id: 'basketball', pattern: /\b(?:triples|robos|tapones|doble doble|triple doble)\b/ },

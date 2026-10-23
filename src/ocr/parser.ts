@@ -4,6 +4,8 @@ import { visualRows, type OcrLine } from './layout';
 import { parseBetanoLayout } from './betano';
 import { betanoHeader } from './header';
 import type { SymbolCandidate, TicketPromotion } from './symbols';
+import { normalized } from './markets';
+import { interpretMarket, type MarketInterpretation } from './semantics';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -14,6 +16,9 @@ export interface ParsedTicket {
   visibleStatus?: string;
   expectedSelections?: number;
   bonusAmount?: number;
+  // Draft-only metadata; does not change historical selection schemas.
+  reviewReasons?: string[];
+  interpretations?: { path: string; value: MarketInterpretation }[];
   selections: {
     event: string;
     market: string;
@@ -44,7 +49,7 @@ function labeled(text: string, labels: string[], money = false) {
   }
 }
 export function classifyMarket(text: string) {
-  const t = text.toLowerCase();
+  const t = normalized(text);
   const scope = /equipo|local|visitante/.test(t) ? 'equipo' : 'partido';
   const period = /primer tiempo|1[ºo]? tiempo|1st half/.test(t)
     ? 'primer tiempo'
@@ -173,7 +178,11 @@ export function parseTicket(
         : /simple|single/i.test(text)
           ? 'Simple'
           : undefined);
-  const visibleStatus = lines.find((l) => /^(ganada|perdida|anulada|pendiente|won|lost)$/i.test(l));
+  const visibleStatus = lines.find((l) =>
+    /^(ganada|perdida|anulada|pendiente|won|lost|cash\s*out (?:ejecutado|realizado|cobrado))$/i.test(
+      l,
+    ),
+  );
   if (visibleStatus)
     warnings.push(`Estado visible: ${visibleStatus}. Confirma la liquidación después de guardar.`);
   const expectedSelections =
@@ -203,12 +212,21 @@ export function parseTicket(
         : undefined,
     selections,
     warnings,
+    reviewReasons: layout?.reviewReasons ?? [],
+    interpretations: selections.flatMap((s, i) =>
+      (s.builderMarkets ?? [s]).map((m, j) => ({
+        path: `selections[${i}]${s.builderMarkets ? `.builderMarkets[${j}]` : ''}`,
+        value: interpretMarket(m.market, m.pick, s.event, s.sport),
+      })),
+    ),
     text,
     confidence: {
       house: house ? 'high' : 'missing',
+      kind: kind ? 'review' : 'missing',
       stake: stake !== undefined ? 'review' : 'missing',
       odds: odds !== undefined ? 'review' : 'missing',
       potential: potential !== undefined ? 'review' : 'missing',
+      ...layout?.fieldConfidence,
     },
   };
 }

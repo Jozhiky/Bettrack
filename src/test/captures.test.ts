@@ -286,6 +286,32 @@ it('holds missing combined legs', async () => {
   expect((await db.uploads.get(key))?.reason).toContain('1 de 11');
   expect(await db.bets.count()).toBe(0);
 });
+it('retains recoverable data with absent odds even when a draft has no new metadata', async () => {
+  const key = await upload();
+  const draft = { ...parsed, selections: [{ ...parsed.selections[0], odds: null }] };
+  await registerCapture(key, draft, r);
+  const stored = (await db.uploads.get(key))!;
+  expect(stored.status).toBe('review');
+  expect(JSON.parse(stored.draftJson).selections).toEqual(draft.selections);
+  expect(await db.bets.count()).toBe(0);
+  expect(await db.movements.count()).toBe(0);
+});
+it('reviewing an ambiguous new capture cannot change historical bets or financial data', async () => {
+  const existing = await upload();
+  await registerCapture(existing, parsed, r);
+  const before = await r.snapshot();
+  const next = await upload('c'.repeat(64));
+  await registerCapture(next, { ...parsed, reviewReasons: ['Mercado desconocido; revisión requerida.'] }, r);
+  const after = await r.snapshot();
+  for (const key of ['bets', 'selections', 'movements', 'settlements', 'houses', 'audit'] as const)
+    expect(after[key]).toEqual(before[key]);
+  expect((await db.uploads.get(next))?.status).toBe('review');
+  expect(await db.images.get(next)).toBeDefined();
+  // Already saved tickets bypass the new-draft gates and are never rewritten.
+  await registerCapture(existing, { ...parsed, reviewReasons: ['Nueva lectura ambigua'] }, r);
+  expect((await db.uploads.get(existing))?.status).toBe('saved');
+  expect((await r.snapshot()).bets).toEqual(before.bets);
+});
 it('warns on identical images and requires an explicit override for a second operation', async () => {
   const a = await upload(),
     b = await upload();

@@ -126,6 +126,14 @@ export async function registerCapture(
       return needsReview(
         `Se reconocieron ${parsed.selections.length} de ${parsed.expectedSelections} selecciones. Necesitamos la captura completa.`,
       );
+    // New OCR drafts can retain ambiguous raw labels/null odds without turning
+    // them into confirmed bets. Older drafts remain schema-compatible.
+    if (parsed.reviewReasons?.length) return needsReview(parsed.reviewReasons.join(' '));
+    const missingOdds = parsed.selections.findIndex((s) => s.odds === null);
+    if (missingOdds >= 0)
+      return needsReview(
+        `Selección ${missingOdds + 1}: cuota ausente. Conservamos todos los datos para revisión.`,
+      );
     const betId = upload.id;
     const rows = parsed.selections.map((s) => ({ ...s, id: id(), betId }));
     const invalidRow = rows.findIndex((s) => !selectionSchema.safeParse(s).success);

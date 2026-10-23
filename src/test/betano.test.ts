@@ -276,8 +276,10 @@ describe('Betano: lectura espacial y grupos', () => {
         '',
         geometry.map((r) => (r.text === '1.11' ? line('1.11', 900, y) : r)),
       );
-      expect(p.selections).toHaveLength(1);
-      expect(p.warnings.some((w) => w.includes('indica 2'))).toBe(true);
+      expect(p.selections).toHaveLength(2);
+      expect(p.selections[0].odds).toBeNull();
+      expect(p.selections[1].odds).toBe(1.31);
+      expect(p.confidence['selections[0].odds']).toBe('missing');
     }
   });
   it('conserva mercado de equipo, periodo, tarjetas y cuota única del Builder', () => {

@@ -8,6 +8,7 @@ import {
   isSelectionNotice,
   isSelectionValue,
   isMarketContinuation,
+  normalized,
 } from './markets';
 
 const clean = (s: string) =>
@@ -43,7 +44,13 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
   );
   const selections: ParsedTicket['selections'] = [];
   const warnings: string[] = [];
-  if (header < 0 || footer < 0) return { selections, warnings };
+  const reviewReasons: string[] = [];
+  const fieldConfidence: ParsedTicket['confidence'] = {};
+  const review = (path: string, reason: string, missing = false) => {
+    fieldConfidence[path] = missing ? 'missing' : 'review';
+    reviewReasons.push(reason);
+  };
+  if (header < 0 || footer < 0) return { selections, warnings, reviewReasons, fieldConfidence };
   const candidates = rows.slice(header + 1, footer).map((row) => {
     // Ignore pictograms on the left and score/clock widgets on the right.
     const words = withoutSchedule(
@@ -64,6 +71,7 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       odds: odd ? decimal(odd.text) : null,
       content,
       promotion,
+      bullet: /^[Oo○◯]\s/.test(content.map((w) => w.text).join(' ')),
     };
   });
   // Some browser OCR builds put an odds badge on its own row just below the
@@ -94,10 +102,35 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       !(isSelectionValue(r.text) && r.content.every((w) => w.bbox.x0 >= right * 0.68)) &&
       !/^(?:hoy|ma[nñ]ana)\b/i.test(r.text),
   );
-  const starts = body.flatMap((r, i) => (r.odds !== null ? [i] : []));
+  // An odds badge is evidence, not the definition of a leg. The first body
+  // row and separated outer titles survive a missing badge. Child bullets are
+  // never outer titles. Ambiguous boundaries stay in the draft for review.
+  const left = (r: (typeof body)[number]) => Math.min(...r.content.map((w) => w.bbox.x0));
+  const outerColumn = Math.min(...body.filter((r, i) => i === 0 || r.odds !== null).map(left));
+  const starts = body.flatMap((r, i) => {
+    const previous = body[i - 1];
+    const height = Math.max(...r.content.map((w) => w.bbox.y1 - w.bbox.y0), 1);
+    const separated = previous && r.y - previous.y > height * 2.5;
+    const titleShape =
+      /bet builder/i.test(r.text) ||
+      (!marketLine(r.text) && !!body[i + 1] && marketLine(body[i + 1].text));
+    return i === 0 ||
+      (r.odds !== null &&
+        (!marketLine(r.text) || (!!body[i + 1] && marketLine(body[i + 1].text)))) ||
+      (separated && left(r) <= outerColumn + height * 0.5 && !r.bullet && titleShape)
+      ? [i]
+      : [];
+  });
   for (let n = 0; n < starts.length; n++) {
     const block = body.slice(starts[n], starts[n + 1] ?? body.length);
     const title = block[0];
+    const basePath = `selections[${n}]`;
+    if (title.odds === null)
+      review(
+        `${basePath}.odds`,
+        `Selección ${n + 1}: cuota ausente; se conserva sin calcularla.`,
+        true,
+      );
     const builder = /bet builder/i.test(title.text);
     const notices = block.slice(1).filter((r) => isSelectionNotice(r.text));
     const rest = block.slice(1).filter((r) => !isSelectionNotice(r.text));
@@ -131,9 +164,31 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
           previous.pick += `${previous.pick.endsWith('-') ? '' : ' '}${row.text}`;
           continue;
         }
-        if (marketLine(row.text) || (previous?.market && isMarketContinuation(row.text))) {
+        if (row.bullet) {
+          // A visible child bullet establishes the role even if a player's or
+          // team's name contains a word from the market vocabulary.
+          builderMarkets.push({
+            pick: row.text,
+            market: '',
+            ...(row.promotion ? { promotion: row.promotion } : {}),
+          });
+        } else if (marketLine(row.text) || (previous?.market && isMarketContinuation(row.text))) {
           const last = builderMarkets.at(-1);
           if (last) last.market = [last.market, row.text].filter(Boolean).join(' ');
+        } else if (
+          previous &&
+          !previous.market &&
+          !row.bullet &&
+          !isSelectionValue(row.text) &&
+          !/^(?:mas|menos) de\b/.test(normalized(row.text))
+        ) {
+          // The label immediately below a pick is retained as a tentative
+          // market, even outside the vocabulary. Never create a fictitious pick.
+          previous.market = row.text;
+          review(
+            `${basePath}.builderMarkets[${builderMarkets.length - 1}].market`,
+            `Selección ${n + 1}: mercado interno desconocido; revisa su texto original.`,
+          );
         } else
           builderMarkets.push({
             pick: row.text,
@@ -152,10 +207,38 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       const firstTeam = rest.findIndex(
         (r, i) => !marketLine(r.text) && !(i > 0 && isMarketContinuation(r.text)),
       );
-      const marketRows = firstTeam < 0 ? rest : rest.slice(0, firstTeam);
+      // Betano places the two event participants after the market. If exactly
+      // three rows remain and the label is unknown, preserve those positions
+      // as a REVIEWABLE draft, not as confirmed semantic entities.
+      const unknownLabel =
+        firstTeam === 0 &&
+        rest.length === 3 &&
+        !rest.slice(-2).some((r) => marketLine(r.text) || isSelectionValue(r.text));
+      // Recognized market rows followed by exactly two participants establish
+      // roles before vocabulary matching. A team named "Córners FC" is not
+      // absorbed into the market just because it contains a statistical word.
+      const prefix = rest.slice(0, -2);
+      const structuredTail =
+        rest.length >= 3 &&
+        marketLine(prefix[0].text) &&
+        prefix.every((r, i) => marketLine(r.text) || (i > 0 && isMarketContinuation(r.text)));
+      const boundary = unknownLabel ? 1 : structuredTail ? rest.length - 2 : firstTeam;
+      const marketRows = boundary < 0 ? rest : rest.slice(0, boundary);
       market = marketRows.map((r) => r.text).join(' ');
-      const teams = firstTeam < 0 ? [] : rest.slice(firstTeam);
-      event = teams.length === 2 ? teams.map((r) => r.text).join(' vs. ') : '';
+      const teams = boundary < 0 ? [] : rest.slice(boundary);
+      event = market && teams.length === 2 ? teams.map((r) => r.text).join(' vs. ') : '';
+      if (unknownLabel) {
+        review(
+          `${basePath}.market`,
+          `Selección ${n + 1}: mercado desconocido; se conserva el texto original para revisión.`,
+        );
+        fieldConfidence[`${basePath}.event`] = 'review';
+      }
+      if (teams.some((r) => marketLine(r.text)))
+        review(
+          `${basePath}.event`,
+          `Selección ${n + 1}: un participante contiene una etiqueta de mercado; confirma su identidad.`,
+        );
     }
     if (!event || !market)
       warnings.push(`Selección ${n + 1}: evento o mercado incompleto; compáralo con la captura.`);
@@ -171,10 +254,21 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       ...(title.promotion ? { promotion: title.promotion } : {}),
       ...(builderMarkets ? { builderMarkets } : {}),
     });
+    for (const [field, value] of Object.entries({ event, market, pick, odds: title.odds })) {
+      const path = `${basePath}.${field}`;
+      fieldConfidence[path] ??= value === '' || value === null ? 'missing' : 'review';
+    }
+    for (const [j, child] of (builderMarkets ?? []).entries()) {
+      for (const field of ['market', 'pick'] as const)
+        fieldConfidence[`${basePath}.builderMarkets[${j}].${field}`] ??= child[field]
+          ? 'review'
+          : 'missing';
+    }
   }
   if (selections.some((s) => s.promotion || s.builderMarkets?.some((m) => m.promotion)))
     warnings.push(
       'Se detectaron promociones por sus iconos. Confírmalas en cada selección: no indican que ya se haya cobrado ni ganado.',
     );
-  return { selections, warnings };
+  warnings.push(...reviewReasons);
+  return { selections, warnings, reviewReasons, fieldConfidence };
 }

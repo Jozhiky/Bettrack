@@ -50,5 +50,8 @@ Los E2E requieren cuentas QA temporales; consulta `docs/CLOUD.md`. Solo se despl
 - [Arquitectura, acceso, límites y pruebas cloud](docs/CLOUD.md)
 - [Despliegue Firebase](docs/FIREBASE.md)
 - [Lectura Betano](docs/BETANO.md)
+- [FASE 1 OCR: corpus y métricas de referencia](docs/OCR_PHASE1_REPORT.md)
+- [FASE 2 OCR: reparaciones, regresiones y comparación](docs/OCR_PHASE2_REPORT.md)
+- [Reproducir las pruebas OCR aisladas](tests/ocr-phase1/README.md)
 
 `docs/ARCHITECTURE.md` y `docs/QA.md` conservan el historial del MVP local; la arquitectura vigente se describe en CLOUD.md. Funciones pendientes: otros formatos OCR/Bet365, sincronización Google Sheets, invitaciones de grupo, recuperación autónoma y paginación del backend para historiales grandes.

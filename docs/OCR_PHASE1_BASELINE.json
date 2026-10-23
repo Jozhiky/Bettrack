@@ -1,0 +1,1556 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-22T19:12:35.992Z",
+  "environment": {
+    "workerInitializationMs": 185.59999999962747,
+    "hardwareConcurrency": 12,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "memory": 32,
+    "browser": "156.0.8078.4",
+    "node": "v24.22.1",
+    "os": "win32 10.0.26300",
+    "cpu": "AMD Ryzen 5 5600G with Radeon Graphics         "
+  },
+  "repeats": 3,
+  "corpusHash": "7d60102e11be642e21e88c15d437aee47bcc9d60ffc95a0f4fc4009f4f1cf1e0",
+  "packageLockHash": "70c068daf31b221c1a1a5e11f7b7edb182a37f507fbd922c51eabc868dfbf668",
+  "assets": {
+    "spa.traineddata.gz": "bd43c7cbe66a5afbbb4bfbc2fbf935c2f0ae4e959e730c5451ea4714e134b22f",
+    "eng.traineddata.gz": "22d975baf864a9d30757dccd47020e08c433ba4b2324d1edbfc645df996a15be",
+    "worker.min.js": "576b7df7e3393e137e51849357c9adb53fe7ac1bb69bfa06cf3d61520f182c6d",
+    "tesseract-core-lstm.wasm": "66b17df6e20c5329a17ffa9c202a47eaa3e32500b253d4c7f38e7f2bc01457c3",
+    "tesseract-core-lstm.wasm.js": "eef5f8b2f8e20e150680b20adaec4a60babafee3adbe8a94583c81fee46e8680",
+    "tesseract-core-relaxedsimd-lstm.wasm": "7985c92d4c64e7267d24cadffe1b2a1da6bf8aa55fdcaf953fe94fe122a24545",
+    "tesseract-core-relaxedsimd-lstm.wasm.js": "861a536cf9ef8e63cb644d57bab39c388f37f7d6b6f60024b741c5f6b39a59b3",
+    "tesseract-core-relaxedsimd.wasm": "45f8c9b516df326b6ae6b493ed3a6289df5cbd10490e7b6ff8bf5b12ea42d1da",
+    "tesseract-core-relaxedsimd.wasm.js": "843074aa5bad1cc6421b74a86201768ced9f244795e4d81435435a61a40ce535",
+    "tesseract-core-simd-lstm.wasm": "34e8d50cac216427d86bf397d610fdd9f49492539bbcdfbfccc4eda20c810bea",
+    "tesseract-core-simd-lstm.wasm.js": "c58b46a4c796c0b8afccf77591d5b875b6896b45d402bbce8caa6f5362447b38",
+    "tesseract-core-simd.wasm": "7d237a13edfeb0fa2f104744fccde0a00e0c076c3e23b7a8fc7af75ec9af2c3e",
+    "tesseract-core-simd.wasm.js": "6b61ef4e911b5cf57e656bbfe983d6e2b3711a02dd164154ddda064566e8e09d",
+    "tesseract-core.wasm": "c7f5ace62ac0ad065e71e9c6725f1d7cdf82e7eda8fba532cbb9563964da7098",
+    "tesseract-core.wasm.js": "0bc6ce3e5fbbd0cd89706cf2fd70960e3372f4f01ee24265b26990808aaeb286"
+  },
+  "productionHashes": {
+    "src/ocr/adapters.ts": "9d99491e6601b420a7cff839e1e801b1205270a4653052a0878e8e56f346b328",
+    "src/ocr/betano.ts": "e63ac391bcf374b29fdbb198ec9eb5959b69539c0af5b7ab375e65c59a1aa4b1",
+    "src/ocr/engine.ts": "28f39cfdd02d0effc8c1af2e44245e9e2e2f70852310dad65783fe850a8b1c73",
+    "src/ocr/header.ts": "47fadd689666b15462c609b155d734bf20a01daad29f785ea64dc4b8c62e48b5",
+    "src/ocr/layout.ts": "0f3e6b9d7367df6995c706073cbae14fa9ba6bd4898c5679da7dc39026c7f673",
+    "src/ocr/markets.ts": "edbf3d6f4b67b323a227da080828a2a2e6a032929f4d6c04d302d39131b92203",
+    "src/ocr/optimize.ts": "1daef5be328fbe878b964f3f2280b4f87eaee898f3b1c28b9335e743a80c2003",
+    "src/ocr/optimize.worker.ts": "32f594f8efaf31b1a285aa3e548a9e45d1b055cfbcc51f36ffeb4fb8dc12aefe",
+    "src/ocr/parser.ts": "78de1d40cb7e5205ef891d812c9db200adc72be531d84c762925bdf6029e0031",
+    "src/ocr/readCapture.ts": "534918b3a5777f27c73874730c135bbb6d62d84daf2656617468f53e5cdee27a",
+    "src/ocr/session.ts": "c66eeaf39bb60612b9ba2a11e24f57b2991ac61c399850253cda7338ca00517c",
+    "src/ocr/symbols.ts": "00aae1ea838e68f138c8a5161bb1d0be1da459d5574bc451d8c870c0f341fed3",
+    "src/data/batch.ts": "cf8cf0a024ac9e830179e8d0122fa48547f4e63d32e81cfe1b45bee54b5b2607",
+    "src/data/captureActivity.ts": "dab11ca01e2547f927b24568bc00a26c12c6d32742444ae8e16515813b227608",
+    "src/data/capturePages.ts": "220128410074b081705c5ea5a3c107bf1f477f5ee55529cbe045abb8d5cb266f",
+    "src/data/captures.ts": "d5e50be645c2a62338b19f8c58050290dd3910bb8d55278f30d9501ef52011ac",
+    "src/data/cloudStore.ts": "3767d0f8980335e4ccfa0f77374772ee10af5ba19bb4f01e52d4a93d387bca57",
+    "src/data/db.ts": "1e12ad33ffe494957f739f6fc1a60dca17a333c92860ec2462a7c7ed45ef6408",
+    "src/data/imageCache.ts": "f79b43f42c4f7489f53af5d56a2a1861be0d262305f82d13be87aed5ec5846d0",
+    "src/data/jsonEquality.ts": "d99ce8d43e7ea7906483d8ebc6edc8aec951cba1317bb1dbc705490c2cd1f053",
+    "src/data/repository.ts": "b0379e46b89d53a384ce9aefd95ba14608822c75c1c9f8c48d5197f1eb886a22",
+    "src/data/storagePolicy.ts": "74b68300b026b6cda3bb65075a98f6ed5da1240c0beaa8a9b6c590184b909b23",
+    "src/data/transfer.ts": "6e9550353c9136d65ee011a8e2d3a3580a9c19d84f548465f7a5467797064c5d",
+    "src/data/useCloudQuery.ts": "5ba34a12ae42155f5610e6d85fafb22ed25ec7029338e02b4e3ed91e293a7463",
+    "src/domain/identity.ts": "86e3c92e975abff6c96f49abfd47eaff872f509b7e6c370bcc8d73a969b07ba2",
+    "src/domain/model.ts": "81b31780b6f90b52161966a2c0cfcd3713b04a91682caf41f7a1bf21c493326b",
+    "src/domain/workspace.ts": "536926840e620e0456ea78078048941f5f67e0e25730fa1420fbe9c2538e87d9",
+    "supabase/migrations/20261017151541_bettrack_cloud.sql": "94c7d41fbc47a1ac511fe170030836905438edbd3520b7d47a8caa668ef2a630",
+    "supabase/migrations/20261017203537_cloud_financial_guards.sql": "aa2f632351c9fb0a17328b287e2ed1ccc704392def9d49d2bfe818ea82e3b2a9",
+    "supabase/migrations/20261019204744_cloud_commit_validation.sql": "eaf5c37059756ad33fa632a6ac6cd1dc67fd0e14f498ef9985a01ee806b432b2",
+    "supabase/migrations/20261021025000_allow_simple_bet_builder.sql": "16af8674d4257c49c576e69c09cfe892598077943e6990171090d899a7967a00"
+  },
+  "phaseSummary": {
+    "preprocessing": {
+      "samples": 15,
+      "p50Ms": 48.19999999925494,
+      "p95Ms": 69.30000000074506
+    },
+    "ocr": {
+      "samples": 15,
+      "p50Ms": 764.7999999988824,
+      "p95Ms": 1092.2999999988824
+    },
+    "reconstruction": {
+      "samples": 15,
+      "p50Ms": 0.30000000074505806,
+      "p95Ms": 1.5
+    },
+    "interpretation": {
+      "samples": 15,
+      "p50Ms": 0.2000000011175871,
+      "p95Ms": 2.199999999254942
+    },
+    "validation": {
+      "samples": 15,
+      "p50Ms": 0.2999999988824129,
+      "p95Ms": 2.699999999254942
+    },
+    "registration": {
+      "samples": 15,
+      "p50Ms": 2.800000000745058,
+      "p95Ms": 24.09999999962747
+    }
+  },
+  "qualitySummary": {
+    "house": {
+      "correct": 5,
+      "total": 5,
+      "missing": 0,
+      "wrong": 0
+    },
+    "kind": {
+      "correct": 5,
+      "total": 5,
+      "missing": 0,
+      "wrong": 0
+    },
+    "stake": {
+      "correct": 5,
+      "total": 5,
+      "missing": 0,
+      "wrong": 0
+    },
+    "odds": {
+      "correct": 5,
+      "total": 5,
+      "missing": 0,
+      "wrong": 0
+    },
+    "potential": {
+      "correct": 5,
+      "total": 5,
+      "missing": 0,
+      "wrong": 0
+    },
+    "count": {
+      "correct": 18,
+      "total": 18,
+      "missing": 0,
+      "wrong": 0
+    },
+    "cashoutOffer": {
+      "correct": 4,
+      "total": 4,
+      "missing": 0,
+      "wrong": 0
+    },
+    "event": {
+      "correct": 12,
+      "total": 13,
+      "missing": 0,
+      "wrong": 1
+    },
+    "market": {
+      "correct": 23,
+      "total": 24,
+      "missing": 0,
+      "wrong": 1
+    },
+    "pick": {
+      "correct": 22,
+      "total": 24,
+      "missing": 0,
+      "wrong": 2
+    },
+    "legOdds": {
+      "correct": 13,
+      "total": 13,
+      "missing": 0,
+      "wrong": 0
+    },
+    "promotion": {
+      "correct": 10,
+      "total": 10,
+      "missing": 0,
+      "wrong": 0
+    }
+  },
+  "instrumentationParity": [
+    {
+      "id": "timed-goal",
+      "equal": true
+    },
+    {
+      "id": "player-builders",
+      "equal": true
+    },
+    {
+      "id": "handicap-combination",
+      "equal": true
+    },
+    {
+      "id": "first-half-corners",
+      "equal": true
+    },
+    {
+      "id": "mixed-builders",
+      "equal": true
+    }
+  ],
+  "networkAttempts": [],
+  "protectedFilesUnchanged": true,
+  "baselineDifferences": [],
+  "limitations": [
+    "Registration uses fake-indexeddb in RAM, NOT Supabase.",
+    "Five images do not represent all Betano markets.",
+    "Exclusive phase timings follow existing mixed function boundaries.",
+    "Ordinal leg alignment penalizes omissions and shifts; not a semantic classifier."
+  ],
+  "cases": [
+    {
+      "id": "timed-goal",
+      "repeat": 0,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 49.5
+        },
+        "ocr": {
+          "calls": 1,
+          "ms": 384.6000000014901
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 1.5
+        },
+        "interpretation": {
+          "calls": 3,
+          "ms": 2.199999999254942
+        },
+        "validation": {
+          "calls": 5,
+          "ms": 2.699999999254942
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 24.09999999962747
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 441.59999999962747
+    },
+    {
+      "id": "player-builders",
+      "repeat": 0,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "FC Bayern München vs. Arsenal FC",
+          "actual": "FC Bayern Munchen vs. Arsenal FC",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 63.80000000074506
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 981.5
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.6999999992549419
+        },
+        "interpretation": {
+          "calls": 15,
+          "ms": 0.09999999962747097
+        },
+        "validation": {
+          "calls": 8,
+          "ms": 0.8000000007450581
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 3.199999999254942
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 1048.7000000011176
+    },
+    {
+      "id": "handicap-combination",
+      "repeat": 0,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 43
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 559.5000000018626
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.30000000074505806
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.2000000011175871
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.7999999970197678
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 603.7999999988824
+    },
+    {
+      "id": "first-half-corners",
+      "repeat": 0,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Córners en Primer Tiempo Más/Menos",
+          "actual": "Córners en Primer Tiempo Mas/Menos",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].pick",
+          "expected": "Más de 4.5",
+          "actual": "Mas de 4.5",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 33.30000000074506
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 1012.9000000003725
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.09999999962747097
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0.40000000037252903
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.2999999988824129
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 3.200000001117587
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 1047.5
+    },
+    {
+      "id": "mixed-builders",
+      "repeat": 0,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "pick",
+          "path": "selections[1].builderMarkets[1].pick",
+          "expected": "Sí",
+          "actual": "Si",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 69.30000000074506
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 755
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.3999999985098839
+        },
+        "interpretation": {
+          "calls": 13,
+          "ms": 0.10000000149011612
+        },
+        "validation": {
+          "calls": 14,
+          "ms": 0.599999999627471
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.900000000372529
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 828
+    },
+    {
+      "id": "timed-goal",
+      "repeat": 1,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 32.19999999925494
+        },
+        "ocr": {
+          "calls": 1,
+          "ms": 300.90000000037253
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.10000000149011612
+        },
+        "interpretation": {
+          "calls": 3,
+          "ms": 0
+        },
+        "validation": {
+          "calls": 5,
+          "ms": 0.09999999962747097
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.300000000745058
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 334
+    },
+    {
+      "id": "player-builders",
+      "repeat": 1,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "FC Bayern München vs. Arsenal FC",
+          "actual": "FC Bayern Munchen vs. Arsenal FC",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 66.90000000037253
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 1092.2999999988824
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.3999999985098839
+        },
+        "interpretation": {
+          "calls": 15,
+          "ms": 0.2000000011175871
+        },
+        "validation": {
+          "calls": 8,
+          "ms": 0.5000000018626451
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 3.699999999254942
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 1161.2000000011176
+    },
+    {
+      "id": "handicap-combination",
+      "repeat": 1,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 48.19999999925494
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 596.4000000003725
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.2999999988824129
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0.09999999962747097
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.30000000074505806
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.900000000372529
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 645.9000000003725
+    },
+    {
+      "id": "first-half-corners",
+      "repeat": 1,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Córners en Primer Tiempo Más/Menos",
+          "actual": "Córners en Primer Tiempo Mas/Menos",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].pick",
+          "expected": "Más de 4.5",
+          "actual": "Mas de 4.5",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 43.90000000037253
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 982.5999999996275
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.30000000074505806
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0.09999999962747097
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.2999999988824129
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.600000001490116
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 1031
+    },
+    {
+      "id": "mixed-builders",
+      "repeat": 1,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "pick",
+          "path": "selections[1].builderMarkets[1].pick",
+          "expected": "Sí",
+          "actual": "Si",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 61.399999998509884
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 764.7999999988824
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.30000000074505806
+        },
+        "interpretation": {
+          "calls": 13,
+          "ms": 0.30000000074505806
+        },
+        "validation": {
+          "calls": 14,
+          "ms": 0.3999999985098839
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.700000001117587
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 828.5999999996275
+    },
+    {
+      "id": "timed-goal",
+      "repeat": 2,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 21.800000000745058
+        },
+        "ocr": {
+          "calls": 1,
+          "ms": 273.40000000037253
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.10000000149011612
+        },
+        "interpretation": {
+          "calls": 3,
+          "ms": 0.09999999962747097
+        },
+        "validation": {
+          "calls": 5,
+          "ms": 0.2999999988824129
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 3.200000001117587
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 295.80000000074506
+    },
+    {
+      "id": "player-builders",
+      "repeat": 2,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "FC Bayern München vs. Arsenal FC",
+          "actual": "FC Bayern Munchen vs. Arsenal FC",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 64.90000000037253
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 1044
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.5
+        },
+        "interpretation": {
+          "calls": 15,
+          "ms": 0.2000000011175871
+        },
+        "validation": {
+          "calls": 8,
+          "ms": 0.19999999925494194
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.800000000745058
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 1114.9000000003725
+    },
+    {
+      "id": "handicap-combination",
+      "repeat": 2,
+      "provenance": "real-capture-deidentified",
+      "complete": true,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 38.70000000111759
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 642.5
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.19999999925494194
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0.30000000074505806
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.09999999962747097
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.599999999627471
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 682.3000000007451
+    },
+    {
+      "id": "first-half-corners",
+      "repeat": 2,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Córners en Primer Tiempo Más/Menos",
+          "actual": "Córners en Primer Tiempo Mas/Menos",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].pick",
+          "expected": "Más de 4.5",
+          "actual": "Mas de 4.5",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 32.09999999962747
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 910.5999999977648
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.3999999985098839
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0.40000000037252903
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.2999999988824129
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.700000001117587
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 944.1999999992549
+    },
+    {
+      "id": "mixed-builders",
+      "repeat": 2,
+      "provenance": "real-capture-deidentified",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "pick",
+          "path": "selections[1].builderMarkets[1].pick",
+          "expected": "Sí",
+          "actual": "Si",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 1,
+          "ms": 52.600000001490116
+        },
+        "ocr": {
+          "calls": 2,
+          "ms": 778.4000000022352
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.5
+        },
+        "interpretation": {
+          "calls": 13,
+          "ms": 0.6000000014901161
+        },
+        "validation": {
+          "calls": 14,
+          "ms": 0.09999999962747097
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.599999999627471
+        }
+      },
+      "reads": 1,
+      "recognitionMs": 834.7000000011176
+    },
+    {
+      "id": "injected-missing-odds",
+      "repeat": 0,
+      "provenance": "real-image-with-controlled-ocr-fault",
+      "complete": false,
+      "omittedLegs": 1,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "count",
+          "path": "selections.length",
+          "expected": 3,
+          "actual": 2,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "event",
+          "path": "selections[0].event",
+          "expected": "Barranquilla FC vs. América de Cali",
+          "actual": "Deportivo Toluca FC vs. Club Tijuana",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Resultado del partido",
+          "actual": "Hándicap Resultado del Partido",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].pick",
+          "expected": "América de Cali",
+          "actual": "Club Tijuana +3",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "legOdds",
+          "path": "selections[0].odds",
+          "expected": null,
+          "actual": 1.5,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "promotion",
+          "path": "selections[0].promotion",
+          "expected": "Pago anticipado +2",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "Deportivo Toluca FC vs. Club Tijuana",
+          "actual": "Independiente Santa Fe vs. Jaguares de Córdoba",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "market",
+          "path": "selections[1].market",
+          "expected": "Hándicap Resultado del Partido",
+          "actual": "Resultado del partido",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[1].pick",
+          "expected": "Club Tijuana +3",
+          "actual": "Independiente Santa Fe",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "legOdds",
+          "path": "selections[1].odds",
+          "expected": 1.5,
+          "actual": 1.3,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "event",
+          "path": "selections[2].event",
+          "expected": "Independiente Santa Fe vs. Jaguares de Córdoba",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "market",
+          "path": "selections[2].market",
+          "expected": "Resultado del partido",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "pick",
+          "path": "selections[2].pick",
+          "expected": "Independiente Santa Fe",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "legOdds",
+          "path": "selections[2].odds",
+          "expected": 1.3,
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "promotion",
+          "path": "selections[2].promotion",
+          "expected": "Pago anticipado +2",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        }
+      ],
+      "registered": {
+        "status": "review",
+        "bets": 0,
+        "movements": 0,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 2,
+          "ms": 72.3000000026077
+        },
+        "ocr": {
+          "calls": 4,
+          "ms": 1125.4000000022352
+        },
+        "reconstruction": {
+          "calls": 4,
+          "ms": 0.5
+        },
+        "interpretation": {
+          "calls": 10,
+          "ms": 0.40000000037252903
+        },
+        "validation": {
+          "calls": 6,
+          "ms": 0.19999999925494194
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 0.6999999992549419
+        }
+      },
+      "reads": 2,
+      "recognitionMs": 1204.300000000745
+    },
+    {
+      "id": "injected-unknown-market",
+      "repeat": 0,
+      "provenance": "real-image-with-controlled-ocr-fault",
+      "complete": false,
+      "omittedLegs": 0,
+      "extraLegs": 0,
+      "failures": [
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "Deportivo Toluca FC vs. Club Tijuana",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "market",
+          "path": "selections[1].market",
+          "expected": "Mercado experimental no catalogado",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        }
+      ],
+      "registered": {
+        "status": "review",
+        "bets": 0,
+        "movements": 0,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 2,
+          "ms": 76.90000000037253
+        },
+        "ocr": {
+          "calls": 4,
+          "ms": 1143.4999999981374
+        },
+        "reconstruction": {
+          "calls": 4,
+          "ms": 0.6999999992549419
+        },
+        "interpretation": {
+          "calls": 12,
+          "ms": 0.2000000011175871
+        },
+        "validation": {
+          "calls": 11,
+          "ms": 0.599999999627471
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 0.6999999992549419
+        }
+      },
+      "reads": 2,
+      "recognitionMs": 1228.4000000003725
+    }
+  ],
+  "controlled": [
+    {
+      "id": "layout-known",
+      "provenance": "hand-authored-layout-not-ocr",
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 0,
+          "ms": 0
+        },
+        "ocr": {
+          "calls": 0,
+          "ms": 0
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.30000000074505806
+        },
+        "interpretation": {
+          "calls": 5,
+          "ms": 0.19999999925494194
+        },
+        "validation": {
+          "calls": 6,
+          "ms": 0
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.5
+        }
+      }
+    },
+    {
+      "id": "layout-builder",
+      "provenance": "hand-authored-layout-not-ocr",
+      "failures": [],
+      "registered": {
+        "status": "saved",
+        "bets": 1,
+        "movements": 1,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 0,
+          "ms": 0
+        },
+        "ocr": {
+          "calls": 0,
+          "ms": 0
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.09999999962747097
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0
+        },
+        "validation": {
+          "calls": 6,
+          "ms": 0.09999999962747097
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 2.5
+        }
+      }
+    },
+    {
+      "id": "unknown-market",
+      "provenance": "hand-authored-layout-not-ocr",
+      "failures": [
+        {
+          "field": "event",
+          "path": "selections[0].event",
+          "expected": "Equipo Norte vs. Equipo Sur",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Mercado experimental no catalogado",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        }
+      ],
+      "registered": {
+        "status": "review",
+        "bets": 0,
+        "movements": 0,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 0,
+          "ms": 0
+        },
+        "ocr": {
+          "calls": 0,
+          "ms": 0
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.09999999962747097
+        },
+        "interpretation": {
+          "calls": 4,
+          "ms": 0.09999999962747097
+        },
+        "validation": {
+          "calls": 1,
+          "ms": 0
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 0.599999999627471
+        }
+      }
+    },
+    {
+      "id": "unknown-builder-market",
+      "provenance": "hand-authored-layout-not-ocr",
+      "failures": [
+        {
+          "field": "count",
+          "path": "selections[0].builderMarkets.length",
+          "expected": 2,
+          "actual": 3,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "market",
+          "path": "selections[0].builderMarkets[0].market",
+          "expected": "Mercado experimental no catalogado",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "market",
+          "path": "selections[0].builderMarkets[1].market",
+          "expected": "Ambos equipos anotan",
+          "actual": "",
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].builderMarkets[1].pick",
+          "expected": "Sí",
+          "actual": "Mercado experimental no catalogado",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        }
+      ],
+      "registered": {
+        "status": "review",
+        "bets": 0,
+        "movements": 0,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 0,
+          "ms": 0
+        },
+        "ocr": {
+          "calls": 0,
+          "ms": 0
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.2000000011175871
+        },
+        "interpretation": {
+          "calls": 7,
+          "ms": 0
+        },
+        "validation": {
+          "calls": 1,
+          "ms": 0.10000000149011612
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 0.5999999977648258
+        }
+      }
+    },
+    {
+      "id": "missing-odds",
+      "provenance": "hand-authored-layout-not-ocr",
+      "failures": [
+        {
+          "field": "count",
+          "path": "selections.length",
+          "expected": 2,
+          "actual": 1,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "event",
+          "path": "selections[0].event",
+          "expected": "Equipo Norte vs. Equipo Sur",
+          "actual": "Equipo Este vs. Equipo Oeste",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "market",
+          "path": "selections[0].market",
+          "expected": "Goles totales Más/Menos",
+          "actual": "Equipo Este - Goles totales Más/Menos en Primer Tiempo",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "pick",
+          "path": "selections[0].pick",
+          "expected": "Más de 2.5",
+          "actual": "Más de 1.5",
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "legOdds",
+          "path": "selections[0].odds",
+          "expected": null,
+          "actual": 2,
+          "exact": false,
+          "correct": false,
+          "status": "wrong"
+        },
+        {
+          "field": "event",
+          "path": "selections[1].event",
+          "expected": "Equipo Este vs. Equipo Oeste",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "market",
+          "path": "selections[1].market",
+          "expected": "Equipo Este - Goles totales Más/Menos en Primer Tiempo",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "pick",
+          "path": "selections[1].pick",
+          "expected": "Más de 1.5",
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        },
+        {
+          "field": "legOdds",
+          "path": "selections[1].odds",
+          "expected": 2,
+          "actual": null,
+          "exact": false,
+          "correct": false,
+          "status": "missing"
+        }
+      ],
+      "registered": {
+        "status": "review",
+        "bets": 0,
+        "movements": 0,
+        "settlements": 0,
+        "backend": "fake-indexeddb in RAM; no Supabase latency"
+      },
+      "metrics": {
+        "preprocessing": {
+          "calls": 0,
+          "ms": 0
+        },
+        "ocr": {
+          "calls": 0,
+          "ms": 0
+        },
+        "reconstruction": {
+          "calls": 2,
+          "ms": 0.09999999962747097
+        },
+        "interpretation": {
+          "calls": 3,
+          "ms": 0.10000000149011612
+        },
+        "validation": {
+          "calls": 0,
+          "ms": 0
+        },
+        "registration": {
+          "calls": 1,
+          "ms": 0.7000000011175871
+        }
+      }
+    }
+  ]
+}

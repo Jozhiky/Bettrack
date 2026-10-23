@@ -1,0 +1,564 @@
+{
+  "version": 2,
+  "generatedAt": "2026-10-23T00:38:50.897Z",
+  "baselineGeneratedAt": "2026-10-22T19:12:35.992Z",
+  "measurementGeneratedAt": "2026-10-22T23:10:26.452Z",
+  "environment": {
+    "workerInitializationMs": 171.19999999925494,
+    "hardwareConcurrency": 12,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+    "memory": 32,
+    "browser": "156.0.8078.4",
+    "node": "v24.22.1",
+    "os": "win32 10.0.26300",
+    "cpu": "AMD Ryzen 5 5600G with Radeon Graphics         "
+  },
+  "repeats": 3,
+  "corpusHash": "7d60102e11be642e21e88c15d437aee47bcc9d60ffc95a0f4fc4009f4f1cf1e0",
+  "assetsUnchanged": true,
+  "dependenciesUnchanged": true,
+  "productionHashes": {
+    "src/ocr/adapters.ts": "9d99491e6601b420a7cff839e1e801b1205270a4653052a0878e8e56f346b328",
+    "src/ocr/betano.ts": "95e34e92f1dc9494356029a53e0ace806b1aff1684b6a03cddc11219cac0cc7f",
+    "src/ocr/engine.ts": "28f39cfdd02d0effc8c1af2e44245e9e2e2f70852310dad65783fe850a8b1c73",
+    "src/ocr/header.ts": "47fadd689666b15462c609b155d734bf20a01daad29f785ea64dc4b8c62e48b5",
+    "src/ocr/layout.ts": "0f3e6b9d7367df6995c706073cbae14fa9ba6bd4898c5679da7dc39026c7f673",
+    "src/ocr/markets.ts": "37e573782367c594dbb062400ea16ef8b0cf783927fdef2c6754312b45ca497e",
+    "src/ocr/optimize.ts": "1daef5be328fbe878b964f3f2280b4f87eaee898f3b1c28b9335e743a80c2003",
+    "src/ocr/optimize.worker.ts": "32f594f8efaf31b1a285aa3e548a9e45d1b055cfbcc51f36ffeb4fb8dc12aefe",
+    "src/ocr/parser.ts": "85ee5f8e45a9b7157976705ca87b6ec0c712081530d1fd86a86a74dad0c21d75",
+    "src/ocr/readCapture.ts": "534918b3a5777f27c73874730c135bbb6d62d84daf2656617468f53e5cdee27a",
+    "src/ocr/semantics.ts": "3227c3808caf4e554f014fe2b4c82a208ceb4c8e19749ea6177c90888d440442",
+    "src/ocr/session.ts": "c66eeaf39bb60612b9ba2a11e24f57b2991ac61c399850253cda7338ca00517c",
+    "src/ocr/symbols.ts": "00aae1ea838e68f138c8a5161bb1d0be1da459d5574bc451d8c870c0f341fed3",
+    "src/data/batch.ts": "cf8cf0a024ac9e830179e8d0122fa48547f4e63d32e81cfe1b45bee54b5b2607",
+    "src/data/captureActivity.ts": "dab11ca01e2547f927b24568bc00a26c12c6d32742444ae8e16515813b227608",
+    "src/data/capturePages.ts": "220128410074b081705c5ea5a3c107bf1f477f5ee55529cbe045abb8d5cb266f",
+    "src/data/captures.ts": "8c50865e8dffac913d849fdf2c62d77373994f9c48d87f626f28d05788a88d38",
+    "src/data/cloudStore.ts": "3767d0f8980335e4ccfa0f77374772ee10af5ba19bb4f01e52d4a93d387bca57",
+    "src/data/db.ts": "1e12ad33ffe494957f739f6fc1a60dca17a333c92860ec2462a7c7ed45ef6408",
+    "src/data/imageCache.ts": "f79b43f42c4f7489f53af5d56a2a1861be0d262305f82d13be87aed5ec5846d0",
+    "src/data/jsonEquality.ts": "d99ce8d43e7ea7906483d8ebc6edc8aec951cba1317bb1dbc705490c2cd1f053",
+    "src/data/repository.ts": "b0379e46b89d53a384ce9aefd95ba14608822c75c1c9f8c48d5197f1eb886a22",
+    "src/data/storagePolicy.ts": "74b68300b026b6cda3bb65075a98f6ed5da1240c0beaa8a9b6c590184b909b23",
+    "src/data/transfer.ts": "6e9550353c9136d65ee011a8e2d3a3580a9c19d84f548465f7a5467797064c5d",
+    "src/data/useCloudQuery.ts": "5ba34a12ae42155f5610e6d85fafb22ed25ec7029338e02b4e3ed91e293a7463",
+    "src/domain/identity.ts": "86e3c92e975abff6c96f49abfd47eaff872f509b7e6c370bcc8d73a969b07ba2",
+    "src/domain/model.ts": "81b31780b6f90b52161966a2c0cfcd3713b04a91682caf41f7a1bf21c493326b",
+    "src/domain/workspace.ts": "536926840e620e0456ea78078048941f5f67e0e25730fa1420fbe9c2538e87d9",
+    "supabase/migrations/20261017151541_bettrack_cloud.sql": "94c7d41fbc47a1ac511fe170030836905438edbd3520b7d47a8caa668ef2a630",
+    "supabase/migrations/20261017203537_cloud_financial_guards.sql": "aa2f632351c9fb0a17328b287e2ed1ccc704392def9d49d2bfe818ea82e3b2a9",
+    "supabase/migrations/20261019204744_cloud_commit_validation.sql": "eaf5c37059756ad33fa632a6ac6cd1dc67fd0e14f498ef9985a01ee806b432b2",
+    "supabase/migrations/20261021025000_allow_simple_bet_builder.sql": "16af8674d4257c49c576e69c09cfe892598077943e6990171090d899a7967a00"
+  },
+  "changedProductionFiles": [
+    "src/data/captures.ts",
+    "src/ocr/betano.ts",
+    "src/ocr/markets.ts",
+    "src/ocr/parser.ts",
+    "src/ocr/semantics.ts"
+  ],
+  "historicalSchemasAccountingAndOcrEngineUnchanged": true,
+  "networkAttempts": [],
+  "instrumentationParity": [
+    {
+      "id": "timed-goal",
+      "equal": true
+    },
+    {
+      "id": "player-builders",
+      "equal": true
+    },
+    {
+      "id": "handicap-combination",
+      "equal": true
+    },
+    {
+      "id": "first-half-corners",
+      "equal": true
+    },
+    {
+      "id": "mixed-builders",
+      "equal": true
+    }
+  ],
+  "precision": {
+    "definition": "Exact transcription, NFC and whitespace only. No accent forgiveness or semantic relabelling.",
+    "realImages": 5,
+    "before": {
+      "house": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "kind": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "stake": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "odds": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "potential": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "count": {
+        "correct": 18,
+        "total": 18,
+        "missing": 0,
+        "wrong": 0
+      },
+      "cashoutOffer": {
+        "correct": 4,
+        "total": 4,
+        "missing": 0,
+        "wrong": 0
+      },
+      "event": {
+        "correct": 12,
+        "total": 13,
+        "missing": 0,
+        "wrong": 1
+      },
+      "market": {
+        "correct": 23,
+        "total": 24,
+        "missing": 0,
+        "wrong": 1
+      },
+      "pick": {
+        "correct": 22,
+        "total": 24,
+        "missing": 0,
+        "wrong": 2
+      },
+      "legOdds": {
+        "correct": 13,
+        "total": 13,
+        "missing": 0,
+        "wrong": 0
+      },
+      "promotion": {
+        "correct": 10,
+        "total": 10,
+        "missing": 0,
+        "wrong": 0
+      }
+    },
+    "after": {
+      "house": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "kind": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "stake": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "odds": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "potential": {
+        "correct": 5,
+        "total": 5,
+        "missing": 0,
+        "wrong": 0
+      },
+      "count": {
+        "correct": 18,
+        "total": 18,
+        "missing": 0,
+        "wrong": 0
+      },
+      "cashoutOffer": {
+        "correct": 4,
+        "total": 4,
+        "missing": 0,
+        "wrong": 0
+      },
+      "event": {
+        "correct": 12,
+        "total": 13,
+        "missing": 0,
+        "wrong": 1
+      },
+      "market": {
+        "correct": 23,
+        "total": 24,
+        "missing": 0,
+        "wrong": 1
+      },
+      "pick": {
+        "correct": 22,
+        "total": 24,
+        "missing": 0,
+        "wrong": 2
+      },
+      "legOdds": {
+        "correct": 13,
+        "total": 13,
+        "missing": 0,
+        "wrong": 0
+      },
+      "promotion": {
+        "correct": 10,
+        "total": 10,
+        "missing": 0,
+        "wrong": 0
+      }
+    },
+    "remainingLiteralErrors": [
+      {
+        "id": "player-builders",
+        "field": "event",
+        "path": "selections[1].event",
+        "expected": "FC Bayern München vs. Arsenal FC",
+        "actual": "FC Bayern Munchen vs. Arsenal FC",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "market",
+        "path": "selections[0].market",
+        "expected": "Córners en Primer Tiempo Más/Menos",
+        "actual": "Córners en Primer Tiempo Mas/Menos",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "pick",
+        "path": "selections[0].pick",
+        "expected": "Más de 4.5",
+        "actual": "Mas de 4.5",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "mixed-builders",
+        "field": "pick",
+        "path": "selections[1].builderMarkets[1].pick",
+        "expected": "Sí",
+        "actual": "Si",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      }
+    ],
+    "repairedCases": [
+      {
+        "id": "unknown-market",
+        "beforeFieldFailures": 2,
+        "afterFieldFailures": 0,
+        "beforeOmittedLegs": 0,
+        "afterOmittedLegs": 0,
+        "beforeReadPasses": null,
+        "afterReadPasses": null,
+        "beforeReadMs": null,
+        "afterReadMs": null,
+        "afterRegistration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        }
+      },
+      {
+        "id": "unknown-builder-market",
+        "beforeFieldFailures": 4,
+        "afterFieldFailures": 0,
+        "beforeOmittedLegs": 0,
+        "afterOmittedLegs": 0,
+        "beforeReadPasses": null,
+        "afterReadPasses": null,
+        "beforeReadMs": null,
+        "afterReadMs": null,
+        "afterRegistration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        }
+      },
+      {
+        "id": "missing-odds",
+        "beforeFieldFailures": 9,
+        "afterFieldFailures": 0,
+        "beforeOmittedLegs": 1,
+        "afterOmittedLegs": 0,
+        "beforeReadPasses": null,
+        "afterReadPasses": null,
+        "beforeReadMs": null,
+        "afterReadMs": null,
+        "afterRegistration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        }
+      },
+      {
+        "id": "injected-unknown-market",
+        "beforeFieldFailures": 2,
+        "afterFieldFailures": 0,
+        "beforeOmittedLegs": 0,
+        "afterOmittedLegs": 0,
+        "beforeReadPasses": 2,
+        "afterReadPasses": 1,
+        "beforeReadMs": 1228.4000000003725,
+        "afterReadMs": 568.8000000007451,
+        "afterRegistration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        }
+      },
+      {
+        "id": "injected-missing-odds",
+        "beforeFieldFailures": 15,
+        "afterFieldFailures": 0,
+        "beforeOmittedLegs": 1,
+        "afterOmittedLegs": 0,
+        "beforeReadPasses": 2,
+        "afterReadPasses": 1,
+        "beforeReadMs": 1204.300000000745,
+        "afterReadMs": 572.3999999985099,
+        "afterRegistration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        }
+      }
+    ],
+    "controlledSemanticAttributes": "Validated in ocr-phase2.test.ts; no Phase 1 attribute-accuracy baseline exists. Not a real-image NBA accuracy claim."
+  },
+  "timing": {
+    "definition": "Exclusive milliseconds; same phase boundaries, hardware and models. Registration in fake-indexeddb RAM, not cloud.",
+    "before": {
+      "preprocessing": {
+        "samples": 15,
+        "p50Ms": 48.19999999925494,
+        "p95Ms": 69.30000000074506
+      },
+      "ocr": {
+        "samples": 15,
+        "p50Ms": 764.7999999988824,
+        "p95Ms": 1092.2999999988824
+      },
+      "reconstruction": {
+        "samples": 15,
+        "p50Ms": 0.30000000074505806,
+        "p95Ms": 1.5
+      },
+      "interpretation": {
+        "samples": 15,
+        "p50Ms": 0.2000000011175871,
+        "p95Ms": 2.199999999254942
+      },
+      "validation": {
+        "samples": 15,
+        "p50Ms": 0.2999999988824129,
+        "p95Ms": 2.699999999254942
+      },
+      "registration": {
+        "samples": 15,
+        "p50Ms": 2.800000000745058,
+        "p95Ms": 24.09999999962747
+      }
+    },
+    "after": {
+      "preprocessing": {
+        "samples": 15,
+        "p50Ms": 35.79999999701977,
+        "p95Ms": 58.900000002235174
+      },
+      "ocr": {
+        "samples": 15,
+        "p50Ms": 703.3000000007451,
+        "p95Ms": 1003.3000000007451
+      },
+      "reconstruction": {
+        "samples": 15,
+        "p50Ms": 0.30000000074505806,
+        "p95Ms": 1.7000000029802322
+      },
+      "interpretation": {
+        "samples": 15,
+        "p50Ms": 0.30000000447034836,
+        "p95Ms": 2.199999999254942
+      },
+      "validation": {
+        "samples": 15,
+        "p50Ms": 0.19999999925494194,
+        "p95Ms": 2.699999999254942
+      },
+      "registration": {
+        "samples": 15,
+        "p50Ms": 2.300000000745058,
+        "p95Ms": 14
+      }
+    },
+    "fullReadSamples": [
+      {
+        "id": "timed-goal",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 398.30000000074506
+      },
+      {
+        "id": "player-builders",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 1032
+      },
+      {
+        "id": "handicap-combination",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 588.8000000007451
+      },
+      {
+        "id": "first-half-corners",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 859.8000000007451
+      },
+      {
+        "id": "mixed-builders",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 773.6000000014901
+      },
+      {
+        "id": "timed-goal",
+        "repeat": 1,
+        "reads": 1,
+        "ms": 267
+      },
+      {
+        "id": "player-builders",
+        "repeat": 1,
+        "reads": 1,
+        "ms": 1054.7000000029802
+      },
+      {
+        "id": "handicap-combination",
+        "repeat": 1,
+        "reads": 1,
+        "ms": 572.1999999992549
+      },
+      {
+        "id": "first-half-corners",
+        "repeat": 1,
+        "reads": 1,
+        "ms": 866
+      },
+      {
+        "id": "mixed-builders",
+        "repeat": 1,
+        "reads": 1,
+        "ms": 757.6999999992549
+      },
+      {
+        "id": "timed-goal",
+        "repeat": 2,
+        "reads": 1,
+        "ms": 263.19999999925494
+      },
+      {
+        "id": "player-builders",
+        "repeat": 2,
+        "reads": 1,
+        "ms": 1055.300000000745
+      },
+      {
+        "id": "handicap-combination",
+        "repeat": 2,
+        "reads": 1,
+        "ms": 588.9000000022352
+      },
+      {
+        "id": "first-half-corners",
+        "repeat": 2,
+        "reads": 1,
+        "ms": 852.3000000007451
+      },
+      {
+        "id": "mixed-builders",
+        "repeat": 2,
+        "reads": 1,
+        "ms": 756.1000000014901
+      },
+      {
+        "id": "injected-missing-odds",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 572.3999999985099
+      },
+      {
+        "id": "injected-unknown-market",
+        "repeat": 0,
+        "reads": 1,
+        "ms": 568.8000000007451
+      }
+    ]
+  },
+  "unitTests": {
+    "total": 379,
+    "passed": 379,
+    "failed": 0,
+    "pending": 0,
+    "todo": 0
+  },
+  "strictLiteralCheck": {
+    "passed": false,
+    "remainingFieldErrors": 4,
+    "unexpectedDifferences": [],
+    "explanation": "Strict matching still fails on four unchanged accent/diaeresis transcriptions. These are not skipped."
+  },
+  "limitations": [
+    "Four literal accent/diaeresis errors remain; strict literal mode must still fail.",
+    "Unknown markets are tentative raw labels requiring review, not a verified bookmaker catalog.",
+    "Participant type cannot always be inferred without a roster; unknown remains unknown.",
+    "Missing odds plus absent/ambiguous block boundaries can still require review of the full OCR text.",
+    "NBA coverage is controlled text/layout only; five real fixtures remain football.",
+    "No deployment, historical data migration or cloud benchmark was performed."
+  ]
+}
