@@ -1,0 +1,446 @@
+{
+  "annotation": "Manual semantic labels; unspecified period is absence of explicit wording, not a claim of full-match settlement rules. Null participant means not applicable. Player identities are expected human annotations, not evidence the engine can verify them. No explicit ticket-level settlement label in these seven images.",
+  "cases": {
+    "timed-goal": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "next-goal",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        }
+      ]
+    },
+    "player-builders": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0].builderMarkets[0]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Nico Paz",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[0].builderMarkets[1]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Matheus Cunha",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[0].builderMarkets[2]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Bruno Fernandes",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[0].builderMarkets[3]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Bryan Mbeumo",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[0].builderMarkets[4]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Anastasios Douvikas",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[0]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Harry Kane",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[1]",
+          "statistic": "shots-on-target",
+          "scope": "player",
+          "participant": "Luis Díaz",
+          "period": "unspecified"
+        }
+      ]
+    },
+    "handicap-combination": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1]",
+          "statistic": "handicap",
+          "scope": "team",
+          "participant": "Club Tijuana",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        }
+      ]
+    },
+    "first-half-corners": {
+      "placement": "unknown",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "corners",
+          "scope": "match",
+          "participant": null,
+          "period": "first-half"
+        },
+        {
+          "path": "selections[1]",
+          "statistic": "corners",
+          "scope": "match",
+          "participant": null,
+          "period": "first-half"
+        },
+        {
+          "path": "selections[2]",
+          "statistic": "corners",
+          "scope": "match",
+          "participant": null,
+          "period": "first-half"
+        }
+      ]
+    },
+    "mixed-builders": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[0]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[1]",
+          "statistic": "both-teams-to-score",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "team",
+          "participant": "FC Porto",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[3]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        }
+      ]
+    },
+    "scorer-builders": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[3]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[4].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[4].builderMarkets[1]",
+          "statistic": "cards",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[4].builderMarkets[2]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[5].builderMarkets[0]",
+          "statistic": "corners",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[5].builderMarkets[1]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[6].builderMarkets[0]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[6].builderMarkets[1]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[6].builderMarkets[2]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "first-half"
+        },
+        {
+          "path": "selections[6].builderMarkets[3]",
+          "statistic": "scorer",
+          "scope": "player",
+          "participant": "Erling Haaland",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[7].builderMarkets[0]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[7].builderMarkets[1]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[7].builderMarkets[2]",
+          "statistic": "corners",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[8].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[8].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        }
+      ]
+    },
+    "eleven-builders": {
+      "placement": "confirmed",
+      "settlement": "unknown",
+      "attributes": [
+        {
+          "path": "selections[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[1].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[2].builderMarkets[2]",
+          "statistic": "shots-on-target",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[3].builderMarkets[0]",
+          "statistic": "both-teams-to-score",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[3].builderMarkets[1]",
+          "statistic": "handicap",
+          "scope": "team",
+          "participant": "Paris Saint-Germain",
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[3].builderMarkets[2]",
+          "statistic": "shots-on-target",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[4]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[5]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[6]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[7]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[8].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[8].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[9].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[9].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[10].builderMarkets[0]",
+          "statistic": "result",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        },
+        {
+          "path": "selections[10].builderMarkets[1]",
+          "statistic": "goals",
+          "scope": "match",
+          "participant": null,
+          "period": "unspecified"
+        }
+      ]
+    }
+  }
+}

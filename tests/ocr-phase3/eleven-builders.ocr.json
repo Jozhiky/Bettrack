@@ -1,0 +1,4227 @@
+{
+  "provenance": "Actual first Tesseract pass on eleven-builders.png; no injected text",
+  "imageSha256": "a40705502ab2cd62555f53496b99e1e6fbd3d785292889c50157491efed29ba2",
+  "text": "Betano\n\n\nCombinada de 11 S/2.00\n\n\n51.53\n\n\nes\n\n\nFC Porto\n\n\n1.57\n\n\nResultado del partido\n\n\nFC Porto\n\n\nPSV Eindhoven\n\n\nHoy 14:00\n\n\n6\n\n\no.\n\n\n5d\n\n\nBet Builder\n\n\n1.23\n\n\nAS Roma\n\n\nHoy 14:00\n\n\nSK Slovan Bratislava\n\n\nO AS Roma\n\n\nResultado del partido\n\n\nO Más de 1.5\n\n\nGoles totales Más/Menos\n\n\n4,59\n\n\nee\n\n\nse\n\n\nBet Builder\n\n\n1.62\n\n\nManchester City\n\n\nHoy 14:00\n\n\nAEK Atenas\n\n\nO Manchester City\n\n\nResultado del partido\n\n\nO Más de 1.5\n\n\nGoles totales Más/Menos\n\n\nO Más de 9.5\n\n\nTiros al Arco\n\n\nee\n\n\n4,9\n\n\no\n\n\nBet Builder\n\n\n2.12\n\n\nParis Saint-Germain\n\n\nHoy 14:00\n\n\nFC Barcelona\n\n\nO\n\n\nSÍ\n\n\nAmbos equipos anotan\n\n\nParis Saint-Germain +2\n\n\nHándicap Resultado del Partido\n\n\nMás de 10.5\n\n\nTiros al Arco\n\n\n._0\n\n\no.\n\n\nInter de Milán\n\n\n1.20\n\n\nse\n\n\nResultado del partido\n\n\nInter de Milan\n\n\nManana 14:00\n\n\nFC Shakhtar Donetsk\n\n\nee\n\n\n6\n\n\n5d\n\n\nReal Betis Balompié\n\n\n1.57\n\n\nResultado del partido\n\n\nReal Betis Balompié\n\n\nManana 14:00\n\n\nFeyenoord Rotterdam\n\n\n._0\n\n\noe\n\n\n1.37\n\n\no\n\n\nClub Brugge KV o Empate\n\n\nDoble oportunidad\n\n\nClub Brugge KV\n\n\nMañana 14:00\n\n\nRC Lens\n\n\nee\n\n\n0.6\n\n\n5d\n\n\nFC Bayern Munchen o Empate\n\n\n1.36\n\n\nDoble oportunidad\n\n\nFC Bayern Munchen\n\n\nArsenal FC\n\n\nManana 14:00\n\n\n._0\n\n\no.\n\n\nBet Builder\n\n\n1.32\n\n\no\n\n\nAston Villa\n\n\nViking FK\n\n\nMañana 14:00\n\n\nO Aston Villa\n\n\nResultado del partido\n\n\nO Más de 1.5\n\n\nGoles totales Más/Menos\n\n\n6\n\n\nee\n\n\nBet Builder\n\n\n1.29\n\n\n5d\n\n\nSporting CP\n\n\nMañana 14:00\n\n\nLinzer ASK\n\n\nO Sporting CP\n\n\nResultado del partido\n\n\nO Más de 1.5\n\n\nGoles totales Más/Menos\n\n\n6\n\n\nee\n\n\nBet Builder\n\n\n1.30\n\n\nAd\n\n\nReal Madrid\n\n\nManana 14:00\n\n\nRB Leipzig\n\n\n© Real Madrid\n\n\nResultado del partido\n\n\nO Más de 1.5\n\n\nGoles totales Más/Menos\n\n\nApuesta\n\n\nS/2.00\n\n\nGanancias potenciales\n\n\n$/103.07\n\n\nCASH OUT S/2.00\n",
+  "lines": [
+    {
+      "text": "Betano\n\n",
+      "confidence": 91,
+      "bbox": {
+        "x0": 99,
+        "y0": 81,
+        "x1": 431,
+        "y1": 156
+      },
+      "words": [
+        {
+          "text": "Betano",
+          "confidence": 91,
+          "bbox": {
+            "x0": 99,
+            "y0": 81,
+            "x1": 431,
+            "y1": 156
+          }
+        }
+      ]
+    },
+    {
+      "text": "Combinada de 11 S/2.00\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 86,
+        "y0": 252,
+        "x1": 542,
+        "y1": 292
+      },
+      "words": [
+        {
+          "text": "Combinada",
+          "confidence": 96,
+          "bbox": {
+            "x0": 86,
+            "y0": 252,
+            "x1": 298,
+            "y1": 286
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 310,
+            "y0": 253,
+            "x1": 357,
+            "y1": 286
+          }
+        },
+        {
+          "text": "11",
+          "confidence": 93,
+          "bbox": {
+            "x0": 370,
+            "y0": 255,
+            "x1": 408,
+            "y1": 285
+          }
+        },
+        {
+          "text": "S/2.00",
+          "confidence": 92,
+          "bbox": {
+            "x0": 428,
+            "y0": 252,
+            "x1": 542,
+            "y1": 292
+          }
+        }
+      ]
+    },
+    {
+      "text": "51.53\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1014,
+        "y0": 265,
+        "x1": 1115,
+        "y1": 296
+      },
+      "words": [
+        {
+          "text": "51.53",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1014,
+            "y0": 265,
+            "x1": 1115,
+            "y1": 296
+          }
+        }
+      ]
+    },
+    {
+      "text": "es\n\n",
+      "confidence": 58,
+      "bbox": {
+        "x0": 96,
+        "y0": 380,
+        "x1": 147,
+        "y1": 430
+      },
+      "words": [
+        {
+          "text": "es",
+          "confidence": 58,
+          "bbox": {
+            "x0": 96,
+            "y0": 380,
+            "x1": 147,
+            "y1": 430
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Porto\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 176,
+        "y0": 383,
+        "x1": 367,
+        "y1": 418
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 94,
+          "bbox": {
+            "x0": 176,
+            "y0": 383,
+            "x1": 230,
+            "y1": 418
+          }
+        },
+        {
+          "text": "Porto",
+          "confidence": 96,
+          "bbox": {
+            "x0": 244,
+            "y0": 383,
+            "x1": 367,
+            "y1": 418
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.57\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 387,
+        "x1": 1088,
+        "y1": 418
+      },
+      "words": [
+        {
+          "text": "1.57",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 387,
+            "x1": 1088,
+            "y1": 418
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 177,
+        "y0": 468,
+        "x1": 602,
+        "y1": 510
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 96,
+          "bbox": {
+            "x0": 177,
+            "y0": 469,
+            "x1": 373,
+            "y1": 502
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 387,
+            "y0": 468,
+            "x1": 446,
+            "y1": 502
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 460,
+            "y0": 469,
+            "x1": 602,
+            "y1": 510
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Porto\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 175,
+        "y0": 543,
+        "x1": 332,
+        "y1": 574
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 93,
+          "bbox": {
+            "x0": 175,
+            "y0": 543,
+            "x1": 220,
+            "y1": 574
+          }
+        },
+        {
+          "text": "Porto",
+          "confidence": 93,
+          "bbox": {
+            "x0": 231,
+            "y0": 543,
+            "x1": 332,
+            "y1": 574
+          }
+        }
+      ]
+    },
+    {
+      "text": "PSV Eindhoven\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 603,
+        "x1": 447,
+        "y1": 635
+      },
+      "words": [
+        {
+          "text": "PSV",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 604,
+            "x1": 246,
+            "y1": 635
+          }
+        },
+        {
+          "text": "Eindhoven",
+          "confidence": 96,
+          "bbox": {
+            "x0": 258,
+            "y0": 603,
+            "x1": 447,
+            "y1": 635
+          }
+        }
+      ]
+    },
+    {
+      "text": "Hoy 14:00\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 936,
+        "y0": 576,
+        "x1": 1113,
+        "y1": 610
+      },
+      "words": [
+        {
+          "text": "Hoy",
+          "confidence": 95,
+          "bbox": {
+            "x0": 936,
+            "y0": 576,
+            "x1": 1002,
+            "y1": 610
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 95,
+          "bbox": {
+            "x0": 1018,
+            "y0": 576,
+            "x1": 1113,
+            "y1": 603
+          }
+        }
+      ]
+    },
+    {
+      "text": "6\n\n",
+      "confidence": 0,
+      "bbox": {
+        "x0": 96,
+        "y0": 769,
+        "x1": 147,
+        "y1": 788
+      },
+      "words": [
+        {
+          "text": "6",
+          "confidence": 0,
+          "bbox": {
+            "x0": 96,
+            "y0": 769,
+            "x1": 147,
+            "y1": 788
+          }
+        }
+      ]
+    },
+    {
+      "text": "o.\n\n",
+      "confidence": 78,
+      "bbox": {
+        "x0": 103,
+        "y0": 749,
+        "x1": 142,
+        "y1": 767
+      },
+      "words": [
+        {
+          "text": "o.",
+          "confidence": 78,
+          "bbox": {
+            "x0": 103,
+            "y0": 749,
+            "x1": 142,
+            "y1": 767
+          }
+        }
+      ]
+    },
+    {
+      "text": "5d\n\n",
+      "confidence": 49,
+      "bbox": {
+        "x0": 112,
+        "y0": 787,
+        "x1": 132,
+        "y1": 799
+      },
+      "words": [
+        {
+          "text": "5d",
+          "confidence": 49,
+          "bbox": {
+            "x0": 112,
+            "y0": 787,
+            "x1": 132,
+            "y1": 799
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 191,
+        "y0": 750,
+        "x1": 440,
+        "y1": 786
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 96,
+          "bbox": {
+            "x0": 191,
+            "y0": 754,
+            "x1": 264,
+            "y1": 786
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 96,
+          "bbox": {
+            "x0": 283,
+            "y0": 750,
+            "x1": 440,
+            "y1": 786
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.23\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1011,
+        "y0": 756,
+        "x1": 1088,
+        "y1": 788
+      },
+      "words": [
+        {
+          "text": "1.23",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1011,
+            "y0": 756,
+            "x1": 1088,
+            "y1": 788
+          }
+        }
+      ]
+    },
+    {
+      "text": "AS Roma\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 173,
+        "y0": 852,
+        "x1": 336,
+        "y1": 883
+      },
+      "words": [
+        {
+          "text": "AS",
+          "confidence": 96,
+          "bbox": {
+            "x0": 173,
+            "y0": 852,
+            "x1": 223,
+            "y1": 883
+          }
+        },
+        {
+          "text": "Roma",
+          "confidence": 96,
+          "bbox": {
+            "x0": 234,
+            "y0": 852,
+            "x1": 336,
+            "y1": 882
+          }
+        }
+      ]
+    },
+    {
+      "text": "Hoy 14:00\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 936,
+        "y0": 885,
+        "x1": 1113,
+        "y1": 918
+      },
+      "words": [
+        {
+          "text": "Hoy",
+          "confidence": 96,
+          "bbox": {
+            "x0": 936,
+            "y0": 885,
+            "x1": 1003,
+            "y1": 918
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 885,
+            "x1": 1113,
+            "y1": 911
+          }
+        }
+      ]
+    },
+    {
+      "text": "SK Slovan Bratislava\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 174,
+        "y0": 911,
+        "x1": 540,
+        "y1": 944
+      },
+      "words": [
+        {
+          "text": "SK",
+          "confidence": 93,
+          "bbox": {
+            "x0": 174,
+            "y0": 912,
+            "x1": 220,
+            "y1": 944
+          }
+        },
+        {
+          "text": "Slovan",
+          "confidence": 91,
+          "bbox": {
+            "x0": 231,
+            "y0": 911,
+            "x1": 349,
+            "y1": 944
+          }
+        },
+        {
+          "text": "Bratislava",
+          "confidence": 96,
+          "bbox": {
+            "x0": 363,
+            "y0": 911,
+            "x1": 540,
+            "y1": 943
+          }
+        }
+      ]
+    },
+    {
+      "text": "O AS Roma\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 1022,
+        "x1": 431,
+        "y1": 1059
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 1022,
+            "x1": 205,
+            "y1": 1053
+          }
+        },
+        {
+          "text": "AS",
+          "confidence": 95,
+          "bbox": {
+            "x0": 234,
+            "y0": 1024,
+            "x1": 296,
+            "y1": 1059
+          }
+        },
+        {
+          "text": "Roma",
+          "confidence": 96,
+          "bbox": {
+            "x0": 309,
+            "y0": 1024,
+            "x1": 431,
+            "y1": 1059
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 238,
+        "y0": 1089,
+        "x1": 663,
+        "y1": 1130
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 95,
+          "bbox": {
+            "x0": 238,
+            "y0": 1089,
+            "x1": 434,
+            "y1": 1122
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 448,
+            "y0": 1089,
+            "x1": 507,
+            "y1": 1122
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 521,
+            "y0": 1089,
+            "x1": 663,
+            "y1": 1130
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 1.5\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 1203,
+        "x1": 468,
+        "y1": 1242
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 94,
+          "bbox": {
+            "x0": 175,
+            "y0": 1205,
+            "x1": 205,
+            "y1": 1236
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 236,
+            "y0": 1203,
+            "x1": 325,
+            "y1": 1242
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 1204,
+            "x1": 393,
+            "y1": 1242
+          }
+        },
+        {
+          "text": "1.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 407,
+            "y0": 1207,
+            "x1": 468,
+            "y1": 1242
+          }
+        }
+      ]
+    },
+    {
+      "text": "Goles totales Más/Menos\n\n",
+      "confidence": 92,
+      "bbox": {
+        "x0": 237,
+        "y0": 1271,
+        "x1": 736,
+        "y1": 1313
+      },
+      "words": [
+        {
+          "text": "Goles",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 1272,
+            "x1": 345,
+            "y1": 1305
+          }
+        },
+        {
+          "text": "totales",
+          "confidence": 92,
+          "bbox": {
+            "x0": 359,
+            "y0": 1272,
+            "x1": 494,
+            "y1": 1305
+          }
+        },
+        {
+          "text": "Más/Menos",
+          "confidence": 89,
+          "bbox": {
+            "x0": 509,
+            "y0": 1271,
+            "x1": 736,
+            "y1": 1313
+          }
+        }
+      ]
+    },
+    {
+      "text": "4,59\n\n",
+      "confidence": 3,
+      "bbox": {
+        "x0": 96,
+        "y0": 1471,
+        "x1": 147,
+        "y1": 1489
+      },
+      "words": [
+        {
+          "text": "4,59",
+          "confidence": 3,
+          "bbox": {
+            "x0": 96,
+            "y0": 1471,
+            "x1": 147,
+            "y1": 1489
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 82,
+      "bbox": {
+        "x0": 102,
+        "y0": 1451,
+        "x1": 142,
+        "y1": 1468
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 82,
+          "bbox": {
+            "x0": 102,
+            "y0": 1451,
+            "x1": 142,
+            "y1": 1468
+          }
+        }
+      ]
+    },
+    {
+      "text": "se\n\n",
+      "confidence": 38,
+      "bbox": {
+        "x0": 112,
+        "y0": 1489,
+        "x1": 132,
+        "y1": 1501
+      },
+      "words": [
+        {
+          "text": "se",
+          "confidence": 38,
+          "bbox": {
+            "x0": 112,
+            "y0": 1489,
+            "x1": 132,
+            "y1": 1501
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 191,
+        "y0": 1452,
+        "x1": 440,
+        "y1": 1488
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 96,
+          "bbox": {
+            "x0": 191,
+            "y0": 1456,
+            "x1": 264,
+            "y1": 1488
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 95,
+          "bbox": {
+            "x0": 283,
+            "y0": 1452,
+            "x1": 440,
+            "y1": 1488
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.62\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 1458,
+        "x1": 1088,
+        "y1": 1489
+      },
+      "words": [
+        {
+          "text": "1.62",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 1458,
+            "x1": 1088,
+            "y1": 1489
+          }
+        }
+      ]
+    },
+    {
+      "text": "Manchester City\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 174,
+        "y0": 1552,
+        "x1": 471,
+        "y1": 1591
+      },
+      "words": [
+        {
+          "text": "Manchester",
+          "confidence": 96,
+          "bbox": {
+            "x0": 174,
+            "y0": 1552,
+            "x1": 392,
+            "y1": 1584
+          }
+        },
+        {
+          "text": "City",
+          "confidence": 96,
+          "bbox": {
+            "x0": 401,
+            "y0": 1553,
+            "x1": 471,
+            "y1": 1591
+          }
+        }
+      ]
+    },
+    {
+      "text": "Hoy 14:00\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 936,
+        "y0": 1586,
+        "x1": 1113,
+        "y1": 1620
+      },
+      "words": [
+        {
+          "text": "Hoy",
+          "confidence": 95,
+          "bbox": {
+            "x0": 936,
+            "y0": 1587,
+            "x1": 1003,
+            "y1": 1620
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 1586,
+            "x1": 1113,
+            "y1": 1613
+          }
+        }
+      ]
+    },
+    {
+      "text": "AEK Atenas\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 173,
+        "y0": 1614,
+        "x1": 386,
+        "y1": 1645
+      },
+      "words": [
+        {
+          "text": "AEK",
+          "confidence": 91,
+          "bbox": {
+            "x0": 173,
+            "y0": 1614,
+            "x1": 248,
+            "y1": 1644
+          }
+        },
+        {
+          "text": "Atenas",
+          "confidence": 96,
+          "bbox": {
+            "x0": 258,
+            "y0": 1615,
+            "x1": 386,
+            "y1": 1645
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Manchester City\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 1722,
+        "x1": 600,
+        "y1": 1769
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 1724,
+            "x1": 205,
+            "y1": 1754
+          }
+        },
+        {
+          "text": "Manchester",
+          "confidence": 96,
+          "bbox": {
+            "x0": 235,
+            "y0": 1722,
+            "x1": 500,
+            "y1": 1761
+          }
+        },
+        {
+          "text": "City",
+          "confidence": 96,
+          "bbox": {
+            "x0": 511,
+            "y0": 1722,
+            "x1": 600,
+            "y1": 1769
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 238,
+        "y0": 1790,
+        "x1": 663,
+        "y1": 1832
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 96,
+          "bbox": {
+            "x0": 238,
+            "y0": 1791,
+            "x1": 434,
+            "y1": 1824
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 448,
+            "y0": 1790,
+            "x1": 507,
+            "y1": 1824
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 521,
+            "y0": 1791,
+            "x1": 663,
+            "y1": 1832
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 1.5\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 1905,
+        "x1": 468,
+        "y1": 1944
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 94,
+          "bbox": {
+            "x0": 175,
+            "y0": 1907,
+            "x1": 205,
+            "y1": 1937
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 1905,
+            "x1": 325,
+            "y1": 1944
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 1905,
+            "x1": 393,
+            "y1": 1944
+          }
+        },
+        {
+          "text": "1.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 407,
+            "y0": 1908,
+            "x1": 468,
+            "y1": 1944
+          }
+        }
+      ]
+    },
+    {
+      "text": "Goles totales Más/Menos\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 237,
+        "y0": 1973,
+        "x1": 736,
+        "y1": 2015
+      },
+      "words": [
+        {
+          "text": "Goles",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 1974,
+            "x1": 345,
+            "y1": 2007
+          }
+        },
+        {
+          "text": "totales",
+          "confidence": 92,
+          "bbox": {
+            "x0": 359,
+            "y0": 1974,
+            "x1": 494,
+            "y1": 2007
+          }
+        },
+        {
+          "text": "Más/Menos",
+          "confidence": 91,
+          "bbox": {
+            "x0": 509,
+            "y0": 1973,
+            "x1": 736,
+            "y1": 2015
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 9.5\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 2088,
+        "x1": 468,
+        "y1": 2127
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 2090,
+            "x1": 205,
+            "y1": 2121
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 2088,
+            "x1": 325,
+            "y1": 2127
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 2088,
+            "x1": 393,
+            "y1": 2127
+          }
+        },
+        {
+          "text": "9.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 405,
+            "y0": 2092,
+            "x1": 468,
+            "y1": 2127
+          }
+        }
+      ]
+    },
+    {
+      "text": "Tiros al Arco\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 235,
+        "y0": 2157,
+        "x1": 479,
+        "y1": 2190
+      },
+      "words": [
+        {
+          "text": "Tiros",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 2157,
+            "x1": 332,
+            "y1": 2190
+          }
+        },
+        {
+          "text": "al",
+          "confidence": 96,
+          "bbox": {
+            "x0": 346,
+            "y0": 2157,
+            "x1": 377,
+            "y1": 2190
+          }
+        },
+        {
+          "text": "Arco",
+          "confidence": 96,
+          "bbox": {
+            "x0": 390,
+            "y0": 2160,
+            "x1": 479,
+            "y1": 2190
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 82,
+      "bbox": {
+        "x0": 103,
+        "y0": 2336,
+        "x1": 142,
+        "y1": 2353
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 82,
+          "bbox": {
+            "x0": 103,
+            "y0": 2336,
+            "x1": 142,
+            "y1": 2353
+          }
+        }
+      ]
+    },
+    {
+      "text": "4,9\n\n",
+      "confidence": 57,
+      "bbox": {
+        "x0": 96,
+        "y0": 2356,
+        "x1": 147,
+        "y1": 2374
+      },
+      "words": [
+        {
+          "text": "4,9",
+          "confidence": 57,
+          "bbox": {
+            "x0": 96,
+            "y0": 2356,
+            "x1": 147,
+            "y1": 2374
+          }
+        }
+      ]
+    },
+    {
+      "text": "o\n\n",
+      "confidence": 68,
+      "bbox": {
+        "x0": 113,
+        "y0": 2373,
+        "x1": 132,
+        "y1": 2386
+      },
+      "words": [
+        {
+          "text": "o",
+          "confidence": 68,
+          "bbox": {
+            "x0": 113,
+            "y0": 2373,
+            "x1": 132,
+            "y1": 2386
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 191,
+        "y0": 2337,
+        "x1": 440,
+        "y1": 2372
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 96,
+          "bbox": {
+            "x0": 191,
+            "y0": 2340,
+            "x1": 264,
+            "y1": 2372
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 96,
+          "bbox": {
+            "x0": 283,
+            "y0": 2337,
+            "x1": 440,
+            "y1": 2372
+          }
+        }
+      ]
+    },
+    {
+      "text": "2.12\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 1011,
+        "y0": 2343,
+        "x1": 1088,
+        "y1": 2374
+      },
+      "words": [
+        {
+          "text": "2.12",
+          "confidence": 94,
+          "bbox": {
+            "x0": 1011,
+            "y0": 2343,
+            "x1": 1088,
+            "y1": 2374
+          }
+        }
+      ]
+    },
+    {
+      "text": "Paris Saint-Germain\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 2437,
+        "x1": 530,
+        "y1": 2469
+      },
+      "words": [
+        {
+          "text": "Paris",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 2438,
+            "x1": 262,
+            "y1": 2469
+          }
+        },
+        {
+          "text": "Saint-Germain",
+          "confidence": 96,
+          "bbox": {
+            "x0": 273,
+            "y0": 2437,
+            "x1": 530,
+            "y1": 2469
+          }
+        }
+      ]
+    },
+    {
+      "text": "Hoy 14:00\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 936,
+        "y0": 2471,
+        "x1": 1113,
+        "y1": 2504
+      },
+      "words": [
+        {
+          "text": "Hoy",
+          "confidence": 96,
+          "bbox": {
+            "x0": 936,
+            "y0": 2471,
+            "x1": 1002,
+            "y1": 2504
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 2471,
+            "x1": 1113,
+            "y1": 2498
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Barcelona\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 2498,
+        "x1": 412,
+        "y1": 2530
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 2499,
+            "x1": 220,
+            "y1": 2530
+          }
+        },
+        {
+          "text": "Barcelona",
+          "confidence": 96,
+          "bbox": {
+            "x0": 231,
+            "y0": 2498,
+            "x1": 412,
+            "y1": 2530
+          }
+        }
+      ]
+    },
+    {
+      "text": "O\n\n",
+      "confidence": 88,
+      "bbox": {
+        "x0": 175,
+        "y0": 2608,
+        "x1": 205,
+        "y1": 2639
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 88,
+          "bbox": {
+            "x0": 175,
+            "y0": 2608,
+            "x1": 205,
+            "y1": 2639
+          }
+        }
+      ]
+    },
+    {
+      "text": "SÍ\n\n",
+      "confidence": 89,
+      "bbox": {
+        "x0": 235,
+        "y0": 2607,
+        "x1": 274,
+        "y1": 2645
+      },
+      "words": [
+        {
+          "text": "SÍ",
+          "confidence": 89,
+          "bbox": {
+            "x0": 235,
+            "y0": 2607,
+            "x1": 274,
+            "y1": 2645
+          }
+        }
+      ]
+    },
+    {
+      "text": "Ambos equipos anotan\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 235,
+        "y0": 2675,
+        "x1": 688,
+        "y1": 2716
+      },
+      "words": [
+        {
+          "text": "Ambos",
+          "confidence": 96,
+          "bbox": {
+            "x0": 235,
+            "y0": 2675,
+            "x1": 372,
+            "y1": 2709
+          }
+        },
+        {
+          "text": "equipos",
+          "confidence": 96,
+          "bbox": {
+            "x0": 385,
+            "y0": 2676,
+            "x1": 540,
+            "y1": 2716
+          }
+        },
+        {
+          "text": "anotan",
+          "confidence": 96,
+          "bbox": {
+            "x0": 554,
+            "y0": 2679,
+            "x1": 688,
+            "y1": 2709
+          }
+        }
+      ]
+    },
+    {
+      "text": "Paris Saint-Germain +2\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 237,
+        "y0": 2790,
+        "x1": 741,
+        "y1": 2828
+      },
+      "words": [
+        {
+          "text": "Paris",
+          "confidence": 94,
+          "bbox": {
+            "x0": 237,
+            "y0": 2790,
+            "x1": 345,
+            "y1": 2828
+          }
+        },
+        {
+          "text": "Saint-Germain",
+          "confidence": 94,
+          "bbox": {
+            "x0": 358,
+            "y0": 2790,
+            "x1": 675,
+            "y1": 2828
+          }
+        },
+        {
+          "text": "+2",
+          "confidence": 96,
+          "bbox": {
+            "x0": 689,
+            "y0": 2793,
+            "x1": 741,
+            "y1": 2827
+          }
+        }
+      ]
+    },
+    {
+      "text": "Hándicap Resultado del Partido\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 238,
+        "y0": 2858,
+        "x1": 859,
+        "y1": 2900
+      },
+      "words": [
+        {
+          "text": "Hándicap",
+          "confidence": 92,
+          "bbox": {
+            "x0": 238,
+            "y0": 2858,
+            "x1": 417,
+            "y1": 2900
+          }
+        },
+        {
+          "text": "Resultado",
+          "confidence": 96,
+          "bbox": {
+            "x0": 434,
+            "y0": 2858,
+            "x1": 629,
+            "y1": 2892
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 644,
+            "y0": 2858,
+            "x1": 702,
+            "y1": 2892
+          }
+        },
+        {
+          "text": "Partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 719,
+            "y0": 2859,
+            "x1": 859,
+            "y1": 2892
+          }
+        }
+      ]
+    },
+    {
+      "text": "Más de 10.5\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 235,
+        "y0": 2973,
+        "x1": 494,
+        "y1": 3011
+      },
+      "words": [
+        {
+          "text": "Más",
+          "confidence": 96,
+          "bbox": {
+            "x0": 235,
+            "y0": 2973,
+            "x1": 325,
+            "y1": 3011
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 2973,
+            "x1": 393,
+            "y1": 3011
+          }
+        },
+        {
+          "text": "10.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 407,
+            "y0": 2976,
+            "x1": 494,
+            "y1": 3011
+          }
+        }
+      ]
+    },
+    {
+      "text": "Tiros al Arco\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 235,
+        "y0": 3041,
+        "x1": 479,
+        "y1": 3075
+      },
+      "words": [
+        {
+          "text": "Tiros",
+          "confidence": 96,
+          "bbox": {
+            "x0": 235,
+            "y0": 3041,
+            "x1": 332,
+            "y1": 3075
+          }
+        },
+        {
+          "text": "al",
+          "confidence": 96,
+          "bbox": {
+            "x0": 346,
+            "y0": 3041,
+            "x1": 377,
+            "y1": 3075
+          }
+        },
+        {
+          "text": "Arco",
+          "confidence": 96,
+          "bbox": {
+            "x0": 390,
+            "y0": 3045,
+            "x1": 479,
+            "y1": 3075
+          }
+        }
+      ]
+    },
+    {
+      "text": "._0\n\n",
+      "confidence": 12,
+      "bbox": {
+        "x0": 96,
+        "y0": 3240,
+        "x1": 147,
+        "y1": 3259
+      },
+      "words": [
+        {
+          "text": "._0",
+          "confidence": 12,
+          "bbox": {
+            "x0": 96,
+            "y0": 3240,
+            "x1": 147,
+            "y1": 3259
+          }
+        }
+      ]
+    },
+    {
+      "text": "o.\n\n",
+      "confidence": 78,
+      "bbox": {
+        "x0": 103,
+        "y0": 3220,
+        "x1": 142,
+        "y1": 3238
+      },
+      "words": [
+        {
+          "text": "o.",
+          "confidence": 78,
+          "bbox": {
+            "x0": 103,
+            "y0": 3220,
+            "x1": 142,
+            "y1": 3238
+          }
+        }
+      ]
+    },
+    {
+      "text": "Inter de Milán\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 176,
+        "y0": 3220,
+        "x1": 485,
+        "y1": 3259
+      },
+      "words": [
+        {
+          "text": "Inter",
+          "confidence": 87,
+          "bbox": {
+            "x0": 176,
+            "y0": 3224,
+            "x1": 283,
+            "y1": 3259
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 95,
+          "bbox": {
+            "x0": 295,
+            "y0": 3221,
+            "x1": 350,
+            "y1": 3259
+          }
+        },
+        {
+          "text": "Milán",
+          "confidence": 96,
+          "bbox": {
+            "x0": 364,
+            "y0": 3220,
+            "x1": 485,
+            "y1": 3259
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.20\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 3228,
+        "x1": 1088,
+        "y1": 3259
+      },
+      "words": [
+        {
+          "text": "1.20",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 3228,
+            "x1": 1088,
+            "y1": 3259
+          }
+        }
+      ]
+    },
+    {
+      "text": "se\n\n",
+      "confidence": 52,
+      "bbox": {
+        "x0": 112,
+        "y0": 3258,
+        "x1": 132,
+        "y1": 3271
+      },
+      "words": [
+        {
+          "text": "se",
+          "confidence": 52,
+          "bbox": {
+            "x0": 112,
+            "y0": 3258,
+            "x1": 132,
+            "y1": 3271
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 177,
+        "y0": 3309,
+        "x1": 602,
+        "y1": 3350
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 96,
+          "bbox": {
+            "x0": 177,
+            "y0": 3309,
+            "x1": 373,
+            "y1": 3343
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 387,
+            "y0": 3309,
+            "x1": 446,
+            "y1": 3343
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 95,
+          "bbox": {
+            "x0": 460,
+            "y0": 3309,
+            "x1": 602,
+            "y1": 3350
+          }
+        }
+      ]
+    },
+    {
+      "text": "Inter de Milan\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 3382,
+        "x1": 427,
+        "y1": 3415
+      },
+      "words": [
+        {
+          "text": "Inter",
+          "confidence": 94,
+          "bbox": {
+            "x0": 175,
+            "y0": 3384,
+            "x1": 261,
+            "y1": 3415
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 272,
+            "y0": 3382,
+            "x1": 317,
+            "y1": 3415
+          }
+        },
+        {
+          "text": "Milan",
+          "confidence": 95,
+          "bbox": {
+            "x0": 329,
+            "y0": 3382,
+            "x1": 427,
+            "y1": 3415
+          }
+        }
+      ]
+    },
+    {
+      "text": "Manana 14:00\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 862,
+        "y0": 3415,
+        "x1": 1113,
+        "y1": 3444
+      },
+      "words": [
+        {
+          "text": "Manana",
+          "confidence": 90,
+          "bbox": {
+            "x0": 862,
+            "y0": 3415,
+            "x1": 1000,
+            "y1": 3444
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 3417,
+            "x1": 1113,
+            "y1": 3444
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Shakhtar Donetsk\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 3443,
+        "x1": 556,
+        "y1": 3476
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 3445,
+            "x1": 220,
+            "y1": 3476
+          }
+        },
+        {
+          "text": "Shakhtar",
+          "confidence": 95,
+          "bbox": {
+            "x0": 230,
+            "y0": 3443,
+            "x1": 393,
+            "y1": 3476
+          }
+        },
+        {
+          "text": "Donetsk",
+          "confidence": 96,
+          "bbox": {
+            "x0": 405,
+            "y0": 3443,
+            "x1": 556,
+            "y1": 3476
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 83,
+      "bbox": {
+        "x0": 102,
+        "y0": 3590,
+        "x1": 142,
+        "y1": 3607
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 83,
+          "bbox": {
+            "x0": 102,
+            "y0": 3590,
+            "x1": 142,
+            "y1": 3607
+          }
+        }
+      ]
+    },
+    {
+      "text": "6\n\n",
+      "confidence": 0,
+      "bbox": {
+        "x0": 96,
+        "y0": 3610,
+        "x1": 147,
+        "y1": 3628
+      },
+      "words": [
+        {
+          "text": "6",
+          "confidence": 0,
+          "bbox": {
+            "x0": 96,
+            "y0": 3610,
+            "x1": 147,
+            "y1": 3628
+          }
+        }
+      ]
+    },
+    {
+      "text": "5d\n\n",
+      "confidence": 41,
+      "bbox": {
+        "x0": 112,
+        "y0": 3628,
+        "x1": 132,
+        "y1": 3640
+      },
+      "words": [
+        {
+          "text": "5d",
+          "confidence": 41,
+          "bbox": {
+            "x0": 112,
+            "y0": 3628,
+            "x1": 132,
+            "y1": 3640
+          }
+        }
+      ]
+    },
+    {
+      "text": "Real Betis Balompié\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 176,
+        "y0": 3590,
+        "x1": 620,
+        "y1": 3637
+      },
+      "words": [
+        {
+          "text": "Real",
+          "confidence": 96,
+          "bbox": {
+            "x0": 176,
+            "y0": 3590,
+            "x1": 272,
+            "y1": 3628
+          }
+        },
+        {
+          "text": "Betis",
+          "confidence": 96,
+          "bbox": {
+            "x0": 286,
+            "y0": 3590,
+            "x1": 399,
+            "y1": 3628
+          }
+        },
+        {
+          "text": "Balompié",
+          "confidence": 96,
+          "bbox": {
+            "x0": 413,
+            "y0": 3590,
+            "x1": 620,
+            "y1": 3637
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.57\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 3597,
+        "x1": 1088,
+        "y1": 3629
+      },
+      "words": [
+        {
+          "text": "1.57",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 3597,
+            "x1": 1088,
+            "y1": 3629
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 177,
+        "y0": 3679,
+        "x1": 602,
+        "y1": 3720
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 94,
+          "bbox": {
+            "x0": 177,
+            "y0": 3679,
+            "x1": 373,
+            "y1": 3712
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 387,
+            "y0": 3679,
+            "x1": 446,
+            "y1": 3712
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 460,
+            "y0": 3679,
+            "x1": 602,
+            "y1": 3720
+          }
+        }
+      ]
+    },
+    {
+      "text": "Real Betis Balompié\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 3752,
+        "x1": 539,
+        "y1": 3790
+      },
+      "words": [
+        {
+          "text": "Real",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 3752,
+            "x1": 254,
+            "y1": 3784
+          }
+        },
+        {
+          "text": "Betis",
+          "confidence": 96,
+          "bbox": {
+            "x0": 265,
+            "y0": 3753,
+            "x1": 356,
+            "y1": 3784
+          }
+        },
+        {
+          "text": "Balompié",
+          "confidence": 96,
+          "bbox": {
+            "x0": 368,
+            "y0": 3752,
+            "x1": 539,
+            "y1": 3790
+          }
+        }
+      ]
+    },
+    {
+      "text": "Manana 14:00\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 862,
+        "y0": 3786,
+        "x1": 1113,
+        "y1": 3813
+      },
+      "words": [
+        {
+          "text": "Manana",
+          "confidence": 92,
+          "bbox": {
+            "x0": 862,
+            "y0": 3787,
+            "x1": 1000,
+            "y1": 3813
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 3786,
+            "x1": 1113,
+            "y1": 3813
+          }
+        }
+      ]
+    },
+    {
+      "text": "Feyenoord Rotterdam\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 3812,
+        "x1": 579,
+        "y1": 3852
+      },
+      "words": [
+        {
+          "text": "Feyenoord",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 3813,
+            "x1": 369,
+            "y1": 3852
+          }
+        },
+        {
+          "text": "Rotterdam",
+          "confidence": 96,
+          "bbox": {
+            "x0": 383,
+            "y0": 3812,
+            "x1": 579,
+            "y1": 3845
+          }
+        }
+      ]
+    },
+    {
+      "text": "._0\n\n",
+      "confidence": 18,
+      "bbox": {
+        "x0": 96,
+        "y0": 3979,
+        "x1": 147,
+        "y1": 3998
+      },
+      "words": [
+        {
+          "text": "._0",
+          "confidence": 18,
+          "bbox": {
+            "x0": 96,
+            "y0": 3979,
+            "x1": 147,
+            "y1": 3998
+          }
+        }
+      ]
+    },
+    {
+      "text": "oe\n\n",
+      "confidence": 75,
+      "bbox": {
+        "x0": 103,
+        "y0": 3959,
+        "x1": 142,
+        "y1": 3977
+      },
+      "words": [
+        {
+          "text": "oe",
+          "confidence": 75,
+          "bbox": {
+            "x0": 103,
+            "y0": 3959,
+            "x1": 142,
+            "y1": 3977
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.37\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 1012,
+        "y0": 3966,
+        "x1": 1088,
+        "y1": 3998
+      },
+      "words": [
+        {
+          "text": "1.37",
+          "confidence": 95,
+          "bbox": {
+            "x0": 1012,
+            "y0": 3966,
+            "x1": 1088,
+            "y1": 3998
+          }
+        }
+      ]
+    },
+    {
+      "text": "o\n\n",
+      "confidence": 64,
+      "bbox": {
+        "x0": 112,
+        "y0": 3997,
+        "x1": 132,
+        "y1": 4010
+      },
+      "words": [
+        {
+          "text": "o",
+          "confidence": 64,
+          "bbox": {
+            "x0": 112,
+            "y0": 3997,
+            "x1": 132,
+            "y1": 4010
+          }
+        }
+      ]
+    },
+    {
+      "text": "Club Brugge KV o Empate\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 174,
+        "y0": 3960,
+        "x1": 749,
+        "y1": 4007
+      },
+      "words": [
+        {
+          "text": "Club",
+          "confidence": 92,
+          "bbox": {
+            "x0": 174,
+            "y0": 3960,
+            "x1": 274,
+            "y1": 3998
+          }
+        },
+        {
+          "text": "Brugge",
+          "confidence": 92,
+          "bbox": {
+            "x0": 289,
+            "y0": 3963,
+            "x1": 448,
+            "y1": 4007
+          }
+        },
+        {
+          "text": "KV",
+          "confidence": 96,
+          "bbox": {
+            "x0": 463,
+            "y0": 3963,
+            "x1": 528,
+            "y1": 3997
+          }
+        },
+        {
+          "text": "o",
+          "confidence": 96,
+          "bbox": {
+            "x0": 539,
+            "y0": 3970,
+            "x1": 566,
+            "y1": 3998
+          }
+        },
+        {
+          "text": "Empate",
+          "confidence": 96,
+          "bbox": {
+            "x0": 581,
+            "y0": 3963,
+            "x1": 749,
+            "y1": 4007
+          }
+        }
+      ]
+    },
+    {
+      "text": "Doble oportunidad\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 177,
+        "y0": 4048,
+        "x1": 549,
+        "y1": 4089
+      },
+      "words": [
+        {
+          "text": "Doble",
+          "confidence": 95,
+          "bbox": {
+            "x0": 177,
+            "y0": 4048,
+            "x1": 290,
+            "y1": 4082
+          }
+        },
+        {
+          "text": "oportunidad",
+          "confidence": 95,
+          "bbox": {
+            "x0": 305,
+            "y0": 4048,
+            "x1": 549,
+            "y1": 4089
+          }
+        }
+      ]
+    },
+    {
+      "text": "Club Brugge KV\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 174,
+        "y0": 4121,
+        "x1": 463,
+        "y1": 4160
+      },
+      "words": [
+        {
+          "text": "Club",
+          "confidence": 92,
+          "bbox": {
+            "x0": 174,
+            "y0": 4121,
+            "x1": 255,
+            "y1": 4154
+          }
+        },
+        {
+          "text": "Brugge",
+          "confidence": 92,
+          "bbox": {
+            "x0": 268,
+            "y0": 4123,
+            "x1": 400,
+            "y1": 4160
+          }
+        },
+        {
+          "text": "KV",
+          "confidence": 96,
+          "bbox": {
+            "x0": 413,
+            "y0": 4123,
+            "x1": 463,
+            "y1": 4153
+          }
+        }
+      ]
+    },
+    {
+      "text": "Mañana 14:00\n\n",
+      "confidence": 87,
+      "bbox": {
+        "x0": 862,
+        "y0": 4154,
+        "x1": 1113,
+        "y1": 4183
+      },
+      "words": [
+        {
+          "text": "Mañana",
+          "confidence": 78,
+          "bbox": {
+            "x0": 862,
+            "y0": 4154,
+            "x1": 1000,
+            "y1": 4183
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1019,
+            "y0": 4156,
+            "x1": 1113,
+            "y1": 4183
+          }
+        }
+      ]
+    },
+    {
+      "text": "RC Lens\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 4184,
+        "x1": 318,
+        "y1": 4215
+      },
+      "words": [
+        {
+          "text": "RC",
+          "confidence": 94,
+          "bbox": {
+            "x0": 175,
+            "y0": 4184,
+            "x1": 223,
+            "y1": 4215
+          }
+        },
+        {
+          "text": "Lens",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 4184,
+            "x1": 318,
+            "y1": 4215
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 85,
+      "bbox": {
+        "x0": 103,
+        "y0": 4329,
+        "x1": 142,
+        "y1": 4346
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 85,
+          "bbox": {
+            "x0": 103,
+            "y0": 4329,
+            "x1": 142,
+            "y1": 4346
+          }
+        }
+      ]
+    },
+    {
+      "text": "0.6\n\n",
+      "confidence": 28,
+      "bbox": {
+        "x0": 96,
+        "y0": 4349,
+        "x1": 147,
+        "y1": 4367
+      },
+      "words": [
+        {
+          "text": "0.6",
+          "confidence": 28,
+          "bbox": {
+            "x0": 96,
+            "y0": 4349,
+            "x1": 147,
+            "y1": 4367
+          }
+        }
+      ]
+    },
+    {
+      "text": "5d\n\n",
+      "confidence": 38,
+      "bbox": {
+        "x0": 112,
+        "y0": 4367,
+        "x1": 132,
+        "y1": 4379
+      },
+      "words": [
+        {
+          "text": "5d",
+          "confidence": 38,
+          "bbox": {
+            "x0": 112,
+            "y0": 4367,
+            "x1": 132,
+            "y1": 4379
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Bayern Munchen o Empate\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 176,
+        "y0": 4329,
+        "x1": 837,
+        "y1": 4376
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 96,
+          "bbox": {
+            "x0": 176,
+            "y0": 4332,
+            "x1": 230,
+            "y1": 4367
+          }
+        },
+        {
+          "text": "Bayern",
+          "confidence": 92,
+          "bbox": {
+            "x0": 244,
+            "y0": 4332,
+            "x1": 397,
+            "y1": 4376
+          }
+        },
+        {
+          "text": "Munchen",
+          "confidence": 92,
+          "bbox": {
+            "x0": 412,
+            "y0": 4329,
+            "x1": 614,
+            "y1": 4367
+          }
+        },
+        {
+          "text": "o",
+          "confidence": 96,
+          "bbox": {
+            "x0": 628,
+            "y0": 4339,
+            "x1": 654,
+            "y1": 4367
+          }
+        },
+        {
+          "text": "Empate",
+          "confidence": 96,
+          "bbox": {
+            "x0": 669,
+            "y0": 4332,
+            "x1": 837,
+            "y1": 4376
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.36\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 4336,
+        "x1": 1088,
+        "y1": 4368
+      },
+      "words": [
+        {
+          "text": "1.36",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 4336,
+            "x1": 1088,
+            "y1": 4368
+          }
+        }
+      ]
+    },
+    {
+      "text": "Doble oportunidad\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 177,
+        "y0": 4418,
+        "x1": 549,
+        "y1": 4459
+      },
+      "words": [
+        {
+          "text": "Doble",
+          "confidence": 96,
+          "bbox": {
+            "x0": 177,
+            "y0": 4418,
+            "x1": 290,
+            "y1": 4451
+          }
+        },
+        {
+          "text": "oportunidad",
+          "confidence": 96,
+          "bbox": {
+            "x0": 305,
+            "y0": 4418,
+            "x1": 549,
+            "y1": 4459
+          }
+        }
+      ]
+    },
+    {
+      "text": "FC Bayern Munchen\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 175,
+        "y0": 4491,
+        "x1": 537,
+        "y1": 4530
+      },
+      "words": [
+        {
+          "text": "FC",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 4492,
+            "x1": 220,
+            "y1": 4523
+          }
+        },
+        {
+          "text": "Bayern",
+          "confidence": 93,
+          "bbox": {
+            "x0": 231,
+            "y0": 4492,
+            "x1": 357,
+            "y1": 4530
+          }
+        },
+        {
+          "text": "Munchen",
+          "confidence": 91,
+          "bbox": {
+            "x0": 370,
+            "y0": 4491,
+            "x1": 537,
+            "y1": 4523
+          }
+        }
+      ]
+    },
+    {
+      "text": "Arsenal FC\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 173,
+        "y0": 4552,
+        "x1": 369,
+        "y1": 4584
+      },
+      "words": [
+        {
+          "text": "Arsenal",
+          "confidence": 96,
+          "bbox": {
+            "x0": 173,
+            "y0": 4552,
+            "x1": 312,
+            "y1": 4584
+          }
+        },
+        {
+          "text": "FC",
+          "confidence": 96,
+          "bbox": {
+            "x0": 324,
+            "y0": 4553,
+            "x1": 369,
+            "y1": 4584
+          }
+        }
+      ]
+    },
+    {
+      "text": "Manana 14:00\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 862,
+        "y0": 4525,
+        "x1": 1113,
+        "y1": 4552
+      },
+      "words": [
+        {
+          "text": "Manana",
+          "confidence": 92,
+          "bbox": {
+            "x0": 862,
+            "y0": 4526,
+            "x1": 1000,
+            "y1": 4552
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 95,
+          "bbox": {
+            "x0": 1019,
+            "y0": 4525,
+            "x1": 1113,
+            "y1": 4552
+          }
+        }
+      ]
+    },
+    {
+      "text": "._0\n\n",
+      "confidence": 12,
+      "bbox": {
+        "x0": 96,
+        "y0": 4718,
+        "x1": 147,
+        "y1": 4737
+      },
+      "words": [
+        {
+          "text": "._0",
+          "confidence": 12,
+          "bbox": {
+            "x0": 96,
+            "y0": 4718,
+            "x1": 147,
+            "y1": 4737
+          }
+        }
+      ]
+    },
+    {
+      "text": "o.\n\n",
+      "confidence": 81,
+      "bbox": {
+        "x0": 103,
+        "y0": 4698,
+        "x1": 142,
+        "y1": 4716
+      },
+      "words": [
+        {
+          "text": "o.",
+          "confidence": 81,
+          "bbox": {
+            "x0": 103,
+            "y0": 4698,
+            "x1": 142,
+            "y1": 4716
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 191,
+        "y0": 4700,
+        "x1": 440,
+        "y1": 4735
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 96,
+          "bbox": {
+            "x0": 191,
+            "y0": 4703,
+            "x1": 264,
+            "y1": 4735
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 96,
+          "bbox": {
+            "x0": 283,
+            "y0": 4700,
+            "x1": 440,
+            "y1": 4735
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.32\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 4705,
+        "x1": 1088,
+        "y1": 4737
+      },
+      "words": [
+        {
+          "text": "1.32",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 4705,
+            "x1": 1088,
+            "y1": 4737
+          }
+        }
+      ]
+    },
+    {
+      "text": "o\n\n",
+      "confidence": 73,
+      "bbox": {
+        "x0": 112,
+        "y0": 4736,
+        "x1": 132,
+        "y1": 4749
+      },
+      "words": [
+        {
+          "text": "o",
+          "confidence": 73,
+          "bbox": {
+            "x0": 112,
+            "y0": 4736,
+            "x1": 132,
+            "y1": 4749
+          }
+        }
+      ]
+    },
+    {
+      "text": "Aston Villa\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 173,
+        "y0": 4799,
+        "x1": 372,
+        "y1": 4832
+      },
+      "words": [
+        {
+          "text": "Aston",
+          "confidence": 96,
+          "bbox": {
+            "x0": 173,
+            "y0": 4802,
+            "x1": 281,
+            "y1": 4832
+          }
+        },
+        {
+          "text": "Villa",
+          "confidence": 96,
+          "bbox": {
+            "x0": 292,
+            "y0": 4799,
+            "x1": 372,
+            "y1": 4832
+          }
+        }
+      ]
+    },
+    {
+      "text": "Viking FK\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 173,
+        "y0": 4860,
+        "x1": 345,
+        "y1": 4899
+      },
+      "words": [
+        {
+          "text": "Viking",
+          "confidence": 93,
+          "bbox": {
+            "x0": 173,
+            "y0": 4860,
+            "x1": 288,
+            "y1": 4899
+          }
+        },
+        {
+          "text": "FK",
+          "confidence": 93,
+          "bbox": {
+            "x0": 301,
+            "y0": 4862,
+            "x1": 345,
+            "y1": 4892
+          }
+        }
+      ]
+    },
+    {
+      "text": "Mañana 14:00\n\n",
+      "confidence": 84,
+      "bbox": {
+        "x0": 862,
+        "y0": 4832,
+        "x1": 1113,
+        "y1": 4861
+      },
+      "words": [
+        {
+          "text": "Mañana",
+          "confidence": 74,
+          "bbox": {
+            "x0": 862,
+            "y0": 4832,
+            "x1": 1000,
+            "y1": 4861
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 95,
+          "bbox": {
+            "x0": 1019,
+            "y0": 4834,
+            "x1": 1113,
+            "y1": 4861
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Aston Villa\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 175,
+        "y0": 4969,
+        "x1": 482,
+        "y1": 5008
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 93,
+          "bbox": {
+            "x0": 175,
+            "y0": 4971,
+            "x1": 205,
+            "y1": 5002
+          }
+        },
+        {
+          "text": "Aston",
+          "confidence": 94,
+          "bbox": {
+            "x0": 234,
+            "y0": 4973,
+            "x1": 366,
+            "y1": 5008
+          }
+        },
+        {
+          "text": "Villa",
+          "confidence": 96,
+          "bbox": {
+            "x0": 379,
+            "y0": 4969,
+            "x1": 482,
+            "y1": 5008
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 238,
+        "y0": 5038,
+        "x1": 663,
+        "y1": 5079
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 95,
+          "bbox": {
+            "x0": 238,
+            "y0": 5038,
+            "x1": 434,
+            "y1": 5071
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 448,
+            "y0": 5038,
+            "x1": 507,
+            "y1": 5071
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 521,
+            "y0": 5038,
+            "x1": 663,
+            "y1": 5079
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 1.5\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 5153,
+        "x1": 468,
+        "y1": 5191
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 5154,
+            "x1": 205,
+            "y1": 5185
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 236,
+            "y0": 5153,
+            "x1": 325,
+            "y1": 5191
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 5153,
+            "x1": 393,
+            "y1": 5191
+          }
+        },
+        {
+          "text": "1.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 407,
+            "y0": 5156,
+            "x1": 468,
+            "y1": 5191
+          }
+        }
+      ]
+    },
+    {
+      "text": "Goles totales Más/Menos\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 237,
+        "y0": 5221,
+        "x1": 736,
+        "y1": 5262
+      },
+      "words": [
+        {
+          "text": "Goles",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 5221,
+            "x1": 345,
+            "y1": 5254
+          }
+        },
+        {
+          "text": "totales",
+          "confidence": 92,
+          "bbox": {
+            "x0": 359,
+            "y0": 5221,
+            "x1": 494,
+            "y1": 5254
+          }
+        },
+        {
+          "text": "Más/Menos",
+          "confidence": 89,
+          "bbox": {
+            "x0": 509,
+            "y0": 5221,
+            "x1": 736,
+            "y1": 5262
+          }
+        }
+      ]
+    },
+    {
+      "text": "6\n\n",
+      "confidence": 0,
+      "bbox": {
+        "x0": 96,
+        "y0": 5420,
+        "x1": 147,
+        "y1": 5439
+      },
+      "words": [
+        {
+          "text": "6",
+          "confidence": 0,
+          "bbox": {
+            "x0": 96,
+            "y0": 5420,
+            "x1": 147,
+            "y1": 5439
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 86,
+      "bbox": {
+        "x0": 102,
+        "y0": 5400,
+        "x1": 142,
+        "y1": 5418
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 86,
+          "bbox": {
+            "x0": 102,
+            "y0": 5400,
+            "x1": 142,
+            "y1": 5418
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 191,
+        "y0": 5401,
+        "x1": 440,
+        "y1": 5437
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 95,
+          "bbox": {
+            "x0": 191,
+            "y0": 5405,
+            "x1": 264,
+            "y1": 5437
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 95,
+          "bbox": {
+            "x0": 283,
+            "y0": 5401,
+            "x1": 440,
+            "y1": 5437
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.29\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 1012,
+        "y0": 5407,
+        "x1": 1088,
+        "y1": 5438
+      },
+      "words": [
+        {
+          "text": "1.29",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1012,
+            "y0": 5407,
+            "x1": 1088,
+            "y1": 5438
+          }
+        }
+      ]
+    },
+    {
+      "text": "5d\n\n",
+      "confidence": 51,
+      "bbox": {
+        "x0": 112,
+        "y0": 5438,
+        "x1": 132,
+        "y1": 5450
+      },
+      "words": [
+        {
+          "text": "5d",
+          "confidence": 51,
+          "bbox": {
+            "x0": 112,
+            "y0": 5438,
+            "x1": 132,
+            "y1": 5450
+          }
+        }
+      ]
+    },
+    {
+      "text": "Sporting CP\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 174,
+        "y0": 5502,
+        "x1": 390,
+        "y1": 5540
+      },
+      "words": [
+        {
+          "text": "Sporting",
+          "confidence": 96,
+          "bbox": {
+            "x0": 174,
+            "y0": 5502,
+            "x1": 330,
+            "y1": 5540
+          }
+        },
+        {
+          "text": "CP",
+          "confidence": 96,
+          "bbox": {
+            "x0": 343,
+            "y0": 5502,
+            "x1": 390,
+            "y1": 5533
+          }
+        }
+      ]
+    },
+    {
+      "text": "Mañana 14:00\n\n",
+      "confidence": 80,
+      "bbox": {
+        "x0": 862,
+        "y0": 5533,
+        "x1": 1113,
+        "y1": 5562
+      },
+      "words": [
+        {
+          "text": "Mañana",
+          "confidence": 66,
+          "bbox": {
+            "x0": 862,
+            "y0": 5533,
+            "x1": 1000,
+            "y1": 5562
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 94,
+          "bbox": {
+            "x0": 1019,
+            "y0": 5536,
+            "x1": 1113,
+            "y1": 5562
+          }
+        }
+      ]
+    },
+    {
+      "text": "Linzer ASK\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 175,
+        "y0": 5563,
+        "x1": 369,
+        "y1": 5594
+      },
+      "words": [
+        {
+          "text": "Linzer",
+          "confidence": 92,
+          "bbox": {
+            "x0": 175,
+            "y0": 5563,
+            "x1": 285,
+            "y1": 5594
+          }
+        },
+        {
+          "text": "ASK",
+          "confidence": 96,
+          "bbox": {
+            "x0": 294,
+            "y0": 5563,
+            "x1": 369,
+            "y1": 5594
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Sporting CP\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 5671,
+        "x1": 501,
+        "y1": 5719
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 5673,
+            "x1": 205,
+            "y1": 5704
+          }
+        },
+        {
+          "text": "Sporting",
+          "confidence": 96,
+          "bbox": {
+            "x0": 235,
+            "y0": 5671,
+            "x1": 426,
+            "y1": 5719
+          }
+        },
+        {
+          "text": "CP",
+          "confidence": 96,
+          "bbox": {
+            "x0": 441,
+            "y0": 5675,
+            "x1": 501,
+            "y1": 5710
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 238,
+        "y0": 5740,
+        "x1": 663,
+        "y1": 5781
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 95,
+          "bbox": {
+            "x0": 238,
+            "y0": 5740,
+            "x1": 434,
+            "y1": 5773
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 448,
+            "y0": 5740,
+            "x1": 507,
+            "y1": 5773
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 521,
+            "y0": 5740,
+            "x1": 663,
+            "y1": 5781
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 1.5\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 5854,
+        "x1": 468,
+        "y1": 5893
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 93,
+          "bbox": {
+            "x0": 175,
+            "y0": 5856,
+            "x1": 205,
+            "y1": 5887
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 5854,
+            "x1": 325,
+            "y1": 5893
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 5854,
+            "x1": 393,
+            "y1": 5893
+          }
+        },
+        {
+          "text": "1.5",
+          "confidence": 96,
+          "bbox": {
+            "x0": 407,
+            "y0": 5858,
+            "x1": 468,
+            "y1": 5893
+          }
+        }
+      ]
+    },
+    {
+      "text": "Goles totales Más/Menos\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 237,
+        "y0": 5922,
+        "x1": 736,
+        "y1": 5964
+      },
+      "words": [
+        {
+          "text": "Goles",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 5923,
+            "x1": 345,
+            "y1": 5956
+          }
+        },
+        {
+          "text": "totales",
+          "confidence": 92,
+          "bbox": {
+            "x0": 359,
+            "y0": 5923,
+            "x1": 494,
+            "y1": 5956
+          }
+        },
+        {
+          "text": "Más/Menos",
+          "confidence": 91,
+          "bbox": {
+            "x0": 509,
+            "y0": 5922,
+            "x1": 736,
+            "y1": 5964
+          }
+        }
+      ]
+    },
+    {
+      "text": "6\n\n",
+      "confidence": 4,
+      "bbox": {
+        "x0": 96,
+        "y0": 6122,
+        "x1": 147,
+        "y1": 6140
+      },
+      "words": [
+        {
+          "text": "6",
+          "confidence": 4,
+          "bbox": {
+            "x0": 96,
+            "y0": 6122,
+            "x1": 147,
+            "y1": 6140
+          }
+        }
+      ]
+    },
+    {
+      "text": "ee\n\n",
+      "confidence": 82,
+      "bbox": {
+        "x0": 103,
+        "y0": 6102,
+        "x1": 142,
+        "y1": 6119
+      },
+      "words": [
+        {
+          "text": "ee",
+          "confidence": 82,
+          "bbox": {
+            "x0": 103,
+            "y0": 6102,
+            "x1": 142,
+            "y1": 6119
+          }
+        }
+      ]
+    },
+    {
+      "text": "Bet Builder\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 191,
+        "y0": 6103,
+        "x1": 440,
+        "y1": 6138
+      },
+      "words": [
+        {
+          "text": "Bet",
+          "confidence": 96,
+          "bbox": {
+            "x0": 191,
+            "y0": 6106,
+            "x1": 264,
+            "y1": 6138
+          }
+        },
+        {
+          "text": "Builder",
+          "confidence": 96,
+          "bbox": {
+            "x0": 283,
+            "y0": 6103,
+            "x1": 440,
+            "y1": 6138
+          }
+        }
+      ]
+    },
+    {
+      "text": "1.30\n\n",
+      "confidence": 92,
+      "bbox": {
+        "x0": 1012,
+        "y0": 6109,
+        "x1": 1088,
+        "y1": 6140
+      },
+      "words": [
+        {
+          "text": "1.30",
+          "confidence": 92,
+          "bbox": {
+            "x0": 1012,
+            "y0": 6109,
+            "x1": 1088,
+            "y1": 6140
+          }
+        }
+      ]
+    },
+    {
+      "text": "Ad\n\n",
+      "confidence": 22,
+      "bbox": {
+        "x0": 113,
+        "y0": 6139,
+        "x1": 132,
+        "y1": 6152
+      },
+      "words": [
+        {
+          "text": "Ad",
+          "confidence": 22,
+          "bbox": {
+            "x0": 113,
+            "y0": 6139,
+            "x1": 132,
+            "y1": 6152
+          }
+        }
+      ]
+    },
+    {
+      "text": "Real Madrid\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 6202,
+        "x1": 391,
+        "y1": 6235
+      },
+      "words": [
+        {
+          "text": "Real",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 6203,
+            "x1": 253,
+            "y1": 6235
+          }
+        },
+        {
+          "text": "Madrid",
+          "confidence": 96,
+          "bbox": {
+            "x0": 265,
+            "y0": 6202,
+            "x1": 391,
+            "y1": 6235
+          }
+        }
+      ]
+    },
+    {
+      "text": "Manana 14:00\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 862,
+        "y0": 6237,
+        "x1": 1113,
+        "y1": 6264
+      },
+      "words": [
+        {
+          "text": "Manana",
+          "confidence": 92,
+          "bbox": {
+            "x0": 862,
+            "y0": 6238,
+            "x1": 1000,
+            "y1": 6264
+          }
+        },
+        {
+          "text": "14:00",
+          "confidence": 96,
+          "bbox": {
+            "x0": 1018,
+            "y0": 6237,
+            "x1": 1113,
+            "y1": 6264
+          }
+        }
+      ]
+    },
+    {
+      "text": "RB Leipzig\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 175,
+        "y0": 6265,
+        "x1": 363,
+        "y1": 6303
+      },
+      "words": [
+        {
+          "text": "RB",
+          "confidence": 96,
+          "bbox": {
+            "x0": 175,
+            "y0": 6265,
+            "x1": 224,
+            "y1": 6295
+          }
+        },
+        {
+          "text": "Leipzig",
+          "confidence": 96,
+          "bbox": {
+            "x0": 236,
+            "y0": 6265,
+            "x1": 363,
+            "y1": 6303
+          }
+        }
+      ]
+    },
+    {
+      "text": "© Real Madrid\n\n",
+      "confidence": 95,
+      "bbox": {
+        "x0": 175,
+        "y0": 6373,
+        "x1": 501,
+        "y1": 6411
+      },
+      "words": [
+        {
+          "text": "©",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 6375,
+            "x1": 205,
+            "y1": 6405
+          }
+        },
+        {
+          "text": "Real",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 6373,
+            "x1": 333,
+            "y1": 6411
+          }
+        },
+        {
+          "text": "Madrid",
+          "confidence": 96,
+          "bbox": {
+            "x0": 346,
+            "y0": 6373,
+            "x1": 501,
+            "y1": 6411
+          }
+        }
+      ]
+    },
+    {
+      "text": "Resultado del partido\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 238,
+        "y0": 6441,
+        "x1": 663,
+        "y1": 6482
+      },
+      "words": [
+        {
+          "text": "Resultado",
+          "confidence": 96,
+          "bbox": {
+            "x0": 238,
+            "y0": 6442,
+            "x1": 434,
+            "y1": 6475
+          }
+        },
+        {
+          "text": "del",
+          "confidence": 96,
+          "bbox": {
+            "x0": 448,
+            "y0": 6441,
+            "x1": 507,
+            "y1": 6475
+          }
+        },
+        {
+          "text": "partido",
+          "confidence": 96,
+          "bbox": {
+            "x0": 521,
+            "y0": 6442,
+            "x1": 663,
+            "y1": 6482
+          }
+        }
+      ]
+    },
+    {
+      "text": "O Más de 1.5\n\n",
+      "confidence": 94,
+      "bbox": {
+        "x0": 175,
+        "y0": 6556,
+        "x1": 468,
+        "y1": 6594
+      },
+      "words": [
+        {
+          "text": "O",
+          "confidence": 95,
+          "bbox": {
+            "x0": 175,
+            "y0": 6558,
+            "x1": 205,
+            "y1": 6588
+          }
+        },
+        {
+          "text": "Más",
+          "confidence": 95,
+          "bbox": {
+            "x0": 235,
+            "y0": 6556,
+            "x1": 325,
+            "y1": 6594
+          }
+        },
+        {
+          "text": "de",
+          "confidence": 96,
+          "bbox": {
+            "x0": 338,
+            "y0": 6556,
+            "x1": 393,
+            "y1": 6594
+          }
+        },
+        {
+          "text": "1.5",
+          "confidence": 92,
+          "bbox": {
+            "x0": 407,
+            "y0": 6559,
+            "x1": 468,
+            "y1": 6594
+          }
+        }
+      ]
+    },
+    {
+      "text": "Goles totales Más/Menos\n\n",
+      "confidence": 93,
+      "bbox": {
+        "x0": 237,
+        "y0": 6624,
+        "x1": 736,
+        "y1": 6665
+      },
+      "words": [
+        {
+          "text": "Goles",
+          "confidence": 96,
+          "bbox": {
+            "x0": 237,
+            "y0": 6625,
+            "x1": 345,
+            "y1": 6658
+          }
+        },
+        {
+          "text": "totales",
+          "confidence": 92,
+          "bbox": {
+            "x0": 359,
+            "y0": 6624,
+            "x1": 494,
+            "y1": 6658
+          }
+        },
+        {
+          "text": "Más/Menos",
+          "confidence": 91,
+          "bbox": {
+            "x0": 509,
+            "y0": 6624,
+            "x1": 736,
+            "y1": 6665
+          }
+        }
+      ]
+    },
+    {
+      "text": "Apuesta\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 86,
+        "y0": 6807,
+        "x1": 234,
+        "y1": 6840
+      },
+      "words": [
+        {
+          "text": "Apuesta",
+          "confidence": 96,
+          "bbox": {
+            "x0": 86,
+            "y0": 6807,
+            "x1": 234,
+            "y1": 6840
+          }
+        }
+      ]
+    },
+    {
+      "text": "S/2.00\n\n",
+      "confidence": 40,
+      "bbox": {
+        "x0": 1000,
+        "y0": 6801,
+        "x1": 1115,
+        "y1": 6842
+      },
+      "words": [
+        {
+          "text": "S/2.00",
+          "confidence": 40,
+          "bbox": {
+            "x0": 1000,
+            "y0": 6801,
+            "x1": 1115,
+            "y1": 6842
+          }
+        }
+      ]
+    },
+    {
+      "text": "Ganancias potenciales\n\n",
+      "confidence": 96,
+      "bbox": {
+        "x0": 86,
+        "y0": 6927,
+        "x1": 512,
+        "y1": 6967
+      },
+      "words": [
+        {
+          "text": "Ganancias",
+          "confidence": 96,
+          "bbox": {
+            "x0": 86,
+            "y0": 6927,
+            "x1": 278,
+            "y1": 6961
+          }
+        },
+        {
+          "text": "potenciales",
+          "confidence": 96,
+          "bbox": {
+            "x0": 291,
+            "y0": 6927,
+            "x1": 512,
+            "y1": 6967
+          }
+        }
+      ]
+    },
+    {
+      "text": "$/103.07\n\n",
+      "confidence": 65,
+      "bbox": {
+        "x0": 896,
+        "y0": 6919,
+        "x1": 1115,
+        "y1": 6973
+      },
+      "words": [
+        {
+          "text": "$/103.07",
+          "confidence": 65,
+          "bbox": {
+            "x0": 896,
+            "y0": 6919,
+            "x1": 1115,
+            "y1": 6973
+          }
+        }
+      ]
+    },
+    {
+      "text": "CASH OUT S/2.00\n",
+      "confidence": 91,
+      "bbox": {
+        "x0": 434,
+        "y0": 7045,
+        "x1": 768,
+        "y1": 7081
+      },
+      "words": [
+        {
+          "text": "CASH",
+          "confidence": 96,
+          "bbox": {
+            "x0": 434,
+            "y0": 7047,
+            "x1": 530,
+            "y1": 7075
+          }
+        },
+        {
+          "text": "OUT",
+          "confidence": 91,
+          "bbox": {
+            "x0": 546,
+            "y0": 7047,
+            "x1": 617,
+            "y1": 7075
+          }
+        },
+        {
+          "text": "S/2.00",
+          "confidence": 85,
+          "bbox": {
+            "x0": 654,
+            "y0": 7045,
+            "x1": 768,
+            "y1": 7081
+          }
+        }
+      ]
+    }
+  ],
+  "symbols": [
+    {
+      "bbox": {
+        "x0": 390,
+        "y0": 378,
+        "x1": 447,
+        "y1": 432
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 453,
+        "y0": 1017,
+        "x1": 510,
+        "y1": 1074
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 621,
+        "y0": 1719,
+        "x1": 675,
+        "y1": 1776
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 510,
+        "y0": 3219,
+        "x1": 564,
+        "y1": 3273
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 642,
+        "y0": 3588,
+        "x1": 696,
+        "y1": 3642
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 504,
+        "y0": 4968,
+        "x1": 561,
+        "y1": 5022
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 522,
+        "y0": 5670,
+        "x1": 579,
+        "y1": 5724
+      },
+      "promotion": "Pago anticipado +2"
+    },
+    {
+      "bbox": {
+        "x0": 525,
+        "y0": 6369,
+        "x1": 579,
+        "y1": 6426
+      },
+      "promotion": "Pago anticipado +2"
+    }
+  ]
+}

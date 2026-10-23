@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from '../data/useCloudQuery';
 import { useApp } from '../app/context';
 import { repo } from '../data/repository';
-import { linkCapture } from '../data/captures';
+import { enqueueCaptures, linkCapture } from '../data/captures';
+import { readDraft, reviewIssues, needsNewProof } from '../ocr/review';
+import { CaptureReview } from './CaptureReview';
 import { money, displayDate, type CaptureUpload } from '../domain/model';
 import { Button } from './ui';
 import { CaptureComparison } from './CaptureComparison';
@@ -21,6 +23,9 @@ export function CapturePending({
   const [comparing, setComparing] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [removeFailed, setRemoveFailed] = useState(false);
+  const [reviewing, setReviewing] = useState(false);
+  const [addingProof, setAddingProof] = useState(false);
+  const proofInput = useRef<HTMLInputElement>(null);
   const remove = async () => {
     if (removing) return;
     setRemoving(true);
@@ -39,17 +44,20 @@ export function CapturePending({
     return () => URL.revokeObjectURL(u);
   }, [image]);
   const bet = data.bets.find((b) => b.id === upload.betId);
-  const draft = useMemo(() => {
+  const draft = useMemo(() => readDraft(upload.draftJson), [upload.draftJson]);
+  const issues = reviewIssues(upload, draft);
+  const proof = async (file?: File) => {
+    if (!file || addingProof) return;
+    setAddingProof(true);
     try {
-      return JSON.parse(upload.draftJson) as {
-        cashoutOffer?: number;
-        potential?: number;
-        text?: string;
-      };
-    } catch {
-      return undefined;
+      await run(async () => {
+        const result = await enqueueCaptures([file], repo, undefined, upload.id);
+        if (result.failed.length) throw new Error(result.failed[0].error);
+      }, 'Comprobante añadido como captura independiente. El borrador original se conserva.');
+    } finally {
+      setAddingProof(false);
     }
-  }, [upload.draftJson]);
+  };
   const sels = data.selections.filter((s) => s.betId === bet?.id),
     house = data.houses.find((h) => h.id === bet?.houseId);
   const retry = (allowDuplicate = false) =>
@@ -79,8 +87,9 @@ export function CapturePending({
             {
               {
                 queued: 'En cola',
-                processing: activity?.phase === 'saving' ? 'Guardando apuesta…' : 'Leyendo captura…',
-                review: 'Necesita otra captura',
+                processing:
+                  activity?.phase === 'saving' ? 'Guardando apuesta…' : 'Leyendo captura…',
+                review: issues[0]?.title ?? 'Revisión necesaria',
                 duplicate: 'Posible duplicado',
                 error: 'No se pudo leer',
                 saved: 'Apuesta eliminada',
@@ -96,11 +105,34 @@ export function CapturePending({
       </div>
       {(upload.status === 'queued' || upload.status === 'processing') && (
         <>
-          <div className="capture-stage" role="status"><span>{activity?.phase === 'saving' ? 'Confirmando en Supabase' : upload.status === 'queued' ? 'Lista para leer' : 'Reconociendo el boleto'}</span><span>{activity?.phase === 'reading' ? `${activity.progress}%` : ''}</span></div>
-          <progress max={100} value={activity?.phase === 'reading' ? activity.progress : undefined} aria-label="Progreso de lectura" />
+          <div className="capture-stage" role="status">
+            <span>
+              {activity?.phase === 'saving'
+                ? 'Confirmando en Supabase'
+                : upload.status === 'queued'
+                  ? 'Lista para leer'
+                  : 'Reconociendo el boleto'}
+            </span>
+            <span>{activity?.phase === 'reading' ? `${activity.progress}%` : ''}</span>
+          </div>
+          <progress
+            max={100}
+            value={activity?.phase === 'reading' ? activity.progress : undefined}
+            aria-label="Progreso de lectura"
+          />
         </>
       )}
       {upload.reason && <p className="capture-reason">{upload.reason}</p>}
+      {upload.status === 'review' && (
+        <ul className="capture-review-issues">
+          {issues.map((issue) => (
+            <li key={issue.kind}>
+              <strong>{issue.title}</strong>
+              <small>{issue.detail}</small>
+            </li>
+          ))}
+        </ul>
+      )}
       {upload.status === 'duplicate' && bet && (
         <div className="match-preview">
           <strong>
@@ -132,9 +164,38 @@ export function CapturePending({
       )}
       <div className="quick-results">
         {['review', 'error'].includes(upload.status) && (
-          <Button variant="secondary" disabled={removing} onClick={() => retry()}>
-            Mejorar lectura
-          </Button>
+          <>
+            <Button variant="secondary" disabled={removing || addingProof} onClick={() => retry()}>
+              Mejorar lectura
+            </Button>
+            <Button
+              variant="secondary"
+              disabled={removing || addingProof}
+              onClick={() => proofInput.current?.click()}
+            >
+              {addingProof ? 'Añadiendo…' : 'Añadir comprobante de apuesta'}
+            </Button>
+            <input
+              ref={proofInput}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              hidden
+              aria-label="Seleccionar comprobante de apuesta"
+              onChange={(e) => {
+                void proof(e.target.files?.[0]);
+                e.target.value = '';
+              }}
+            />
+            {upload.status === 'review' && draft && !needsNewProof(draft) && (
+              <Button disabled={removing || addingProof} onClick={() => setReviewing(true)}>
+                Revisar datos
+              </Button>
+            )}
+            <small>
+              Mejorar lectura usa la misma imagen. Añadir comprobante conserva este borrador y lee
+              una nueva captura; no confirma ni combina importes automáticamente.
+            </small>
+          </>
         )}
         {upload.status === 'duplicate' && (
           <>
@@ -183,6 +244,9 @@ export function CapturePending({
           incoming={upload.imageId}
           onClose={() => setComparing(false)}
         />
+      )}
+      {reviewing && (
+        <CaptureReview upload={upload} imageUrl={url} onClose={() => setReviewing(false)} />
       )}
     </article>
   );

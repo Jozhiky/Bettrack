@@ -12,7 +12,20 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixtureRoot = path.join(root, 'tests/ocr-phase1');
 const corpus = JSON.parse(await readFile(path.join(fixtureRoot, 'cases.json'), 'utf8'));
 const known = JSON.parse(await readFile(path.join(fixtureRoot, 'known-failures.json'), 'utf8'));
-const placementAudit = process.argv.includes('--placement');
+const phase3 = process.argv.includes('--phase3');
+const reference = phase3 && process.argv.includes('--reference');
+if (phase3) {
+  const extra = JSON.parse(await readFile(path.join(root, 'tests/ocr-phase3/cases.json'), 'utf8'));
+  corpus.cases.push(...extra.cases.map((c) => ({ ...c, image: `../ocr-phase3/${c.image}` })));
+  const additionalKnown = JSON.parse(
+    await readFile(
+      path.join(root, `tests/ocr-phase3/${reference ? 'reference-' : ''}known-failures.json`),
+      'utf8',
+    ),
+  );
+  Object.assign(known, additionalKnown);
+}
+const placementAudit = phase3 || process.argv.includes('--placement');
 const phase21 = placementAudit || process.argv.includes('--phase21');
 const phase2 = phase21 || process.argv.includes('--phase2');
 // Keep the historical Phase 1 oracle immutable. Only the five specifically
@@ -75,21 +88,25 @@ let browser;
 const strict = process.argv.includes('--strict');
 const output = path.join(
   root,
-  placementAudit
+  phase3
     ? strict
-      ? 'test-results/ocr-placement-strict'
-      : 'test-results/ocr-placement'
-    : phase21
+      ? 'test-results/ocr-phase3-strict'
+      : 'test-results/ocr-phase3'
+    : placementAudit
       ? strict
-        ? 'test-results/ocr-phase21-strict'
-        : 'test-results/ocr-phase21'
-      : phase2
+        ? 'test-results/ocr-placement-strict'
+        : 'test-results/ocr-placement'
+      : phase21
         ? strict
-          ? 'test-results/ocr-phase2-strict'
-          : 'test-results/ocr-phase2'
-        : strict
-          ? 'test-results/ocr-phase1-strict'
-          : 'test-results/ocr-phase1',
+          ? 'test-results/ocr-phase21-strict'
+          : 'test-results/ocr-phase21'
+        : phase2
+          ? strict
+            ? 'test-results/ocr-phase2-strict'
+            : 'test-results/ocr-phase2'
+          : strict
+            ? 'test-results/ocr-phase1-strict'
+            : 'test-results/ocr-phase1',
 );
 function limitEvaluation(page) {
   const original = page.evaluate.bind(page);
@@ -216,7 +233,9 @@ try {
       instrumentationParity.push({ id: c.id, equal: true });
     }
     await plainPage.evaluate(() => window.audit.stop());
-    console.log('Uninstrumented parity: 5/5 identical parsed and registration results');
+    console.log(
+      `Uninstrumented parity: ${corpus.cases.length}/${corpus.cases.length} identical parsed and registration results`,
+    );
   } finally {
     await plainContext.close();
     await plainServer.close();
@@ -266,10 +285,14 @@ try {
       );
       if (placementHold) assert.equal(result.parsed.cashoutOffer, undefined);
     }
+    const extraCase = phase3 ? corpus.cases.find((c) => c.id === result.id) : undefined;
+    const extraStatus =
+      extraCase && (reference ? extraCase.referenceRegistration : extraCase.registration);
     const expectedStatus =
-      result.id.startsWith('injected-') || result.knownFailure || semanticHold || placementHold
+      extraStatus ??
+      (result.id.startsWith('injected-') || result.knownFailure || semanticHold || placementHold
         ? 'review'
-        : 'saved';
+        : 'saved');
     assert.equal(
       result.registered.status,
       expectedStatus,
@@ -315,7 +338,7 @@ try {
       for (const key of Object.keys(score)) qualitySummary[field][key] += score[key];
     }
   const report = {
-    version: placementAudit ? '2.1-placement' : phase21 ? 2.1 : phase2 ? 2 : 1,
+    version: phase3 ? 3 : placementAudit ? '2.1-placement' : phase21 ? 2.1 : phase2 ? 2 : 1,
     generatedAt: new Date().toISOString(),
     repeats,
     environment: {
@@ -325,7 +348,9 @@ try {
       os: `${os.platform()} ${os.release()}`,
       cpu: os.cpus()[0]?.model,
     },
-    corpusHash: sha(await readFile(path.join(fixtureRoot, 'cases.json'))),
+    corpusHash: phase3
+      ? sha(JSON.stringify(corpus))
+      : sha(await readFile(path.join(fixtureRoot, 'cases.json'))),
     packageLockHash: sha(await readFile(path.join(root, 'package-lock.json'))),
     assets,
     productionHashes: protectedBefore,
@@ -339,7 +364,7 @@ try {
     baselineDifferences: differences,
     limitations: [
       'Registration uses fake-indexeddb in RAM, NOT Supabase.',
-      'Five images do not represent all Betano markets.',
+      `${corpus.cases.length} images do not represent all Betano markets.`,
       'Exclusive phase timings follow existing mixed function boundaries.',
       'Ordinal leg alignment penalizes omissions and shifts; not a semantic classifier.',
     ],

@@ -71,7 +71,9 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       odds: odd ? decimal(odd.text) : null,
       content,
       promotion,
-      bullet: /^[Oo○◯]\s/.test(content.map((w) => w.text).join(' ')),
+      // Tesseract can read the orange open-circle child marker as ©. Keep
+      // that visible marker so a separated child never becomes an outer leg.
+      bullet: /^[Oo○◯©]\s/.test(content.map((w) => w.text).join(' ')),
     };
   });
   // Some browser OCR builds put an odds badge on its own row just below the
@@ -159,7 +161,7 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
           !previous.market &&
           openParenthesis &&
           !marketLine(row.text) &&
-          !/^[Oo○◯]\s/.test(row.words.map((w) => w.text).join(' '))
+          !row.bullet
         ) {
           previous.pick += `${previous.pick.endsWith('-') ? '' : ' '}${row.text}`;
           continue;

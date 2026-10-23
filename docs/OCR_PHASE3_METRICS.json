@@ -1,0 +1,4431 @@
+{
+  "version": 3,
+  "generatedAt": "2026-10-23T18:11:37.673Z",
+  "baseCommit": "d54d5eb52651da13809e9c623fac054ad01a402a",
+  "corpusHash": "04ac24f8745436918ecbb1d66b66891775e617eea15b6a2b1121c7a3cdd9ac74",
+  "sample": {
+    "uniqueRealImages": 7,
+    "newImages": 2,
+    "sport": "football only",
+    "simple": 1,
+    "combined": 6,
+    "withBuilders": 4,
+    "outerLegs": 33,
+    "semanticSelections": 57,
+    "placementConfirmedByCashoutOffer": 6,
+    "placementUnknown": 1,
+    "explicitSettlementLabels": 0,
+    "realPreparation": 0,
+    "realNBA": 0,
+    "realExecutedCashout": 0,
+    "note": "Preparation, settlement and NBA behavior have synthetic regression tests only. Seven distinct images; timing repeats do not enlarge precision sample."
+  },
+  "before": {
+    "images": 7,
+    "timingSamples": 21,
+    "repeats": 3,
+    "rawFields": {
+      "house": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "kind": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "stake": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "odds": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "potential": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "count": {
+        "correct": 38,
+        "total": 40,
+        "missing": 0,
+        "wrong": 2
+      },
+      "cashoutOffer": {
+        "correct": 6,
+        "total": 6,
+        "missing": 0,
+        "wrong": 0
+      },
+      "event": {
+        "correct": 30,
+        "total": 33,
+        "missing": 0,
+        "wrong": 3
+      },
+      "market": {
+        "correct": 69,
+        "total": 72,
+        "missing": 2,
+        "wrong": 1
+      },
+      "pick": {
+        "correct": 67,
+        "total": 72,
+        "missing": 2,
+        "wrong": 3
+      },
+      "legOdds": {
+        "correct": 33,
+        "total": 33,
+        "missing": 0,
+        "wrong": 0
+      },
+      "promotion": {
+        "correct": 22,
+        "total": 23,
+        "missing": 1,
+        "wrong": 0
+      }
+    },
+    "semanticFields": {
+      "statistic": {
+        "correct": 55,
+        "total": 57,
+        "unknown": 2
+      },
+      "scope": {
+        "correct": 43,
+        "total": 57,
+        "unknown": 14
+      },
+      "periodAbstention": {
+        "correct": 51,
+        "total": 53,
+        "unknown": 2
+      },
+      "placement": {
+        "correct": 7,
+        "total": 7,
+        "unknown": 1
+      },
+      "settlementAbstention": {
+        "correct": 7,
+        "total": 7,
+        "unknown": 7
+      },
+      "participant": {
+        "correct": 8,
+        "total": 11,
+        "unknown": 3
+      },
+      "explicitPeriod": {
+        "correct": 4,
+        "total": 4,
+        "unknown": 0
+      }
+    },
+    "participantCorrectAndRecognized": 1,
+    "phases": {
+      "preprocessing": {
+        "samples": 21,
+        "p50Ms": 59.0999999998603,
+        "p95Ms": 294.30000000004657
+      },
+      "ocr": {
+        "samples": 21,
+        "p50Ms": 914.4000000001397,
+        "p95Ms": 3911.5
+      },
+      "reconstruction": {
+        "samples": 21,
+        "p50Ms": 0.7000000001862645,
+        "p95Ms": 2.599999999627471
+      },
+      "interpretation": {
+        "samples": 21,
+        "p50Ms": 0.6999999999534339,
+        "p95Ms": 2.900000000372529
+      },
+      "validation": {
+        "samples": 21,
+        "p50Ms": 0.2999999998137355,
+        "p95Ms": 0.8000000000465661
+      },
+      "registration": {
+        "samples": 21,
+        "p50Ms": 1.5,
+        "p95Ms": 4.400000000139698
+      }
+    },
+    "environment": {
+      "workerInitializationMs": 163.70000000018626,
+      "hardwareConcurrency": 12,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "memory": 32,
+      "browser": "156.0.8078.4",
+      "node": "v24.22.1",
+      "os": "win32 10.0.26300",
+      "cpu": "AMD Ryzen 5 5600G with Radeon Graphics         "
+    },
+    "saved": 3,
+    "review": 4,
+    "rawFieldFailures": [
+      {
+        "id": "player-builders",
+        "field": "event",
+        "path": "selections[1].event",
+        "expected": "FC Bayern München vs. Arsenal FC",
+        "actual": "FC Bayern Munchen vs. Arsenal FC",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "market",
+        "path": "selections[0].market",
+        "expected": "Córners en Primer Tiempo Más/Menos",
+        "actual": "Córners en Primer Tiempo Mas/Menos",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "pick",
+        "path": "selections[0].pick",
+        "expected": "Más de 4.5",
+        "actual": "Mas de 4.5",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "mixed-builders",
+        "field": "pick",
+        "path": "selections[1].builderMarkets[1].pick",
+        "expected": "Sí",
+        "actual": "Si",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "scorer-builders",
+        "field": "event",
+        "path": "selections[8].event",
+        "expected": "VfB Stuttgart vs. Atlético Madrid",
+        "actual": "VFB Stuttgart vs. Atlético Madrid",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "count",
+        "path": "selections.length",
+        "expected": 11,
+        "actual": 12,
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "pick",
+        "path": "selections[3].builderMarkets[0].pick",
+        "expected": "Sí",
+        "actual": "SÍ",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "event",
+        "path": "selections[4].event",
+        "expected": "Inter de Milán vs. FC Shakhtar Donetsk",
+        "actual": "Inter de Milan vs. FC Shakhtar Donetsk",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "count",
+        "path": "selections[10].builderMarkets.length",
+        "expected": 2,
+        "actual": 0,
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "market",
+        "path": "selections[10].builderMarkets[0].market",
+        "expected": "Resultado del partido",
+        "actual": null,
+        "exact": false,
+        "correct": false,
+        "status": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "pick",
+        "path": "selections[10].builderMarkets[0].pick",
+        "expected": "Real Madrid",
+        "actual": null,
+        "exact": false,
+        "correct": false,
+        "status": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "promotion",
+        "path": "selections[10].builderMarkets[0].promotion",
+        "expected": "Pago anticipado +2",
+        "actual": null,
+        "exact": false,
+        "correct": false,
+        "status": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "market",
+        "path": "selections[10].builderMarkets[1].market",
+        "expected": "Goles totales Más/Menos",
+        "actual": null,
+        "exact": false,
+        "correct": false,
+        "status": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "pick",
+        "path": "selections[10].builderMarkets[1].pick",
+        "expected": "Más de 1.5",
+        "actual": null,
+        "exact": false,
+        "correct": false,
+        "status": "missing"
+      }
+    ],
+    "semanticFailures": [
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[0]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[1]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[2]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[3]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[4]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[1].builderMarkets[0]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[1].builderMarkets[1]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "handicap-combination",
+        "field": "scope",
+        "path": "selections[1]",
+        "expected": "team",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "handicap-combination",
+        "field": "participant",
+        "path": "selections[1]",
+        "expected": "Club Tijuana",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      },
+      {
+        "id": "mixed-builders",
+        "field": "scope",
+        "path": "selections[3]",
+        "expected": "match",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "scope",
+        "path": "selections[4].builderMarkets[1]",
+        "expected": "match",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "scope",
+        "path": "selections[6].builderMarkets[3]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "participant",
+        "path": "selections[6].builderMarkets[3]",
+        "expected": "Erling Haaland",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "scope",
+        "path": "selections[3].builderMarkets[1]",
+        "expected": "team",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "participant",
+        "path": "selections[3].builderMarkets[1]",
+        "expected": "Paris Saint-Germain",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "statistic",
+        "path": "selections[10].builderMarkets[0]",
+        "expected": "result",
+        "actual": null,
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "scope",
+        "path": "selections[10].builderMarkets[0]",
+        "expected": "match",
+        "actual": null,
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "periodAbstention",
+        "path": "selections[10].builderMarkets[0]",
+        "expected": "unspecified",
+        "actual": null,
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "statistic",
+        "path": "selections[10].builderMarkets[1]",
+        "expected": "goals",
+        "actual": null,
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "scope",
+        "path": "selections[10].builderMarkets[1]",
+        "expected": "match",
+        "actual": null,
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "periodAbstention",
+        "path": "selections[10].builderMarkets[1]",
+        "expected": "unspecified",
+        "actual": null,
+        "correct": false
+      }
+    ],
+    "byCaptureType": {
+      "simple": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "combined": {
+        "images": 6,
+        "rawFields": {
+          "house": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 36,
+            "total": 38,
+            "missing": 0,
+            "wrong": 2
+          },
+          "cashoutOffer": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 29,
+            "total": 32,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 68,
+            "total": 71,
+            "missing": 2,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 66,
+            "total": 71,
+            "missing": 2,
+            "wrong": 3
+          },
+          "legOdds": {
+            "correct": 32,
+            "total": 32,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 22,
+            "total": 23,
+            "missing": 1,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 54,
+            "total": 56,
+            "unknown": 2
+          },
+          "scope": {
+            "correct": 42,
+            "total": 56,
+            "unknown": 14
+          },
+          "participant": {
+            "correct": 8,
+            "total": 11,
+            "unknown": 3
+          },
+          "periodAbstention": {
+            "correct": 50,
+            "total": 52,
+            "unknown": 2
+          },
+          "placement": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 6
+          },
+          "explicitPeriod": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "withBuilder": {
+        "images": 4,
+        "rawFields": {
+          "house": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 28,
+            "total": 30,
+            "missing": 0,
+            "wrong": 2
+          },
+          "cashoutOffer": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 23,
+            "total": 26,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 63,
+            "total": 65,
+            "missing": 2,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 61,
+            "total": 65,
+            "missing": 2,
+            "wrong": 2
+          },
+          "legOdds": {
+            "correct": 26,
+            "total": 26,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 20,
+            "total": 21,
+            "missing": 1,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 48,
+            "total": 50,
+            "unknown": 2
+          },
+          "scope": {
+            "correct": 37,
+            "total": 50,
+            "unknown": 13
+          },
+          "participant": {
+            "correct": 8,
+            "total": 10,
+            "unknown": 2
+          },
+          "periodAbstention": {
+            "correct": 47,
+            "total": 49,
+            "unknown": 2
+          },
+          "placement": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 4
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "liveVisible": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "placementConfirmed": {
+        "images": 6,
+        "rawFields": {
+          "house": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 34,
+            "total": 36,
+            "missing": 0,
+            "wrong": 2
+          },
+          "cashoutOffer": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 27,
+            "total": 30,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 67,
+            "total": 69,
+            "missing": 2,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 65,
+            "total": 69,
+            "missing": 2,
+            "wrong": 2
+          },
+          "legOdds": {
+            "correct": 30,
+            "total": 30,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 22,
+            "total": 23,
+            "missing": 1,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 52,
+            "total": 54,
+            "unknown": 2
+          },
+          "scope": {
+            "correct": 40,
+            "total": 54,
+            "unknown": 14
+          },
+          "periodAbstention": {
+            "correct": 51,
+            "total": 53,
+            "unknown": 2
+          },
+          "placement": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 6
+          },
+          "participant": {
+            "correct": 8,
+            "total": 11,
+            "unknown": 3
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "placementUnknown": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      }
+    },
+    "byCapture": [
+      {
+        "id": "timed-goal",
+        "tags": [
+          "simple",
+          "next-goal",
+          "time-limit",
+          "cashout-offer"
+        ],
+        "kind": "Simple",
+        "outerLegs": 1,
+        "semanticSelections": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 320.5999999998603,
+          "p95Ms": 438.20000000018626,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 30.5,
+            "p95Ms": 37
+          },
+          "ocr": {
+            "p50Ms": 296.79999999981374,
+            "p95Ms": 393.19999999995343
+          },
+          "reconstruction": {
+            "p50Ms": 0.30000000004656613,
+            "p95Ms": 1.6000000000931323
+          },
+          "interpretation": {
+            "p50Ms": 0.30000000004656613,
+            "p95Ms": 3.2999999998137355
+          },
+          "validation": {
+            "p50Ms": 0.19999999972060323,
+            "p95Ms": 2.800000000046566
+          },
+          "registration": {
+            "p50Ms": 2.5,
+            "p95Ms": 15.5
+          }
+        }
+      },
+      {
+        "id": "player-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "shots-on-target",
+          "substitute",
+          "status-icons"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 2,
+        "semanticSelections": 7,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 2,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 7,
+            "total": 7,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 0,
+            "total": 7,
+            "unknown": 7
+          },
+          "participant": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 1125.0999999998603,
+          "p95Ms": 1174.5999999998603,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 61.800000000046566,
+            "p95Ms": 62.5999999998603
+          },
+          "ocr": {
+            "p50Ms": 1059.6999999999534,
+            "p95Ms": 1110.4000000001397
+          },
+          "reconstruction": {
+            "p50Ms": 0.5,
+            "p95Ms": 0.7000000001862645
+          },
+          "interpretation": {
+            "p50Ms": 0.49999999976716936,
+            "p95Ms": 0.6999999999534339
+          },
+          "validation": {
+            "p50Ms": 0.19999999995343387,
+            "p95Ms": 0.5
+          },
+          "registration": {
+            "p50Ms": 0.8000000000465661,
+            "p95Ms": 0.8000000000465661
+          }
+        }
+      },
+      {
+        "id": "handicap-combination",
+        "tags": [
+          "combinada",
+          "handicap",
+          "positive-sign",
+          "early-payout",
+          "schedule"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 3,
+        "semanticSelections": 3,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 2,
+            "total": 3,
+            "unknown": 1
+          },
+          "periodAbstention": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 617,
+          "p95Ms": 632.9000000001397,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 40.89999999990687,
+            "p95Ms": 47.800000000046566
+          },
+          "ocr": {
+            "p50Ms": 581.3999999999069,
+            "p95Ms": 583.2999999998137
+          },
+          "reconstruction": {
+            "p50Ms": 0.3000000002793968,
+            "p95Ms": 0.5999999998603016
+          },
+          "interpretation": {
+            "p50Ms": 0.30000000004656613,
+            "p95Ms": 0.39999999990686774
+          },
+          "validation": {
+            "p50Ms": 0.3999999996740371,
+            "p95Ms": 0.49999999976716936
+          },
+          "registration": {
+            "p50Ms": 2.600000000325963,
+            "p95Ms": 3.5000000002328306
+          }
+        }
+      },
+      {
+        "id": "first-half-corners",
+        "tags": [
+          "combinada",
+          "corners",
+          "first-half",
+          "original-return"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 3,
+        "semanticSelections": 3,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 954.8000000000466,
+          "p95Ms": 985.5999999998603,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 35.800000000046566,
+            "p95Ms": 59.0999999998603
+          },
+          "ocr": {
+            "p50Ms": 914.4000000001397,
+            "p95Ms": 924.3000000000466
+          },
+          "reconstruction": {
+            "p50Ms": 0.6000000000931323,
+            "p95Ms": 0.8000000000465661
+          },
+          "interpretation": {
+            "p50Ms": 0.4000000001396984,
+            "p95Ms": 0.49999999976716936
+          },
+          "validation": {
+            "p50Ms": 0.10000000009313226,
+            "p95Ms": 0.20000000018626451
+          },
+          "registration": {
+            "p50Ms": 1,
+            "p95Ms": 1.0999999998603016
+          }
+        }
+      },
+      {
+        "id": "mixed-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "team-goals",
+          "match-goals",
+          "both-score",
+          "qualifies"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 4,
+        "semanticSelections": 6,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 8,
+            "total": 8,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 7,
+            "total": 8,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 5,
+            "total": 6,
+            "unknown": 1
+          },
+          "periodAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 851.0999999998603,
+          "p95Ms": 877.6000000000931,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 75.19999999995343,
+            "p95Ms": 93.10000000009313
+          },
+          "ocr": {
+            "p50Ms": 771.4000000001397,
+            "p95Ms": 781.1000000000931
+          },
+          "reconstruction": {
+            "p50Ms": 0.9000000001396984,
+            "p95Ms": 0.900000000372529
+          },
+          "interpretation": {
+            "p50Ms": 1,
+            "p95Ms": 1.1999999999534339
+          },
+          "validation": {
+            "p50Ms": 0.3999999996740371,
+            "p95Ms": 0.4000000001396984
+          },
+          "registration": {
+            "p50Ms": 3.7000000001862645,
+            "p95Ms": 4.400000000139698
+          }
+        }
+      },
+      {
+        "id": "scorer-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "scorer",
+          "first-half",
+          "corners",
+          "cashout-offer"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 9,
+        "semanticSelections": 18,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 10,
+            "total": 10,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 8,
+            "total": 9,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 18,
+            "total": 18,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 16,
+            "total": 18,
+            "unknown": 2
+          },
+          "periodAbstention": {
+            "correct": 17,
+            "total": 17,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 1859.3999999999069,
+          "p95Ms": 2161.0999999998603,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 154.69999999995343,
+            "p95Ms": 156.5
+          },
+          "ocr": {
+            "p50Ms": 1708.5,
+            "p95Ms": 2000.8999999999069
+          },
+          "reconstruction": {
+            "p50Ms": 1,
+            "p95Ms": 1.0999999998603016
+          },
+          "interpretation": {
+            "p50Ms": 1,
+            "p95Ms": 1.5
+          },
+          "validation": {
+            "p50Ms": 0.10000000009313226,
+            "p95Ms": 0.10000000009313226
+          },
+          "registration": {
+            "p50Ms": 0.9000000001396984,
+            "p95Ms": 2.2000000001862645
+          }
+        }
+      },
+      {
+        "id": "eleven-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "shots-on-target",
+          "handicap",
+          "cashout-offer"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 12,
+        "semanticSelections": 19,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 10,
+            "total": 12,
+            "missing": 0,
+            "wrong": 2
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 10,
+            "total": 11,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 23,
+            "total": 25,
+            "missing": 2,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 22,
+            "total": 25,
+            "missing": 2,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 11,
+            "total": 11,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 7,
+            "total": 8,
+            "missing": 1,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 17,
+            "total": 19,
+            "unknown": 2
+          },
+          "scope": {
+            "correct": 16,
+            "total": 19,
+            "unknown": 3
+          },
+          "periodAbstention": {
+            "correct": 17,
+            "total": 19,
+            "unknown": 2
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 4220.40000000014,
+          "p95Ms": 4222.300000000047,
+          "passes": [
+            2,
+            2,
+            2
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 294.30000000004657,
+            "p95Ms": 310
+          },
+          "ocr": {
+            "p50Ms": 3911.5,
+            "p95Ms": 3925.600000000093
+          },
+          "reconstruction": {
+            "p50Ms": 2.599999999627471,
+            "p95Ms": 3.099999999627471
+          },
+          "interpretation": {
+            "p50Ms": 2.9000000001396984,
+            "p95Ms": 2.900000000372529
+          },
+          "validation": {
+            "p50Ms": 0.5,
+            "p95Ms": 0.8000000000465661
+          },
+          "registration": {
+            "p50Ms": 1,
+            "p95Ms": 1.5
+          }
+        }
+      }
+    ],
+    "externalNetworkAttempts": [],
+    "instrumentationParity": [
+      {
+        "id": "timed-goal",
+        "equal": true
+      },
+      {
+        "id": "player-builders",
+        "equal": true
+      },
+      {
+        "id": "handicap-combination",
+        "equal": true
+      },
+      {
+        "id": "first-half-corners",
+        "equal": true
+      },
+      {
+        "id": "mixed-builders",
+        "equal": true
+      },
+      {
+        "id": "scorer-builders",
+        "equal": true
+      },
+      {
+        "id": "eleven-builders",
+        "equal": true
+      }
+    ],
+    "unexpectedBaselineDifferences": []
+  },
+  "after": {
+    "images": 7,
+    "timingSamples": 21,
+    "repeats": 3,
+    "rawFields": {
+      "house": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "kind": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "stake": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "odds": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "potential": {
+        "correct": 7,
+        "total": 7,
+        "missing": 0,
+        "wrong": 0
+      },
+      "count": {
+        "correct": 40,
+        "total": 40,
+        "missing": 0,
+        "wrong": 0
+      },
+      "cashoutOffer": {
+        "correct": 6,
+        "total": 6,
+        "missing": 0,
+        "wrong": 0
+      },
+      "event": {
+        "correct": 30,
+        "total": 33,
+        "missing": 0,
+        "wrong": 3
+      },
+      "market": {
+        "correct": 71,
+        "total": 72,
+        "missing": 0,
+        "wrong": 1
+      },
+      "pick": {
+        "correct": 69,
+        "total": 72,
+        "missing": 0,
+        "wrong": 3
+      },
+      "legOdds": {
+        "correct": 33,
+        "total": 33,
+        "missing": 0,
+        "wrong": 0
+      },
+      "promotion": {
+        "correct": 23,
+        "total": 23,
+        "missing": 0,
+        "wrong": 0
+      }
+    },
+    "semanticFields": {
+      "statistic": {
+        "correct": 57,
+        "total": 57,
+        "unknown": 0
+      },
+      "scope": {
+        "correct": 45,
+        "total": 57,
+        "unknown": 12
+      },
+      "periodAbstention": {
+        "correct": 53,
+        "total": 53,
+        "unknown": 0
+      },
+      "placement": {
+        "correct": 7,
+        "total": 7,
+        "unknown": 1
+      },
+      "settlementAbstention": {
+        "correct": 7,
+        "total": 7,
+        "unknown": 7
+      },
+      "participant": {
+        "correct": 8,
+        "total": 11,
+        "unknown": 3
+      },
+      "explicitPeriod": {
+        "correct": 4,
+        "total": 4,
+        "unknown": 0
+      }
+    },
+    "participantCorrectAndRecognized": 1,
+    "phases": {
+      "preprocessing": {
+        "samples": 21,
+        "p50Ms": 74.79999999981374,
+        "p95Ms": 172.3000000002794
+      },
+      "ocr": {
+        "samples": 21,
+        "p50Ms": 1052.3999999999069,
+        "p95Ms": 2290.7000000001863
+      },
+      "reconstruction": {
+        "samples": 21,
+        "p50Ms": 1,
+        "p95Ms": 2.600000001024455
+      },
+      "interpretation": {
+        "samples": 21,
+        "p50Ms": 0.8000000007450581,
+        "p95Ms": 5.900000000372529
+      },
+      "validation": {
+        "samples": 21,
+        "p50Ms": 0.20000000018626451,
+        "p95Ms": 0.8000000002793968
+      },
+      "registration": {
+        "samples": 21,
+        "p50Ms": 3.5000000004656613,
+        "p95Ms": 6.699999999720603
+      }
+    },
+    "environment": {
+      "workerInitializationMs": 296.39999999990687,
+      "hardwareConcurrency": 12,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "memory": 32,
+      "browser": "156.0.8078.4",
+      "node": "v24.22.1",
+      "os": "win32 10.0.26300",
+      "cpu": "AMD Ryzen 5 5600G with Radeon Graphics         "
+    },
+    "saved": 4,
+    "review": 3,
+    "rawFieldFailures": [
+      {
+        "id": "player-builders",
+        "field": "event",
+        "path": "selections[1].event",
+        "expected": "FC Bayern München vs. Arsenal FC",
+        "actual": "FC Bayern Munchen vs. Arsenal FC",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "market",
+        "path": "selections[0].market",
+        "expected": "Córners en Primer Tiempo Más/Menos",
+        "actual": "Córners en Primer Tiempo Mas/Menos",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "first-half-corners",
+        "field": "pick",
+        "path": "selections[0].pick",
+        "expected": "Más de 4.5",
+        "actual": "Mas de 4.5",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "mixed-builders",
+        "field": "pick",
+        "path": "selections[1].builderMarkets[1].pick",
+        "expected": "Sí",
+        "actual": "Si",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "scorer-builders",
+        "field": "event",
+        "path": "selections[8].event",
+        "expected": "VfB Stuttgart vs. Atlético Madrid",
+        "actual": "VFB Stuttgart vs. Atlético Madrid",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "pick",
+        "path": "selections[3].builderMarkets[0].pick",
+        "expected": "Sí",
+        "actual": "SÍ",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "event",
+        "path": "selections[4].event",
+        "expected": "Inter de Milán vs. FC Shakhtar Donetsk",
+        "actual": "Inter de Milan vs. FC Shakhtar Donetsk",
+        "exact": false,
+        "correct": false,
+        "status": "wrong"
+      }
+    ],
+    "semanticFailures": [
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[0]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[1]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[2]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[3]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[0].builderMarkets[4]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[1].builderMarkets[0]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "player-builders",
+        "field": "scope",
+        "path": "selections[1].builderMarkets[1]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "handicap-combination",
+        "field": "scope",
+        "path": "selections[1]",
+        "expected": "team",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "handicap-combination",
+        "field": "participant",
+        "path": "selections[1]",
+        "expected": "Club Tijuana",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      },
+      {
+        "id": "mixed-builders",
+        "field": "scope",
+        "path": "selections[3]",
+        "expected": "match",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "scope",
+        "path": "selections[4].builderMarkets[1]",
+        "expected": "match",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "scope",
+        "path": "selections[6].builderMarkets[3]",
+        "expected": "player",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "scorer-builders",
+        "field": "participant",
+        "path": "selections[6].builderMarkets[3]",
+        "expected": "Erling Haaland",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      },
+      {
+        "id": "eleven-builders",
+        "field": "scope",
+        "path": "selections[3].builderMarkets[1]",
+        "expected": "team",
+        "actual": "unknown",
+        "correct": false
+      },
+      {
+        "id": "eleven-builders",
+        "field": "participant",
+        "path": "selections[3].builderMarkets[1]",
+        "expected": "Paris Saint-Germain",
+        "actual": null,
+        "correct": false,
+        "confidence": "missing"
+      }
+    ],
+    "byCaptureType": {
+      "simple": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "combined": {
+        "images": 6,
+        "rawFields": {
+          "house": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 38,
+            "total": 38,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 29,
+            "total": 32,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 70,
+            "total": 71,
+            "missing": 0,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 68,
+            "total": 71,
+            "missing": 0,
+            "wrong": 3
+          },
+          "legOdds": {
+            "correct": 32,
+            "total": 32,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 56,
+            "total": 56,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 44,
+            "total": 56,
+            "unknown": 12
+          },
+          "participant": {
+            "correct": 8,
+            "total": 11,
+            "unknown": 3
+          },
+          "periodAbstention": {
+            "correct": 52,
+            "total": 52,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 6
+          },
+          "explicitPeriod": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "withBuilder": {
+        "images": 4,
+        "rawFields": {
+          "house": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 30,
+            "total": 30,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 23,
+            "total": 26,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 65,
+            "total": 65,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 63,
+            "total": 65,
+            "missing": 0,
+            "wrong": 2
+          },
+          "legOdds": {
+            "correct": 26,
+            "total": 26,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 21,
+            "total": 21,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 50,
+            "total": 50,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 39,
+            "total": 50,
+            "unknown": 11
+          },
+          "participant": {
+            "correct": 8,
+            "total": 10,
+            "unknown": 2
+          },
+          "periodAbstention": {
+            "correct": 49,
+            "total": 49,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 4,
+            "total": 4,
+            "unknown": 4
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "liveVisible": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "placementConfirmed": {
+        "images": 6,
+        "rawFields": {
+          "house": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 36,
+            "total": 36,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 6,
+            "total": 6,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 27,
+            "total": 30,
+            "missing": 0,
+            "wrong": 3
+          },
+          "market": {
+            "correct": 69,
+            "total": 69,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 67,
+            "total": 69,
+            "missing": 0,
+            "wrong": 2
+          },
+          "legOdds": {
+            "correct": 30,
+            "total": 30,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 54,
+            "total": 54,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 42,
+            "total": 54,
+            "unknown": 12
+          },
+          "periodAbstention": {
+            "correct": 53,
+            "total": 53,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 6
+          },
+          "participant": {
+            "correct": 8,
+            "total": 11,
+            "unknown": 3
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      },
+      "placementUnknown": {
+        "images": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "note": "Overlapping subset; do not add groups to enlarge sample."
+      }
+    },
+    "byCapture": [
+      {
+        "id": "timed-goal",
+        "tags": [
+          "simple",
+          "next-goal",
+          "time-limit",
+          "cashout-offer"
+        ],
+        "kind": "Simple",
+        "outerLegs": 1,
+        "semanticSelections": 1,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 360.89999999990687,
+          "p95Ms": 584.6999999997206,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 27.600000000093132,
+            "p95Ms": 74.79999999981374
+          },
+          "ocr": {
+            "p50Ms": 331.89999999990687,
+            "p95Ms": 492.70000000018626
+          },
+          "reconstruction": {
+            "p50Ms": 0.5000000004656613,
+            "p95Ms": 4.7999999998137355
+          },
+          "interpretation": {
+            "p50Ms": 0.20000000018626451,
+            "p95Ms": 5.900000000372529
+          },
+          "validation": {
+            "p50Ms": 0.5000000004656613,
+            "p95Ms": 4.499999999534339
+          },
+          "registration": {
+            "p50Ms": 5.599999999627471,
+            "p95Ms": 35.8000000002794
+          }
+        }
+      },
+      {
+        "id": "player-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "shots-on-target",
+          "substitute",
+          "status-icons"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 2,
+        "semanticSelections": 7,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 1,
+            "total": 2,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 7,
+            "total": 7,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 0,
+            "total": 7,
+            "unknown": 7
+          },
+          "participant": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "periodAbstention": {
+            "correct": 7,
+            "total": 7,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 1302.3000000002794,
+          "p95Ms": 1408.1000000000931,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 81.5,
+            "p95Ms": 107.89999999990687
+          },
+          "ocr": {
+            "p50Ms": 1216.3000000002794,
+            "p95Ms": 1296.4999999995343
+          },
+          "reconstruction": {
+            "p50Ms": 1.0000000004656613,
+            "p95Ms": 1.0000000004656613
+          },
+          "interpretation": {
+            "p50Ms": 0.599999999627471,
+            "p95Ms": 1.2999999998137355
+          },
+          "validation": {
+            "p50Ms": 0.20000000018626451,
+            "p95Ms": 0.6000000000931323
+          },
+          "registration": {
+            "p50Ms": 1.3999999999068677,
+            "p95Ms": 3.5
+          }
+        }
+      },
+      {
+        "id": "handicap-combination",
+        "tags": [
+          "combinada",
+          "handicap",
+          "positive-sign",
+          "early-payout",
+          "schedule"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 3,
+        "semanticSelections": 3,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 2,
+            "total": 2,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 2,
+            "total": 3,
+            "unknown": 1
+          },
+          "periodAbstention": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 770.0999999996275,
+          "p95Ms": 795.6000000000931,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 56.299999999813735,
+            "p95Ms": 57.5
+          },
+          "ocr": {
+            "p50Ms": 710.6000000000931,
+            "p95Ms": 742.1000000000931
+          },
+          "reconstruction": {
+            "p50Ms": 0.4999999995343387,
+            "p95Ms": 0.8000000002793968
+          },
+          "interpretation": {
+            "p50Ms": 0.6000000000931323,
+            "p95Ms": 0.6000000005587935
+          },
+          "validation": {
+            "p50Ms": 0.20000000018626451,
+            "p95Ms": 0.7000000001862645
+          },
+          "registration": {
+            "p50Ms": 3.599999999627471,
+            "p95Ms": 6.699999999720603
+          }
+        }
+      },
+      {
+        "id": "first-half-corners",
+        "tags": [
+          "combinada",
+          "corners",
+          "first-half",
+          "original-return"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 3,
+        "semanticSelections": 3,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "pick": {
+            "correct": 2,
+            "total": 3,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 3,
+            "total": 3,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 3,
+            "total": 3,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 1106.7000000001863,
+          "p95Ms": 1273.6000000000931,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 48.8000000002794,
+            "p95Ms": 50.200000000186265
+          },
+          "ocr": {
+            "p50Ms": 1052.3999999999069,
+            "p95Ms": 1221.2000000001863
+          },
+          "reconstruction": {
+            "p50Ms": 0.5,
+            "p95Ms": 0.5000000004656613
+          },
+          "interpretation": {
+            "p50Ms": 0.5,
+            "p95Ms": 1.3000000002793968
+          },
+          "validation": {
+            "p50Ms": 0,
+            "p95Ms": 0.10000000009313226
+          },
+          "registration": {
+            "p50Ms": 1.7000000001862645,
+            "p95Ms": 2
+          }
+        }
+      },
+      {
+        "id": "mixed-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "team-goals",
+          "match-goals",
+          "both-score",
+          "qualifies"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 4,
+        "semanticSelections": 6,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "market": {
+            "correct": 8,
+            "total": 8,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 7,
+            "total": 8,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 4,
+            "total": 4,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 5,
+            "total": 6,
+            "unknown": 1
+          },
+          "periodAbstention": {
+            "correct": 6,
+            "total": 6,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 997.5999999996275,
+          "p95Ms": 1034.1999999997206,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 75,
+            "p95Ms": 85.8000000002794
+          },
+          "ocr": {
+            "p50Ms": 902.5,
+            "p95Ms": 955.9000000003725
+          },
+          "reconstruction": {
+            "p50Ms": 1,
+            "p95Ms": 1.099999999627471
+          },
+          "interpretation": {
+            "p50Ms": 0.8000000007450581,
+            "p95Ms": 1.3000000002793968
+          },
+          "validation": {
+            "p50Ms": 0.2999999998137355,
+            "p95Ms": 0.8000000002793968
+          },
+          "registration": {
+            "p50Ms": 4,
+            "p95Ms": 4.699999999254942
+          }
+        }
+      },
+      {
+        "id": "scorer-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "scorer",
+          "first-half",
+          "corners",
+          "cashout-offer"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 9,
+        "semanticSelections": 18,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 10,
+            "total": 10,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 8,
+            "total": 9,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 23,
+            "total": 23,
+            "missing": 0,
+            "wrong": 0
+          },
+          "legOdds": {
+            "correct": 9,
+            "total": 9,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 5,
+            "total": 5,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 18,
+            "total": 18,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 16,
+            "total": 18,
+            "unknown": 2
+          },
+          "periodAbstention": {
+            "correct": 17,
+            "total": 17,
+            "unknown": 0
+          },
+          "explicitPeriod": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "review",
+          "bets": 0,
+          "movements": 0,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 2118.1999999997206,
+          "p95Ms": 2122.899999999907,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 145.39999999990687,
+            "p95Ms": 163.20000000018626
+          },
+          "ocr": {
+            "p50Ms": 1953.0999999996275,
+            "p95Ms": 1960.2000000001863
+          },
+          "reconstruction": {
+            "p50Ms": 2.2000000001862645,
+            "p95Ms": 2.600000001024455
+          },
+          "interpretation": {
+            "p50Ms": 1.7999999998137355,
+            "p95Ms": 6.999999999068677
+          },
+          "validation": {
+            "p50Ms": 0.20000000018626451,
+            "p95Ms": 0.20000000018626451
+          },
+          "registration": {
+            "p50Ms": 1.5,
+            "p95Ms": 2.2999999998137355
+          }
+        }
+      },
+      {
+        "id": "eleven-builders",
+        "tags": [
+          "combinada",
+          "builder",
+          "shots-on-target",
+          "handicap",
+          "cashout-offer"
+        ],
+        "kind": "Combinada",
+        "outerLegs": 11,
+        "semanticSelections": 19,
+        "rawFields": {
+          "house": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "kind": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "stake": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "odds": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "potential": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "count": {
+            "correct": 12,
+            "total": 12,
+            "missing": 0,
+            "wrong": 0
+          },
+          "cashoutOffer": {
+            "correct": 1,
+            "total": 1,
+            "missing": 0,
+            "wrong": 0
+          },
+          "event": {
+            "correct": 10,
+            "total": 11,
+            "missing": 0,
+            "wrong": 1
+          },
+          "market": {
+            "correct": 25,
+            "total": 25,
+            "missing": 0,
+            "wrong": 0
+          },
+          "pick": {
+            "correct": 24,
+            "total": 25,
+            "missing": 0,
+            "wrong": 1
+          },
+          "legOdds": {
+            "correct": 11,
+            "total": 11,
+            "missing": 0,
+            "wrong": 0
+          },
+          "promotion": {
+            "correct": 8,
+            "total": 8,
+            "missing": 0,
+            "wrong": 0
+          }
+        },
+        "semanticFields": {
+          "statistic": {
+            "correct": 19,
+            "total": 19,
+            "unknown": 0
+          },
+          "scope": {
+            "correct": 18,
+            "total": 19,
+            "unknown": 1
+          },
+          "periodAbstention": {
+            "correct": 19,
+            "total": 19,
+            "unknown": 0
+          },
+          "participant": {
+            "correct": 0,
+            "total": 1,
+            "unknown": 1
+          },
+          "placement": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 0
+          },
+          "settlementAbstention": {
+            "correct": 1,
+            "total": 1,
+            "unknown": 1
+          }
+        },
+        "registration": {
+          "status": "saved",
+          "bets": 1,
+          "movements": 1,
+          "settlements": 0,
+          "backend": "fake-indexeddb in RAM; no Supabase latency"
+        },
+        "recognition": {
+          "samples": 3,
+          "p50Ms": 2469.9000000003725,
+          "p95Ms": 3021.399999999907,
+          "passes": [
+            1,
+            1,
+            1
+          ]
+        },
+        "phases": {
+          "preprocessing": {
+            "p50Ms": 172.3000000002794,
+            "p95Ms": 197.10000000009313
+          },
+          "ocr": {
+            "p50Ms": 2290.7000000001863,
+            "p95Ms": 2819.100000000093
+          },
+          "reconstruction": {
+            "p50Ms": 1.300000000745058,
+            "p95Ms": 1.7000000001862645
+          },
+          "interpretation": {
+            "p50Ms": 1.599999999627471,
+            "p95Ms": 1.6999999997206032
+          },
+          "validation": {
+            "p50Ms": 0.5,
+            "p95Ms": 0.5
+          },
+          "registration": {
+            "p50Ms": 4.399999999906868,
+            "p95Ms": 5
+          }
+        }
+      }
+    ],
+    "externalNetworkAttempts": [],
+    "instrumentationParity": [
+      {
+        "id": "timed-goal",
+        "equal": true
+      },
+      {
+        "id": "player-builders",
+        "equal": true
+      },
+      {
+        "id": "handicap-combination",
+        "equal": true
+      },
+      {
+        "id": "first-half-corners",
+        "equal": true
+      },
+      {
+        "id": "mixed-builders",
+        "equal": true
+      },
+      {
+        "id": "scorer-builders",
+        "equal": true
+      },
+      {
+        "id": "eleven-builders",
+        "equal": true
+      }
+    ],
+    "unexpectedBaselineDifferences": []
+  },
+  "limitations": [
+    "Literal comparisons retain accents/case; no relaxed matching to inflate accuracy.",
+    "Semantic gold is a separate human annotation, not generated by interpretMarket.",
+    "Participant text extraction differs from identity confidence; report both.",
+    "Unspecified periods and unknown settlement are abstention checks, excluded from explicit-period/settlement precision.",
+    "Timing is local Chromium, one OCR worker, RAM registration. No cloud latency, batch-throughput claim or production synchronization test.",
+    "Small samples and sequential runs; no statistical significance claimed. Existing phase timing boundaries are exclusive mixed-function measurements."
+  ]
+}

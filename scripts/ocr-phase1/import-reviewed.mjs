@@ -5,7 +5,11 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const corpusPath = path.join(root, 'tests/ocr-phase1/cases.json');
+const fixtureRoot = path.join(
+  root,
+  process.argv.includes('--phase3') ? 'tests/ocr-phase3' : 'tests/ocr-phase1',
+);
+const corpusPath = path.join(fixtureRoot, 'cases.json');
 const corpus = JSON.parse(await readFile(corpusPath, 'utf8'));
 const [id, source] = process.argv.slice(2);
 const entry = corpus.cases.find((c) => c.id === id);
@@ -25,8 +29,8 @@ while (offset < input.length) {
   offset = end;
 }
 const output = Buffer.concat(parts);
-await mkdir(path.join(root, 'tests/ocr-phase1/images'), { recursive: true });
-await writeFile(path.join(root, 'tests/ocr-phase1', entry.image), output);
+await mkdir(path.join(fixtureRoot, 'images'), { recursive: true });
+await writeFile(path.join(fixtureRoot, entry.image), output);
 entry.sha256 = createHash('sha256').update(output).digest('hex');
 entry.privacy =
   'Revisión visual: sin titular, usuario, correo, ID de boleto, QR ni credenciales. Metadatos PNG no esenciales eliminados; píxeles preservados.';

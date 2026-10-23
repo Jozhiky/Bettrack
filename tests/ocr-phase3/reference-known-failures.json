@@ -1,0 +1,34 @@
+{
+  "scorer-builders": {
+    "signatures": [
+      "selections[8].event:wrong"
+    ],
+    "observed": {
+      "selections[8].event": "VFB Stuttgart vs. Atlético Madrid"
+    }
+  },
+  "eleven-builders": {
+    "signatures": [
+      "selections.length:wrong",
+      "selections[10].builderMarkets.length:wrong",
+      "selections[10].builderMarkets[0].market:missing",
+      "selections[10].builderMarkets[0].pick:missing",
+      "selections[10].builderMarkets[0].promotion:missing",
+      "selections[10].builderMarkets[1].market:missing",
+      "selections[10].builderMarkets[1].pick:missing",
+      "selections[3].builderMarkets[0].pick:wrong",
+      "selections[4].event:wrong"
+    ],
+    "observed": {
+      "selections.length": 12,
+      "selections[3].builderMarkets[0].pick": "SÍ",
+      "selections[4].event": "Inter de Milan vs. FC Shakhtar Donetsk",
+      "selections[10].builderMarkets.length": 0,
+      "selections[10].builderMarkets[0].market": null,
+      "selections[10].builderMarkets[0].pick": null,
+      "selections[10].builderMarkets[0].promotion": null,
+      "selections[10].builderMarkets[1].market": null,
+      "selections[10].builderMarkets[1].pick": null
+    }
+  }
+}

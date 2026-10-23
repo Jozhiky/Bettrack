@@ -1,0 +1,326 @@
+{
+  "version": 3,
+  "annotation": "Transcripción visual independiente del parser. Importes en céntimos. Solo fútbol real; no equivale a cobertura NBA, preparación o liquidación.",
+  "cases": [
+    {
+      "id": "scorer-builders",
+      "image": "images/scorer-builders.png",
+      "provenance": "real-capture-deidentified",
+      "tags": [
+        "combinada",
+        "builder",
+        "scorer",
+        "first-half",
+        "corners",
+        "cashout-offer"
+      ],
+      "expected": {
+        "house": "Betano",
+        "kind": "Combinada",
+        "stake": 250,
+        "odds": 50.65,
+        "potential": 12664,
+        "cashoutOffer": 250,
+        "selections": [
+          {
+            "event": "Fenerbahce SK vs. SK Slavia Praha",
+            "market": "Resultado del partido",
+            "pick": "Fenerbahce SK",
+            "odds": 1.52,
+            "promotion": "Pago anticipado +2"
+          },
+          {
+            "event": "FC Sabah vs. Borussia Dortmund",
+            "market": "Resultado del partido",
+            "pick": "Borussia Dortmund",
+            "odds": 1.32,
+            "promotion": "Pago anticipado +2"
+          },
+          {
+            "event": "FC Porto vs. PSV Eindhoven",
+            "market": "Goles totales Más/Menos",
+            "pick": "Más de 1.5",
+            "odds": 1.19
+          },
+          {
+            "event": "SSC Napoli vs. FK Bodo/Glimt",
+            "market": "Goles totales Más/Menos",
+            "pick": "Más de 1.5",
+            "odds": 1.18
+          },
+          {
+            "event": "AS Roma vs. SK Slovan Bratislava",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.7,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "AS Roma",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Tarjetas Totales Más/Menos",
+                "pick": "Más de 2.5"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          },
+          {
+            "event": "Liverpool FC vs. Villarreal CF",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.72,
+            "builderMarkets": [
+              {
+                "market": "Más/Menos Córners",
+                "pick": "Más de 8.5"
+              },
+              {
+                "market": "Doble oportunidad",
+                "pick": "Liverpool FC o Empate"
+              }
+            ]
+          },
+          {
+            "event": "Manchester City vs. AEK Atenas",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.83,
+            "builderMarkets": [
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 2.5"
+              },
+              {
+                "market": "Resultado del partido",
+                "pick": "Manchester City",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Más/Menos Goles en Primer Tiempo",
+                "pick": "Más de 0.5"
+              },
+              {
+                "market": "Anotar en cualquier momento",
+                "pick": "Erling Haaland (Manchester City)",
+                "promotion": "Suplente de Oro"
+              }
+            ]
+          },
+          {
+            "event": "Paris Saint-Germain vs. FC Barcelona",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 2.1,
+            "builderMarkets": [
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 2.5"
+              },
+              {
+                "market": "Doble oportunidad",
+                "pick": "Paris Saint-Germain o FC Barcelona"
+              },
+              {
+                "market": "Más/Menos Córners",
+                "pick": "Más de 8.5"
+              }
+            ]
+          },
+          {
+            "event": "VfB Stuttgart vs. Atlético Madrid",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.6,
+            "builderMarkets": [
+              {
+                "market": "Doble oportunidad",
+                "pick": "Atlético Madrid o Empate"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          }
+        ]
+      },
+      "sha256": "ef8599210cd9ade183583054e3b2f6f3884f9e7e0b49d379c76af18753e7041a",
+      "privacy": "Revisión visual: sin titular, usuario, correo, ID de boleto, QR ni credenciales. Metadatos PNG no esenciales eliminados; píxeles preservados.",
+      "registration": "review",
+      "referenceRegistration": "review"
+    },
+    {
+      "id": "eleven-builders",
+      "image": "images/eleven-builders.png",
+      "provenance": "real-capture-deidentified",
+      "tags": [
+        "combinada",
+        "builder",
+        "shots-on-target",
+        "handicap",
+        "cashout-offer"
+      ],
+      "expected": {
+        "house": "Betano",
+        "kind": "Combinada",
+        "stake": 200,
+        "odds": 51.53,
+        "potential": 10307,
+        "cashoutOffer": 200,
+        "selections": [
+          {
+            "event": "FC Porto vs. PSV Eindhoven",
+            "market": "Resultado del partido",
+            "pick": "FC Porto",
+            "odds": 1.57,
+            "promotion": "Pago anticipado +2"
+          },
+          {
+            "event": "AS Roma vs. SK Slovan Bratislava",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.23,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "AS Roma",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          },
+          {
+            "event": "Manchester City vs. AEK Atenas",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.62,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "Manchester City",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              },
+              {
+                "market": "Tiros al Arco",
+                "pick": "Más de 9.5"
+              }
+            ]
+          },
+          {
+            "event": "Paris Saint-Germain vs. FC Barcelona",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 2.12,
+            "builderMarkets": [
+              {
+                "market": "Ambos equipos anotan",
+                "pick": "Sí"
+              },
+              {
+                "market": "Hándicap Resultado del Partido",
+                "pick": "Paris Saint-Germain +2"
+              },
+              {
+                "market": "Tiros al Arco",
+                "pick": "Más de 10.5"
+              }
+            ]
+          },
+          {
+            "event": "Inter de Milán vs. FC Shakhtar Donetsk",
+            "market": "Resultado del partido",
+            "pick": "Inter de Milán",
+            "odds": 1.2,
+            "promotion": "Pago anticipado +2"
+          },
+          {
+            "event": "Real Betis Balompié vs. Feyenoord Rotterdam",
+            "market": "Resultado del partido",
+            "pick": "Real Betis Balompié",
+            "odds": 1.57,
+            "promotion": "Pago anticipado +2"
+          },
+          {
+            "event": "Club Brugge KV vs. RC Lens",
+            "market": "Doble oportunidad",
+            "pick": "Club Brugge KV o Empate",
+            "odds": 1.37
+          },
+          {
+            "event": "FC Bayern Munchen vs. Arsenal FC",
+            "market": "Doble oportunidad",
+            "pick": "FC Bayern Munchen o Empate",
+            "odds": 1.36
+          },
+          {
+            "event": "Aston Villa vs. Viking FK",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.32,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "Aston Villa",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          },
+          {
+            "event": "Sporting CP vs. Linzer ASK",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.29,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "Sporting CP",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          },
+          {
+            "event": "Real Madrid vs. RB Leipzig",
+            "market": "Bet Builder",
+            "pick": "Bet Builder",
+            "odds": 1.3,
+            "builderMarkets": [
+              {
+                "market": "Resultado del partido",
+                "pick": "Real Madrid",
+                "promotion": "Pago anticipado +2"
+              },
+              {
+                "market": "Goles totales Más/Menos",
+                "pick": "Más de 1.5"
+              }
+            ]
+          }
+        ]
+      },
+      "sha256": "a40705502ab2cd62555f53496b99e1e6fbd3d785292889c50157491efed29ba2",
+      "privacy": "Revisión visual: sin titular, usuario, correo, ID de boleto, QR ni credenciales. Metadatos PNG no esenciales eliminados; píxeles preservados.",
+      "registration": "saved",
+      "referenceRegistration": "review"
+    }
+  ]
+}

@@ -10,12 +10,20 @@ import { placementReviewReason } from '../ocr/placement';
 import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
 import { readCapture } from '../ocr/readCapture';
 import { runBatch } from './batch';
+import {
+  readDraft,
+  readPlacementHistory,
+  needsNewProof,
+  reviewSelectionSchema,
+  type ReviewDraft,
+} from '../ocr/review';
 import { id, timestamp, fingerprint, betSchema, selectionSchema, type Bet } from '../domain/model';
 
 export async function enqueueCaptures(
   files: File[],
   repository = repo,
   report?: (label: string) => void,
+  proofFor?: string,
 ) {
   const d = repository.database;
   const generation = cloudStore.generation;
@@ -41,8 +49,11 @@ export async function enqueueCaptures(
       const optimized = known ? { blob: file } : await optimizeImage(file);
       const hash = known?.hash ?? (await hashImage(optimized.blob));
       guard();
-      await transact(d, 'rw', [d.uploads, d.images, d.bets], async (d) => {
+      await transact(d, 'rw', [d.uploads, d.images, d.bets, d.audit], async (d) => {
         guard();
+        const parent = proofFor ? await d.uploads.get(proofFor) : undefined;
+        if (proofFor && (!parent || !['review', 'error'].includes(parent.status)))
+          throw new Error('El borrador de origen cambió. Vuelve a abrirlo.');
         const sameImages = await d.images
           .filter(
             (i) => i.hash === hash || i.hash === originalHash || i.originalHash === originalHash,
@@ -52,6 +63,15 @@ export async function enqueueCaptures(
           .filter((b) => !!b.imageId && sameImages.includes(b.imageId))
           .first();
         const imageId = sameImages[0] ?? key;
+        if (parent && sameImages.includes(parent.imageId))
+          throw new Error(
+            'Es la misma imagen. Añade un comprobante diferente que muestre la apuesta aceptada.',
+          );
+        // A new queue item for identical pixels must retain earlier placement
+        // uncertainty; changing the filename is not new evidence.
+        const previousRead = sameImages.length
+          ? await d.uploads.filter((u) => sameImages.includes(u.imageId) && !!u.draftJson).first()
+          : undefined;
         if (!sameImages.length)
           await d.images.add({
             id: imageId,
@@ -70,10 +90,24 @@ export async function enqueueCaptures(
           createdAt: timestamp(),
           status: existing ? 'duplicate' : 'queued',
           progress: 0,
-          draftJson: '',
+          draftJson: previousRead?.draftJson ?? '',
           reason: existing ? 'Esta imagen ya está registrada. No se ha vuelto a ejecutar OCR.' : '',
           betId: existing?.id,
         });
+        if (parent)
+          await d.audit.add({
+            id: id(),
+            date: timestamp(),
+            action: 'Añadir comprobante independiente',
+            entityId: key,
+            before: JSON.stringify({ uploadId: parent.id, imageId: parent.imageId }),
+            after: JSON.stringify({
+              uploadId: key,
+              imageId,
+              proofFor: parent.id,
+              placementTransferred: false,
+            }),
+          });
       });
     } finally {
       completed++;
@@ -102,19 +136,127 @@ export async function registerCapture(
   parsed: ParsedTicket,
   repository: LocalRepository = repo,
 ) {
+  return processCapture(uploadId, parsed, repository);
+}
+
+export interface CaptureReviewConfirmation {
+  expectedDraft: string;
+  imageId: string;
+  selections: ParsedTicket['selections'];
+  acknowledged: boolean;
+}
+export async function confirmCaptureReview(
+  uploadId: string,
+  confirmation: CaptureReviewConfirmation,
+  repository = repo,
+) {
+  return processCapture(uploadId, undefined, repository, confirmation);
+}
+
+async function processCapture(
+  uploadId: string,
+  input: ParsedTicket | undefined,
+  repository: LocalRepository,
+  confirmation?: CaptureReviewConfirmation,
+) {
   const d = repository.database;
   await transact(d, 'rw', d.tables, async (d) => {
     const scopedRepository = new LocalRepository(d);
     const upload = await d.uploads.get(uploadId);
+    if (
+      confirmation &&
+      (!upload ||
+        upload.status !== 'review' ||
+        upload.draftJson !== confirmation.expectedDraft ||
+        upload.imageId !== confirmation.imageId)
+    )
+      throw new Error('El borrador cambió. Vuelve a abrir la revisión.');
     if (!upload || upload.status === 'saved' || upload.status === 'linked') return;
+    const previous = readDraft(upload.draftJson);
+    let parsed: ReviewDraft;
+    if (confirmation) {
+      if (!confirmation.acknowledged)
+        throw new Error('Confirma explícitamente que cotejaste los datos con la imagen.');
+      if (!previous || needsNewProof(previous))
+        throw new Error('Añade un comprobante de colocación antes de revisar datos.');
+      const selections = confirmation.selections.map((row) => {
+        const s = reviewSelectionSchema.parse(row);
+        return {
+          ...s,
+          promotion: s.promotion || undefined,
+          builderMarkets: s.builderMarkets?.map((m) => ({
+            ...m,
+            promotion: m.promotion || undefined,
+          })),
+        };
+      });
+      if (
+        selections.length !== previous.selections.length ||
+        selections.some(
+          (s, i) =>
+            (s.builderMarkets?.length ?? 0) !==
+            (previous.selections[i].builderMarkets?.length ?? 0),
+        )
+      )
+        throw new Error(
+          'No se pueden omitir ni añadir selecciones en esta revisión. Añade una captura completa.',
+        );
+      parsed = { ...previous, selections, humanReviewed: true };
+    } else parsed = input!;
     // The original is already stored. Registration needs its metadata, not a
     // second Storage download of the pixels we have just recognized.
     const image = await d.images.where('id').equals(upload.imageId).first();
     if (!image) throw new Error('No se encuentra la captura original.');
     const placement = placementFromText(parsed.text);
-    const draftJson = JSON.stringify({ ...parsed, placement });
-    const needsReview = async (reason: string) =>
-      d.uploads.update(uploadId, { status: 'review', draftJson, reason, progress: 100 });
+    const previousHistory = readPlacementHistory(upload.draftJson);
+    const priorPlacement = previousHistory && placementFromText(previousHistory.text);
+    const samePixels = await d.images
+      .filter(
+        (i) =>
+          i.hash === image.hash || (!!image.originalHash && i.originalHash === image.originalHash),
+      )
+      .primaryKeys();
+    const siblingDrafts = (
+      await d.uploads
+        .filter((u) => u.id !== uploadId && samePixels.includes(u.imageId) && !!u.draftJson)
+        .toArray()
+    ).map((u) => readPlacementHistory(u.draftJson));
+    const holds = [
+      previousHistory?.placementHold,
+      priorPlacement && priorPlacement.status !== 'confirmed'
+        ? { text: previousHistory!.text }
+        : undefined,
+      placement.status !== 'confirmed' ? { text: parsed.text } : undefined,
+      ...siblingDrafts.flatMap((draft) =>
+        draft
+          ? [
+              draft.placementHold,
+              placementFromText(draft.text).status !== 'confirmed'
+                ? { text: draft.text }
+                : undefined,
+            ]
+          : [],
+      ),
+    ].filter((hold): hold is { text: string } => !!hold);
+    const isPreparation = (hold: { text: string }) => {
+      const evidence = placementFromText(hold.text);
+      return evidence.status === 'preparation' || evidence.basis === 'conflicting';
+    };
+    const placementHold = holds.find(isPreparation) ?? holds[0];
+    if (confirmation && placementHold && isPreparation(placementHold))
+      throw new Error(
+        'Esta imagen también contiene evidencia previa de preparación. Añade un comprobante diferente.',
+      );
+    const draftJson = JSON.stringify({
+      ...parsed,
+      placement,
+      placementHold,
+      humanReviewed: !!confirmation,
+    });
+    const needsReview = async (reason: string) => {
+      if (confirmation) throw new Error(reason);
+      return d.uploads.update(uploadId, { status: 'review', draftJson, reason, progress: 100 });
+    };
     if (
       !parsed.house ||
       parsed.stake === undefined ||
@@ -131,13 +273,18 @@ export async function registerCapture(
       );
     const placementReason = placementReviewReason(placement);
     if (placementReason) return needsReview(placementReason);
+    if (placementHold && !confirmation)
+      return needsReview(
+        'La misma imagen ya requería comprobar su colocación. Releer no la confirma: añade un comprobante o revisa explícitamente la evidencia recuperada.',
+      );
     // New OCR drafts can retain ambiguous raw labels/null odds without turning
     // them into confirmed bets. Older drafts remain schema-compatible.
-    if (parsed.reviewReasons?.length) return needsReview(parsed.reviewReasons.join(' '));
+    if (!confirmation && parsed.reviewReasons?.length)
+      return needsReview(parsed.reviewReasons.join(' '));
     // Re-evaluate the raw evidence at the write boundary: persisted drafts may
     // predate semantic metadata, and cached confidence is not authorization.
     const semanticReasons = semanticReviewReasons(interpretSelections(parsed.selections));
-    if (semanticReasons.length) return needsReview(semanticReasons.join(' '));
+    if (!confirmation && semanticReasons.length) return needsReview(semanticReasons.join(' '));
     const missingOdds = parsed.selections.findIndex((s) => s.odds === null);
     if (missingOdds >= 0)
       return needsReview(
@@ -201,6 +348,29 @@ export async function registerCapture(
         'Uno de los importes o el tipo de apuesta no es válido. Vuelve a subir el original.',
       );
     const bet: Bet = checked.data;
+    const auditReview = async (decision: string) => {
+      if (confirmation)
+        await d.audit.add({
+          id: id(),
+          date: timestamp(),
+          action: 'Revisión humana de captura',
+          entityId: upload.id,
+          before: upload.draftJson,
+          after: JSON.stringify({
+            decision,
+            imageId: upload.imageId,
+            selections: rows,
+            stake: bet.stake,
+            odds: bet.odds,
+            potential: bet.potential,
+            initialStatus: 'Pendiente',
+            acknowledged: true,
+            interpretation:
+              'Texto cotejado por el usuario; atributos no reconocidos no se infieren',
+            originalText: parsed.text,
+          }),
+        });
+    };
     bet.fingerprint = fingerprint(bet, rows);
     if (!upload.allowDuplicate) {
       const allSelections = await d.selections.toArray();
@@ -225,10 +395,12 @@ export async function registerCapture(
           betId: existing.id,
           progress: 100,
         });
+        if (confirmation) await auditReview('duplicate');
         return;
       }
     }
     await scopedRepository.saveBet(bet, rows, undefined, true);
+    if (confirmation) await auditReview('saved');
     await d.uploads.update(uploadId, {
       status: 'saved',
       draftJson,
