@@ -6,6 +6,7 @@ import { createOcrSession, ocrConcurrency } from '../ocr/session';
 import { optimizeImage } from '../ocr/optimize';
 import { captureActivity } from './captureActivity';
 import type { ParsedTicket } from '../ocr/parser';
+import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
 import { readCapture } from '../ocr/readCapture';
 import { runBatch } from './batch';
 import { id, timestamp, fingerprint, betSchema, selectionSchema, type Bet } from '../domain/model';
@@ -129,6 +130,10 @@ export async function registerCapture(
     // New OCR drafts can retain ambiguous raw labels/null odds without turning
     // them into confirmed bets. Older drafts remain schema-compatible.
     if (parsed.reviewReasons?.length) return needsReview(parsed.reviewReasons.join(' '));
+    // Re-evaluate the raw evidence at the write boundary: persisted drafts may
+    // predate semantic metadata, and cached confidence is not authorization.
+    const semanticReasons = semanticReviewReasons(interpretSelections(parsed.selections));
+    if (semanticReasons.length) return needsReview(semanticReasons.join(' '));
     const missingOdds = parsed.selections.findIndex((s) => s.odds === null);
     if (missingOdds >= 0)
       return needsReview(

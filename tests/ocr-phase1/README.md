@@ -1,5 +1,12 @@
 # Corpus OCR — FASE 1
 
+**Endurecimiento FASE 2.1:** ejecutar `npm run test:ocr:phase21` y
+`npm run test:ocr:phase21:strict`. El primero conserva las expectativas literales
+y exige revisión del fixture `player-builders`: sus siete participantes siguen
+sin identidad/ámbito verificados. Los otros cuatro boletos claros se registran.
+Los modos históricos no adoptan silenciosamente esta nueva decisión de seguridad.
+Véase [OCR_PHASE2_1_REPORT.md](../../docs/OCR_PHASE2_1_REPORT.md).
+
 Banco de pruebas aislado. No es un nuevo parser ni modifica cómo guarda la aplicación.
 
 **Actualización FASE 2:** esta página documenta la referencia histórica. Los tres contratos

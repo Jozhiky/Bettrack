@@ -12,7 +12,8 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixtureRoot = path.join(root, 'tests/ocr-phase1');
 const corpus = JSON.parse(await readFile(path.join(fixtureRoot, 'cases.json'), 'utf8'));
 const known = JSON.parse(await readFile(path.join(fixtureRoot, 'known-failures.json'), 'utf8'));
-const phase2 = process.argv.includes('--phase2');
+const phase21 = process.argv.includes('--phase21');
+const phase2 = phase21 || process.argv.includes('--phase2');
 // Keep the historical Phase 1 oracle immutable. Only the five specifically
 // repaired structural cases must now be exact; literal accent errors remain.
 if (phase2)
@@ -73,13 +74,17 @@ let browser;
 const strict = process.argv.includes('--strict');
 const output = path.join(
   root,
-  phase2
+  phase21
     ? strict
-      ? 'test-results/ocr-phase2-strict'
-      : 'test-results/ocr-phase2'
-    : strict
-      ? 'test-results/ocr-phase1-strict'
-      : 'test-results/ocr-phase1',
+      ? 'test-results/ocr-phase21-strict'
+      : 'test-results/ocr-phase21'
+    : phase2
+      ? strict
+        ? 'test-results/ocr-phase2-strict'
+        : 'test-results/ocr-phase2'
+      : strict
+        ? 'test-results/ocr-phase1-strict'
+        : 'test-results/ocr-phase1',
 );
 function limitEvaluation(page) {
   const original = page.evaluate.bind(page);
@@ -228,8 +233,24 @@ try {
       0,
       `${result.id}: cashout offer created a settlement`,
     );
+    // Phase 2.1 intentionally stops auto-saving the seven unverified named
+    // participants in this fixture. This changes safety, not the text oracle.
+    const semanticHold = phase21 && result.id === 'player-builders';
+    if (semanticHold) {
+      assert.equal(result.parsed.interpretations.length, 7);
+      assert.equal(result.parsed.reviewReasons.length, 7);
+      for (const { path: selectionPath, value } of result.parsed.interpretations) {
+        assert.equal(value.statistic, 'shots-on-target');
+        assert.equal(value.scope, 'unknown');
+        assert.equal(value.confidence.participant, 'review');
+        assert.ok(value.participant);
+        assert.ok(
+          result.parsed.reviewReasons.some((reason) => reason.startsWith(`${selectionPath}:`)),
+        );
+      }
+    }
     const expectedStatus =
-      result.id.startsWith('injected-') || result.knownFailure ? 'review' : 'saved';
+      result.id.startsWith('injected-') || result.knownFailure || semanticHold ? 'review' : 'saved';
     assert.equal(
       result.registered.status,
       expectedStatus,
@@ -275,7 +296,7 @@ try {
       for (const key of Object.keys(score)) qualitySummary[field][key] += score[key];
     }
   const report = {
-    version: phase2 ? 2 : 1,
+    version: phase21 ? 2.1 : phase2 ? 2 : 1,
     generatedAt: new Date().toISOString(),
     repeats,
     environment: {

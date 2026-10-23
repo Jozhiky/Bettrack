@@ -5,7 +5,8 @@ import { parseBetanoLayout } from './betano';
 import { betanoHeader } from './header';
 import type { SymbolCandidate, TicketPromotion } from './symbols';
 import { normalized } from './markets';
-import { interpretMarket, type MarketInterpretation } from './semantics';
+import type { MarketInterpretation } from './semantics';
+import { interpretSelections, semanticReviewReasons } from './semanticReview';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -45,6 +46,29 @@ function labeled(text: string, labels: string[], money = false) {
       } catch {
         /* keep missing */
       }
+    }
+  }
+}
+
+function availableCashout(text: string, lines: string[]) {
+  // Explicit CASH OUT + amount is evidence of an offer, never of execution.
+  const explicit = labeled(text, ['cash\\s*ou[tIi](?:\\s+(?:disponible|ofrecido))?'], true);
+  if (explicit !== undefined) return explicit;
+  // Generic action buttons also occur while creating a bet. Accept their
+  // amount only beside an explicit availability label, not an execution label.
+  if (
+    lines.some((line) => /^(?:crear|confirmar|realizar|colocar) apuesta\b/.test(normalized(line)))
+  )
+    return undefined;
+  for (let i = 0; i < lines.length; i++) {
+    if (!/^(?:cerrar apuesta|cobrar)\b/.test(normalized(lines[i]))) continue;
+    const context = lines.slice(Math.max(0, i - 2), i).map(normalized);
+    if (
+      context.some((line) => /^cash\s*out\s+(?:disponible|ofrecido)\s*:?$/.test(line)) &&
+      !context.some((line) => /cash\s*out\s+(?:ejecutado|realizado|cobrado)/.test(line))
+    ) {
+      const offer = labeled(lines.slice(i, i + 2).join('\n'), ['^cerrar apuesta', '^cobrar'], true);
+      if (offer !== undefined) return offer;
     }
   }
 }
@@ -98,7 +122,7 @@ export function parseTicket(
     labeled(text, adapter.stake, true) ?? (headerMoney ? toCents(headerMoney[1]) : undefined);
   const odds = labeled(text, adapter.odds) ?? (headerOdds ? decimal(headerOdds[1]) : undefined);
   const potential = labeled(text, adapter.potential, true);
-  const cashoutOffer = labeled(text, ['cash\\s*ou[tIi]', 'cerrar apuesta', 'cobrar'], true);
+  const cashoutOffer = availableCashout(text, lines);
   const layout = house === 'Betano' && rows.length ? parseBetanoLayout(rows, symbols) : undefined;
   const bonusAmount = labeled(text, ['bono\\s*\\+?'], true);
   const selections: ParsedTicket['selections'] = layout?.selections ?? [];
@@ -196,6 +220,7 @@ export function parseTicket(
     warnings.push(
       'Bono visible: se conserva aparte del retorno. No se suma ni se contabiliza como ganancia realizada.',
     );
+  const interpretations = interpretSelections(selections);
   return {
     house,
     kind,
@@ -212,13 +237,8 @@ export function parseTicket(
         : undefined,
     selections,
     warnings,
-    reviewReasons: layout?.reviewReasons ?? [],
-    interpretations: selections.flatMap((s, i) =>
-      (s.builderMarkets ?? [s]).map((m, j) => ({
-        path: `selections[${i}]${s.builderMarkets ? `.builderMarkets[${j}]` : ''}`,
-        value: interpretMarket(m.market, m.pick, s.event, s.sport),
-      })),
-    ),
+    reviewReasons: [...(layout?.reviewReasons ?? []), ...semanticReviewReasons(interpretations)],
+    interpretations,
     text,
     confidence: {
       house: house ? 'high' : 'missing',
