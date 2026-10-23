@@ -7,6 +7,7 @@ import type { SymbolCandidate, TicketPromotion } from './symbols';
 import { normalized } from './markets';
 import type { MarketInterpretation } from './semantics';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
+import { classifyPlacement, type PlacementEvidence } from './placement';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -18,6 +19,7 @@ export interface ParsedTicket {
   expectedSelections?: number;
   bonusAmount?: number;
   // Draft-only metadata; does not change historical selection schemas.
+  placement?: PlacementEvidence;
   reviewReasons?: string[];
   interpretations?: { path: string; value: MarketInterpretation }[];
   selections: {
@@ -52,7 +54,7 @@ function labeled(text: string, labels: string[], money = false) {
 
 function availableCashout(text: string, lines: string[]) {
   // Explicit CASH OUT + amount is evidence of an offer, never of execution.
-  const explicit = labeled(text, ['cash\\s*ou[tIi](?:\\s+(?:disponible|ofrecido))?'], true);
+  const explicit = labeled(text, ['^cash\\s*ou[tIi](?:\\s+(?:disponible|ofrecido))?'], true);
   if (explicit !== undefined) return explicit;
   // Generic action buttons also occur while creating a bet. Accept their
   // amount only beside an explicit availability label, not an execution label.
@@ -71,6 +73,16 @@ function availableCashout(text: string, lines: string[]) {
       if (offer !== undefined) return offer;
     }
   }
+}
+
+// Reusable at the write boundary. Recompute from raw OCR rather than trusting
+// cached placement/confidence/cashout fields in an older draft.
+export function placementFromText(text: string): PlacementEvidence {
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return classifyPlacement(text, availableCashout(text, lines) !== undefined);
 }
 export function classifyMarket(text: string) {
   const t = normalized(text);
@@ -230,6 +242,7 @@ export function parseTicket(
     cashoutOffer,
     bonusAmount,
     visibleStatus,
+    placement: classifyPlacement(text, cashoutOffer !== undefined),
     expectedSelections: expectedSelections
       ? Number(expectedSelections)
       : kind === 'Simple'

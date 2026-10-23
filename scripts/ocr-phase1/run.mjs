@@ -12,7 +12,8 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixtureRoot = path.join(root, 'tests/ocr-phase1');
 const corpus = JSON.parse(await readFile(path.join(fixtureRoot, 'cases.json'), 'utf8'));
 const known = JSON.parse(await readFile(path.join(fixtureRoot, 'known-failures.json'), 'utf8'));
-const phase21 = process.argv.includes('--phase21');
+const placementAudit = process.argv.includes('--placement');
+const phase21 = placementAudit || process.argv.includes('--phase21');
 const phase2 = phase21 || process.argv.includes('--phase2');
 // Keep the historical Phase 1 oracle immutable. Only the five specifically
 // repaired structural cases must now be exact; literal accent errors remain.
@@ -74,17 +75,21 @@ let browser;
 const strict = process.argv.includes('--strict');
 const output = path.join(
   root,
-  phase21
+  placementAudit
     ? strict
-      ? 'test-results/ocr-phase21-strict'
-      : 'test-results/ocr-phase21'
-    : phase2
+      ? 'test-results/ocr-placement-strict'
+      : 'test-results/ocr-placement'
+    : phase21
       ? strict
-        ? 'test-results/ocr-phase2-strict'
-        : 'test-results/ocr-phase2'
-      : strict
-        ? 'test-results/ocr-phase1-strict'
-        : 'test-results/ocr-phase1',
+        ? 'test-results/ocr-phase21-strict'
+        : 'test-results/ocr-phase21'
+      : phase2
+        ? strict
+          ? 'test-results/ocr-phase2-strict'
+          : 'test-results/ocr-phase2'
+        : strict
+          ? 'test-results/ocr-phase1-strict'
+          : 'test-results/ocr-phase1',
 );
 function limitEvaluation(page) {
   const original = page.evaluate.bind(page);
@@ -249,8 +254,22 @@ try {
         );
       }
     }
+    // The corners screenshot has neither a receipt nor an available cashout.
+    // Do not rewrite its image/text oracle or assume it was never placed: its
+    // placement is unknown and now requires review before financial writes.
+    const placementHold = placementAudit && result.id === 'first-half-corners';
+    if (placementAudit) {
+      assert.equal(result.parsed.placement.status, placementHold ? 'unknown' : 'confirmed');
+      assert.equal(
+        result.parsed.placement.basis,
+        placementHold ? 'insufficient' : 'cashout-available',
+      );
+      if (placementHold) assert.equal(result.parsed.cashoutOffer, undefined);
+    }
     const expectedStatus =
-      result.id.startsWith('injected-') || result.knownFailure || semanticHold ? 'review' : 'saved';
+      result.id.startsWith('injected-') || result.knownFailure || semanticHold || placementHold
+        ? 'review'
+        : 'saved';
     assert.equal(
       result.registered.status,
       expectedStatus,
@@ -296,7 +315,7 @@ try {
       for (const key of Object.keys(score)) qualitySummary[field][key] += score[key];
     }
   const report = {
-    version: phase21 ? 2.1 : phase2 ? 2 : 1,
+    version: placementAudit ? '2.1-placement' : phase21 ? 2.1 : phase2 ? 2 : 1,
     generatedAt: new Date().toISOString(),
     repeats,
     environment: {

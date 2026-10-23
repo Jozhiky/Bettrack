@@ -17,6 +17,8 @@
     "test:ocr:phase2:strict": "node scripts/ocr-phase1/run.mjs --phase2 --strict",
     "test:ocr:phase21": "node scripts/ocr-phase1/run.mjs --phase21",
     "test:ocr:phase21:strict": "node scripts/ocr-phase1/run.mjs --phase21 --strict",
+    "test:ocr:placement": "node scripts/ocr-phase1/run.mjs --placement",
+    "test:ocr:placement:strict": "node scripts/ocr-phase1/run.mjs --placement --strict",
     "test:ocr:compare": "node scripts/ocr-phase1/compare-phase2.mjs",
     "assets:ocr": "node scripts/prepare-ocr.mjs",
     "deploy:firebase": "npm run build && npx -y firebase-tools@latest deploy --only hosting:bettrack --project wostcloud1"

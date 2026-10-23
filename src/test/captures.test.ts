@@ -217,7 +217,9 @@ const parsed: ParsedTicket = {
   ],
   warnings: [],
   confidence: {},
-  text: 'Boleto de prueba',
+  // This fixture represents an already placed bet; the write boundary now
+  // requires that fact in the raw evidence, not only a cached cashout amount.
+  text: 'Boleto de prueba\nApuesta confirmada',
 };
 beforeEach(async () => {
   db = new BettrackDB('intake-' + id());

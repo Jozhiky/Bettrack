@@ -5,7 +5,8 @@ import { hashImage } from '../ocr/engine';
 import { createOcrSession, ocrConcurrency } from '../ocr/session';
 import { optimizeImage } from '../ocr/optimize';
 import { captureActivity } from './captureActivity';
-import type { ParsedTicket } from '../ocr/parser';
+import { placementFromText, type ParsedTicket } from '../ocr/parser';
+import { placementReviewReason } from '../ocr/placement';
 import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
 import { readCapture } from '../ocr/readCapture';
 import { runBatch } from './batch';
@@ -110,7 +111,8 @@ export async function registerCapture(
     // second Storage download of the pixels we have just recognized.
     const image = await d.images.where('id').equals(upload.imageId).first();
     if (!image) throw new Error('No se encuentra la captura original.');
-    const draftJson = JSON.stringify(parsed);
+    const placement = placementFromText(parsed.text);
+    const draftJson = JSON.stringify({ ...parsed, placement });
     const needsReview = async (reason: string) =>
       d.uploads.update(uploadId, { status: 'review', draftJson, reason, progress: 100 });
     if (
@@ -127,6 +129,8 @@ export async function registerCapture(
       return needsReview(
         `Se reconocieron ${parsed.selections.length} de ${parsed.expectedSelections} selecciones. Necesitamos la captura completa.`,
       );
+    const placementReason = placementReviewReason(placement);
+    if (placementReason) return needsReview(placementReason);
     // New OCR drafts can retain ambiguous raw labels/null odds without turning
     // them into confirmed bets. Older drafts remain schema-compatible.
     if (parsed.reviewReasons?.length) return needsReview(parsed.reviewReasons.join(' '));

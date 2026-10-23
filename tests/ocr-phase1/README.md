@@ -1,5 +1,11 @@
 # Corpus OCR — FASE 1
 
+**Auditoría de colocación (23/10/2026):** usar `npm run test:ocr:placement`
+y `npm run test:ocr:placement:strict`. Además de la revisión semántica de jugadores,
+`first-half-corners` requiere revisión por colocación desconocida: su captura no
+contiene comprobante de aceptación ni cashout disponible. No se modifican sus
+píxeles ni su transcripción. Véase [OCR_PLACEMENT_REPORT.md](../../docs/OCR_PLACEMENT_REPORT.md).
+
 **Endurecimiento FASE 2.1:** ejecutar `npm run test:ocr:phase21` y
 `npm run test:ocr:phase21:strict`. El primero conserva las expectativas literales
 y exige revisión del fixture `player-builders`: sus siete participantes siguen
