@@ -58,6 +58,25 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Siguiente fallo independiente: combinadas de cuatro jugadores y cuotas
   desplazadas, FASE 4C.2. No mezclar correcciones sin medición intermedia.
 
+## FASE 4C.2 — jugadores y cuotas desplazadas
+
+- Rama `fix/ocr-phase4c2-player-layout`, basada en FASE 4C.1, sin despliegue.
+- **3 trazas OCR reales examinadas** (sin publicar): cuatro jugadores en dos
+  instantáneas y doble Kane/Mbappé. Causa: títulos de jugador divididos por
+  salto de línea, cuotas flotantes y nombre alternativo no clasificado.
+- Corrección propuesta: unir solo continuaciones con paréntesis visible y
+  coordenadas compatibles, asociar cuota leída (sin inferir valores), conservar
+  nombres conflictivos para revisión y definir semántica explícita de jugador.
+- Seis pruebas sintéticas nuevas, incluyendo `readCapture` de dos pasadas.
+- Validación pendiente: ejecutar **un solo comando**
+  `npm.cmd run test:ocr:phase4c2` en Windows. Incluye suite completa, TypeScript,
+  build y banco real aislado de las 28 capturas.
+- Baseline anterior: 1006/1089 checks, 83 diferencias, 3 selecciones omitidas,
+  0 adicionales; sin valores nuevos medidos todavía.
+- Protocolo y diagnóstico: [FASE 4C.2](OCR_PHASE4C2_PLAYER_LAYOUT.md).
+- Mantener las PR de fases anteriores en revisión hasta validar el banco y
+  las barreras contables; los datos históricos/Supabase/Firebase no se tocan.
+
 ## Arquitectura esencial
 
 | Área | Punto de entrada / responsabilidad |
