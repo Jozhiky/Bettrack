@@ -98,18 +98,39 @@ try {
       .filter(Boolean)
       .join('\n');
     const pixels = Buffer.from(
-      await a.p.evaluate((text) => {
-        const c = document.createElement('canvas');
-        c.width = 800;
-        c.height = 800;
-        const x = c.getContext('2d');
-        x.fillStyle = 'white';
-        x.fillRect(0, 0, 800, 800);
-        x.fillStyle = 'black';
-        x.font = '28px Arial';
-        text.split('\n').forEach((l, n) => x.fillText(l, 20, 40 + n * 55));
-        return c.toDataURL('image/png').split(',')[1];
-      }, text),
+      await a.p.evaluate(
+        ({ text, live }) => {
+          const c = document.createElement('canvas');
+          c.width = 800;
+          c.height = 800;
+          const x = c.getContext('2d');
+          x.fillStyle = 'white';
+          x.fillRect(0, 0, 800, 800);
+          x.fillStyle = 'black';
+          x.font = '28px Arial';
+          text.split('\n').forEach((l, n) => x.fillText(l, 20, 40 + n * 55));
+          if (live) {
+            x.fillStyle = '#202436';
+            x.fillRect(680, 150, 100, 100);
+            x.fillStyle = '#ff5532';
+            x.beginPath();
+            [
+              [0.55, 0],
+              [0, 0.6],
+              [0.4, 0.6],
+              [0.45, 1],
+              [1, 0.35],
+              [0.6, 0.35],
+            ].forEach(([px, py], i) =>
+              i ? x.lineTo(720 + px * 20, 180 + py * 30) : x.moveTo(720 + px * 20, 180 + py * 30),
+            );
+            x.closePath();
+            x.fill();
+          }
+          return c.toDataURL('image/png').split(',')[1];
+        },
+        { text, live: i === 10 },
+      ),
       'base64',
     );
     const imageId = randomUUID(),
@@ -180,6 +201,7 @@ try {
   const submit = (p) =>
     region(p).getByRole('button', { name: 'Confirmar y registrar 18 liquidadas', exact: true });
   await expect(submit(a.p)).toBeEnabled();
+  await expect(region(a.p).getByText('⚡ En vivo', { exact: true })).toBeVisible();
   await expect(region(a.p)).toContainText('17 nuevas · 1 posibles duplicadas sin cargo.');
   await expect(region(a.p)).toContainText('Neto -S/ 760.00');
   assert.equal((await snapshot()).records.movements.length, 0);
@@ -237,6 +259,8 @@ try {
   s = await snapshot();
   assert(lost);
   assert.equal(s.records.settlements.length, 17);
+  assert.equal(s.records.bets.find((b) => b.id === ids[10]).live, true);
+  assert.equal(s.records.bets.find((b) => b.id === ids[10]).historicalTiming.mode, 'live');
   assert.equal(s.records.movements.length, 34);
   assert.equal(s.records.uploads.filter((u) => u.status === 'duplicate').length, 1);
   assert.equal(s.records.uploads.filter((u) => u.status === 'review').length, 2);

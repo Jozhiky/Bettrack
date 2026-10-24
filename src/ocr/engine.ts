@@ -1,6 +1,7 @@
 import { findSymbols, type SymbolCandidate } from './symbols';
 import type { OcrLine } from './layout';
 import { betanoHeader } from './header';
+import { readVisualMode } from './visualMode';
 const imageSymbols = new WeakMap<HTMLCanvasElement, SymbolCandidate[]>();
 export async function hashImage(blob: Blob) {
   const bytes = await blob.arrayBuffer();
@@ -159,11 +160,15 @@ export async function createRecognizer() {
           }
         }
         const symbols = imageSymbols.get(image) ?? [];
+        const visualMode = header && !crop
+          ? await readVisualMode(file, await hashImage(file)).catch(() => undefined)
+          : undefined;
         return {
           text: lines.map((l) => l.text).join('\n'),
           confidence: data.confidence,
           lines,
           symbols,
+          ...(visualMode ? { visualMode } : {}),
         };
       } finally {
         report = () => {};

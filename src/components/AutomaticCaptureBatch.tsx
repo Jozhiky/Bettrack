@@ -1,9 +1,11 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApp } from '../app/context';
 import { money, displayDate, timestamp, emptySnapshot, type CaptureUpload } from '../domain/model';
 import { previewAutomaticBatch } from '../ocr/automaticImport';
 import { confirmAutomaticBatch, type AutomaticBatchItem } from '../data/captures';
 import { Button } from './ui';
+import { readDraft } from '../ocr/review';
+import { enrichCaptureModes } from '../data/captureVisualMode';
 
 export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] }) {
   const { run, data } = useApp();
@@ -12,13 +14,52 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState('');
   const lock = useRef(false);
-  const { rows, ready } = useMemo(() => previewAutomaticBatch(uploads, recordedAt, data ?? emptySnapshot, excluded), [uploads, recordedAt, data, excluded]);
+  const scanned = useRef(new Set<string>());
+  const [scanning, setScanning] = useState(false);
+  const [scanFailed, setScanFailed] = useState(false);
+  const scanActive = useRef(false),
+    mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  const candidates = uploads.filter(
+    (u) =>
+      ['review', 'error'].includes(u.status) &&
+      readDraft(u.draftJson)?.house === 'Betano' &&
+      !readDraft(u.draftJson)?.visualMode,
+  );
+  const scanKey = candidates.map((u) => u.id + ':' + u.imageId).join('|');
+  const pending = candidates.filter((u) => !scanned.current.has(u.id + ':' + u.imageId));
+  useEffect(() => {
+    if (scanActive.current || !pending.length) return;
+    scanActive.current = true;
+    for (const u of pending) scanned.current.add(u.id + ':' + u.imageId);
+    setScanning(true);
+    void enrichCaptureModes(pending.map((u) => u.id))
+      .then((r) => {
+        if (mounted.current) setScanFailed(r.failed > 0);
+      })
+      .catch(() => {
+        if (mounted.current) setScanFailed(true);
+      })
+      .finally(() => {
+        scanActive.current = false;
+        if (mounted.current) setScanning(false);
+      });
+  }, [scanKey, scanning, recordedAt]);
+  const { rows, ready } = useMemo(
+    () => previewAutomaticBatch(uploads, recordedAt, data ?? emptySnapshot, excluded),
+    [uploads, recordedAt, data, excluded],
+  );
   if (!rows.some((r) => r.evidence?.candidate)) return null;
   const financial = ready.filter((r) => r.expectedOutcome === 'saved');
   const stake = financial.reduce((n, r) => n + r.historical!.closedStake, 0);
   const returned = financial.reduce((n, r) => n + r.historical!.returned, 0);
   const confirm = async () => {
-    if (lock.current || !ready.length) return;
+    if (lock.current || scanning || pending.length || !ready.length) return;
     lock.current = true;
     setBusy(true);
     setResult('');
@@ -98,6 +139,8 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
                 <td>
                   {r.draft?.house} · {r.draft?.kind}
                   <strong>{r.draft?.selections[0]?.event ?? 'Sin reconocer'}</strong>
+                  {r.historical?.timing?.mode === 'live' && <small>⚡ En vivo</small>}
+                  {r.historical?.timing?.mode === 'prematch' && <small>Prepartido</small>}
                   <small>
                     {r.draft?.selections.length ?? 0} selecciones · Cuota{' '}
                     {r.historical?.header.odds ?? r.draft?.odds ?? 'no visible'}
@@ -150,16 +193,35 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
           {money(returned - stake)}
         </strong>
       </p>
-      <p>{financial.length} nuevas · {ready.length - financial.length} posibles duplicadas sin cargo.</p>
+      {scanning && <p role="status">Comprobando los iconos de las capturas guardadas…</p>}
+      {scanFailed && (
+        <p>
+          Alguna modalidad no se pudo comprobar. Se conserva sin determinar; puedes actualizar el
+          resumen para reintentar.
+        </p>
+      )}
+      <p>
+        {financial.length} nuevas · {ready.length - financial.length} posibles duplicadas sin cargo.
+      </p>
       <p>
         Al confirmar autorizas registrar este resumen completo: un cargo y un retorno por boleto.
         Las excepciones y ofertas no se registran.
       </p>
       <div className="form-footer">
-        <Button disabled={busy || !ready.length} onClick={() => void confirm()}>
+        <Button
+          disabled={busy || scanning || !!pending.length || !ready.length}
+          onClick={() => void confirm()}
+        >
           {busy ? 'Guardando lote…' : `Confirmar y registrar ${ready.length} liquidadas`}
         </Button>
-        <Button variant="ghost" disabled={busy} onClick={() => setRecordedAt(timestamp())}>
+        <Button
+          variant="ghost"
+          disabled={busy || scanning}
+          onClick={() => {
+            scanned.current.clear();
+            setRecordedAt(timestamp());
+          }}
+        >
           Actualizar resumen
         </Button>
       </div>

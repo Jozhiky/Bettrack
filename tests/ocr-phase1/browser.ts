@@ -21,7 +21,7 @@ const { registerCapture } = await import('../../src/data/captures');
 const { betSchema, selectionSchema } = await import('../../src/domain/model');
 const { parseTicket } = await import('../../src/ocr/parser');
 const { readCapture } = await import('../../src/ocr/readCapture');
-const { createRecognizer: createReader } = await import('../../src/ocr/engine');
+const { createRecognizer: createReader, hashImage } = await import('../../src/ocr/engine');
 
 // Time the actual Zod calls, including calls made by completeness/register/save.
 for (const schema of [betSchema, selectionSchema]) {
@@ -40,7 +40,7 @@ async function registration(parsed: ParsedTicket, blob: Blob) {
   try {
     const repository = new LocalRepository(db);
     await repository.init();
-    await db.images.add({ id: 'image', name: 'fixture.png', hash: 'fixture-hash', blob });
+    await db.images.add({ id: 'image', name: 'fixture.png', hash: await hashImage(blob), blob });
     await db.uploads.add({
       id: 'fixture',
       imageId: 'image',

@@ -57,7 +57,7 @@ export async function readCapture(
     progress(latest);
   };
   const first = await reader.recognize(file, (p) => report(Math.round(p * 0.7)));
-  let parsed = parseTicket(first.text, first.lines, first.symbols);
+  let parsed = parseTicket(first.text, first.lines, first.symbols, first.visualMode);
   if (enhanced || completeness(parsed) < 150 || missingBadge(parsed)) {
     const second = await reader.recognize(
       file,
@@ -65,7 +65,7 @@ export async function readCapture(
       undefined,
       true,
     );
-    const alternative = parseTicket(second.text, second.lines, second.symbols);
+    const alternative = parseTicket(second.text, second.lines, second.symbols, second.visualMode);
     // A reread cannot erase an observed global settlement or a placement conflict.
     const retainsSafety =
       (!parsed.visibleStatus || alternative.visibleStatus === parsed.visibleStatus) &&

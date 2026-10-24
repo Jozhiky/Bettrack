@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { it, expect, vi, afterEach } from 'vitest';
 import type { CaptureUpload } from '../domain/model';
 import { AutomaticCaptureBatch } from '../components/AutomaticCaptureBatch';
+import { enrichCaptureModes } from '../data/captureVisualMode';
 const mocks = vi.hoisted(() => ({
   confirm: vi.fn().mockResolvedValue({ saved: 1, duplicates: 0 }),
   run: vi.fn(async (fn: () => Promise<unknown>) => {
@@ -10,6 +11,9 @@ const mocks = vi.hoisted(() => ({
   }),
 }));
 vi.mock('../data/captures', () => ({ confirmAutomaticBatch: mocks.confirm }));
+vi.mock('../data/captureVisualMode', () => ({
+  enrichCaptureModes: vi.fn().mockResolvedValue({ enriched: 0, failed: 0 }),
+}));
 vi.mock('../app/context', () => ({
   useApp: () => ({ run: mocks.run }),
   useModalError: () => null,
@@ -58,6 +62,7 @@ it('prepares a visible consolidated summary without dates or per-ticket review; 
   expect(screen.queryByLabelText('Fecha de apuesta')).not.toBeInTheDocument();
   expect(mocks.confirm).not.toHaveBeenCalled();
   const button = screen.getByRole('button', { name: 'Confirmar y registrar 1 liquidadas' });
+  await waitFor(() => expect(button).toBeEnabled());
   fireEvent.click(button);
   fireEvent.click(button);
   await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('1 registradas'));
@@ -70,4 +75,28 @@ it('lets the user exclude a ticket without editing it', () => {
   fireEvent.click(screen.getByRole('checkbox'));
   expect(screen.getByRole('button', { name: 'Confirmar y registrar 0 liquidadas' })).toBeDisabled();
   expect(mocks.confirm).not.toHaveBeenCalled();
+});
+it('finishes the visual scan when the refreshed draft gains its icon evidence', async () => {
+  let finish!: (v: { enriched: number; failed: number }) => void;
+  vi.mocked(enrichCaptureModes).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const u = upload('Ganada', 'Ganancias S/140.00'),
+    view = render(<AutomaticCaptureBatch uploads={[u]} />);
+  const button = screen.getByRole('button', { name: 'Confirmar y registrar 1 liquidadas' });
+  expect(button).toBeDisabled();
+  const draft = JSON.parse(u.draftJson);
+  draft.visualMode = {
+    mode: 'live',
+    basis: 'betano-orange-lightning-v1',
+    imageHash: 'a'.repeat(64),
+    bbox: { x0: 0.89, y0: 0.54, x1: 0.92, y1: 0.59 },
+  };
+  view.rerender(<AutomaticCaptureBatch uploads={[{ ...u, draftJson: JSON.stringify(draft) }]} />);
+  finish({ enriched: 1, failed: 0 });
+  await waitFor(() => expect(button).toBeEnabled());
+  expect(screen.getByText('⚡ En vivo')).toBeVisible();
 });
