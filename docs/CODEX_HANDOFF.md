@@ -15,6 +15,20 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   código. Hosting existente: `https://bettrack-wostcloud1.web.app`.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
+- FASE 4B (rama feat/ocr-phase4b-isolated-measurement): banco **aislado y de solo lectura**
+  preparado para ejecutar Tesseract real sobre las 28 capturas 4A. Compara OCR
+  contra oráculos humanos sin alterar corpus, motor, histórico ni Supabase.
+  **Medición real ejecutada por el usuario en Windows** (28/28 PNG, 6/6 pruebas
+  sintéticas, 0 fallos de ejecución): 1002/1089 checks exactos (92.01%),
+  87 discrepancias (42 ausentes, 45 incorrectas), 13/28 imágenes sin
+  discrepancias; 3 selecciones omitidas, 0 adicionales. El porcentaje por
+  campo no equivale a exactitud de boletos; faltan suite completa, TypeScript,
+  build y revisión de correcciones. Ver [informe 4B](OCR_PHASE4B_REPORT.md)
+  y [protocolo](../tests/ocr-phase4b/README.md).
+  El usuario identificó preparation-flamengo como **bet365 / Superaumento**;
+  sigue fuera del corpus mientras falten marca visible y evidencia de colocación.
+  «Cerrar apuesta» no acredita un cashout ejecutado; «Crear apuesta» en ese
+  producto no debe inferirse automáticamente como un boleto sin colocar.
 - FASE 4A, issue 1: **29 PNG recibidos, 29 distintos, 28 admitidos, 1 pendiente,
   0 rechazados**, sin cambios productivos. Dos pares temporales forman grupos
   probables del mismo boleto: 26 grupos conservadores admitidos, no 26 boletos
@@ -83,6 +97,13 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
+- Prioridad actual: ejecutar el banco FASE 4B en D:\Apuestas, revisar
+  test-results/ocr-phase4b/report.json y establecer línea base ANTES de corregir
+  motor o anotar supuestos aciertos. Ejecutar comandos 4B de abajo, sin cloud.
+  Ya existe línea base medida en docs/OCR_PHASE4B_REPORT.md: priorizar
+  detección de «Perdida» en cabecera y reconstrucción de combinadas de
+  jugadores antes de plantear merge o despliegue. No considerar la suite completa
+  aprobada: solo se observaron 6/6 tests unitarios y la ejecución OCR 28/28.
 - Siguiente prioridad: conectar los 28 casos admitidos al ejecutor OCR aislado en
   una tarea autorizada, conservando las agrupaciones temporales y sin transferir
   aceptación/importes entre imágenes. La suite de admisión no mide precisión OCR.
@@ -129,6 +150,9 @@ npm.cmd run test:ocr:phase3             # tolera solo discrepancias documentadas
 npm.cmd run test:ocr:phase3:strict      # salida 1 mientras existan los 7 fallos conocidos
 npm.cmd run test:ocr:phase3:ui          # UI aislada; no escribe en Supabase
 npm.cmd run test:ocr:phase4a            # admisión/regresión; sin OCR ni cloud
+npm.cmd run test:ocr:phase4b:unit       # controles sintéticos del comparador 4B
+npm.cmd run test:ocr:phase4b            # OCR real aislado de las 28 PNG; tarda minutos
+npm.cmd run test:ocr:phase4b:strict     # fallará si hay cualquier divergencia literal
 ```
 
 Reproducción/comparación: [README FASE 3](../tests/ocr-phase3/README.md). No cargar sus
