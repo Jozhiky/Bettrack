@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/vite';
 import { chromium, expect } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { auditPlugin } from '../ocr-phase1/instrumentation.mjs';
 const blocked = [],
   errors = [],
@@ -17,7 +18,7 @@ const mock = {
     if (p.endsWith('/src/data/useCloudQuery.ts'))
       return `export const useLiveQuery=()=>window.__fixtureImage;`;
     if (p.endsWith('/src/data/captures.ts'))
-      return `export const confirmCaptureReview=async(id,p)=>{window.__review={id,p};};export const enqueueCaptures=async()=>({added:1,failed:[]});export const linkCapture=async()=>{};`;
+      return `export const confirmCaptureReview=async(id,p)=>{window.__review={id,p};};export const enqueueCaptures=async()=>({added:1,failed:[]});export const linkCapture=async()=>{};export const reopenHistoricalCapture=async()=>{};`;
   },
   configureServer(server) {
     server.middlewares.use(async (req, res, next) => {
@@ -34,6 +35,24 @@ const mock = {
 };
 const server = await createServer({
   configFile: false,
+  // Keep this fixture separate from the live demo and other Vite runners.
+  cacheDir: `node_modules/.vite-review-qa-${randomUUID()}`,
+  optimizeDeps: {
+    noDiscovery: true,
+    entries: ['tests/ocr-phase3/review-ui.tsx'],
+    include: [
+      'react',
+      'react-dom/client',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      'zod',
+      '@radix-ui/react-dialog',
+      'lucide-react',
+      'clsx',
+      'tailwind-merge',
+      'dexie',
+    ],
+  },
   plugins: [mock, auditPlugin({ enabled: false }), react(), tailwind()],
   server: { host: '127.0.0.1', port: 0, hmr: false },
   logLevel: 'error',

@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from '../data/useCloudQuery';
 import { useApp } from '../app/context';
 import { repo } from '../data/repository';
-import { enqueueCaptures, linkCapture } from '../data/captures';
-import { readDraft, reviewIssues, needsNewProof } from '../ocr/review';
+import { enqueueCaptures, linkCapture, reopenHistoricalCapture } from '../data/captures';
+import { readDraft, reviewIssues, canReviewCapture } from '../ocr/review';
+import { settlementEvidence } from '../ocr/settlement';
 import { CaptureReview } from './CaptureReview';
 import { money, displayDate, type CaptureUpload } from '../domain/model';
 import { Button } from './ui';
@@ -45,6 +46,7 @@ export function CapturePending({
   }, [image]);
   const bet = data.bets.find((b) => b.id === upload.betId);
   const draft = useMemo(() => readDraft(upload.draftJson), [upload.draftJson]);
+  const historical = draft && settlementEvidence(draft);
   const issues = reviewIssues(upload, draft);
   const proof = async (file?: File) => {
     if (!file || addingProof) return;
@@ -122,7 +124,22 @@ export function CapturePending({
           />
         </>
       )}
-      {upload.reason && <p className="capture-reason">{upload.reason}</p>}
+      {upload.reason && (
+        <p className="capture-reason">
+          {historical?.candidate && upload.reason.startsWith('El boleto ya muestra estado global')
+            ? 'Liquidación detectada. Abre Revisar datos para importar el boleto y su liquidación en una sola operación.'
+            : upload.reason}
+        </p>
+      )}
+      {historical?.candidate && (
+        <p className="capture-reason">
+          Importación histórica · {historical.kind ?? 'Estado por revisar'} · Retorno realizado:{' '}
+          {historical.returned === undefined ? 'por confirmar' : money(historical.returned)}
+          {!historical.partial && historical.returned !== undefined && draft?.stake !== undefined
+            ? ` · Resultado neto: ${money(historical.returned - draft.stake)}`
+            : ''}
+        </p>
+      )}
       {upload.status === 'review' && draft && (
         <details className="ocr-text">
           <summary>Ver datos del boleto · {draft.house || 'Casa no reconocida'}</summary>
@@ -233,11 +250,23 @@ export function CapturePending({
                 e.target.value = '';
               }}
             />
-            {upload.status === 'review' && draft && !needsNewProof(draft) && (
-              <Button disabled={removing || addingProof} onClick={() => setReviewing(true)}>
-                Revisar datos
-              </Button>
-            )}
+            {draft &&
+              canReviewCapture(draft) &&
+              (upload.status === 'review' || historical?.candidate) && (
+                <Button
+                  disabled={removing || addingProof}
+                  onClick={async () => {
+                    if (
+                      upload.status === 'error' &&
+                      !(await run(() => reopenHistoricalCapture(upload.id)))
+                    )
+                      return;
+                    setReviewing(true);
+                  }}
+                >
+                  Revisar datos
+                </Button>
+              )}
             <small>
               Mejorar lectura usa la misma imagen. Añadir comprobante conserva este borrador y lee
               una nueva captura; no confirma ni combina importes automáticamente.

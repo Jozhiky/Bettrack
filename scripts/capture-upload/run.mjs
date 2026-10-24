@@ -137,7 +137,10 @@ try {
     await lost.getByRole('button', { name: 'Revisar datos', exact: true }).click();
     await expect(
       page.getByRole('button', { name: 'Ver resumen antes de registrar', exact: true }),
-    ).toBeDisabled();
+    ).toBeEnabled();
+    await page.getByRole('button', { name: 'Ver resumen antes de registrar', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('Completa fechas históricas');
+    await expect(page.getByRole('button', { name: 'Confirmar e importar liquidada', exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: 'Cerrar', exact: true }).click();
     // Restore a deliberately corrupt QA image and use the production retry button.
     const broken = rows.find((u) => u.status === 'error');

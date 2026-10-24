@@ -7,7 +7,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main`. La cadena #2 → #3 → #4 → #5 → #6 fue integrada en ese orden con autorización.
+  `codex/settled-capture-import`, basada en `main` `5e0e62e`. La cadena #2 → #3 →
+  #4 → #5 → #6 fue integrada en ese orden con autorización.
   **SHA desplegado:** `cc4d4ade62693887ef421164be9f6ca1dabb70a2`, versión Hosting
   `4885a8046b5928a0`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
@@ -41,6 +42,27 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   SHA/CRC/PNG/RGBA, privacidad visual, texto y regiones cotejados. No se ejecutó OCR
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
+
+## Importación histórica — desarrollo 24/10/2026, sin despliegue
+
+- Ganada/Perdida/Cashout ejecutado pueden confirmarse con su liquidación final en
+  una operación atómica del RPC existente. Revisión, fechas históricas, retorno
+  realizado, cierre total, vigencia y consentimiento son obligatorios; ofertas y
+  parciales no se convierten en cobros. No hay cambios SQL/migraciones ni motor OCR.
+- **Mis apuestas → Históricas en revisión** recupera borradores `review/error`
+  conservando imagen, OCR y selecciones, sin volver a subir. Resumen y consentimiento
+  por boleto, sin confirmación masiva. Apuestas y capturas reales no se tocaron.
+- Validación: **613/613**, TypeScript/build, 3/3 controles de destino, 17/17 QA
+  previa + 7/7 grupos históricos con persistencia real aislada. Veinte borradores
+  antiguos sintéticos + oferta; 7 apuestas/7 liquidaciones/14 movimientos,
+  neto −S/40.00, concurrencia y respuesta perdida sin doble cargo.
+- UI 375/768/1440 px aprobada. OCR 28/28 conserva **1065/1089, 24 diferencias**,
+  0 omisiones/adiciones/falsos estados; calidad y hashes idénticos a la referencia.
+  FASE 3 conserva siete divergencias conocidas y paridad 7/7.
+- [Contrato, recuperación, pruebas y límites](SETTLED_CAPTURE_IMPORT.md).
+  Nuevo comando `npm.cmd run test:settled:qa`; no ejecutarlo simultáneamente con
+  `test:persistence:qa`. Publicar PR no despliega; requiere autorización final nueva
+  para integrar y publicar Hosting. Supabase productivo intacto.
 
 ## Despliegue controlado — 24/10/2026
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { selectionSchema, promotions, type CaptureUpload } from '../domain/model';
 import { placementFromText, type ParsedTicket } from './parser';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
-import { settledTicketHeader } from './header';
+import { settlementEvidence } from './settlement';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -82,9 +82,19 @@ export function needsNewProof(draft: ReviewDraft) {
   );
 }
 export function draftSettlement(draft: ReviewDraft) {
-  return draft.house === 'Betano'
-    ? draft.text.split(/\r?\n/).map(settledTicketHeader).find(Boolean)
-    : undefined;
+  return settlementEvidence(draft).kind;
+}
+export function canReviewCapture(draft: ReviewDraft) {
+  if (!needsNewProof(draft)) return true;
+  const history = [draft.text, draft.placementHold?.text].filter((s): s is string => !!s);
+  if (
+    history.some((text) => {
+      const p = placementFromText(text);
+      return p.status === 'preparation' || p.basis === 'conflicting';
+    })
+  )
+    return false;
+  return settlementEvidence(draft).candidate;
 }
 export function reviewIssues(upload: CaptureUpload, draft = readDraft(upload.draftJson)) {
   if (upload.status === 'duplicate')
@@ -110,9 +120,9 @@ export function reviewIssues(upload: CaptureUpload, draft = readDraft(upload.dra
       kind: 'settled',
       title: `Boleto liquidado: ${settled}`,
       detail:
-        'Se conserva para revisión. No se registra como pendiente ni genera movimientos automáticos.',
+        'Revisa fechas y retorno realizado para importar el boleto y su liquidación en una sola confirmación.',
     });
-  if (needsNewProof(draft))
+  if (!canReviewCapture(draft))
     issues.push({
       kind: 'placement',
       title: 'Falta comprobante de colocación',

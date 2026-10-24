@@ -17,6 +17,7 @@ import { BetCard } from '../components/BetCard';
 import { ticketReference } from '../components/TicketSummary';
 import { position } from '../domain/model';
 import { BetOverview } from '../components/BetOverview';
+import { HistoricalCaptureInbox } from '../components/HistoricalCaptureInbox';
 export function Bets() {
   const { data, settings, run } = useApp();
   const { value, update } = useHistoryView();
@@ -187,6 +188,7 @@ export function Bets() {
         </div>
       </div>
       <BetOverview bets={scoped} settlements={data.settlements} currency={settings.currency} />
+      <HistoricalCaptureInbox uploads={unresolved}/>
       <div className="workspace-context">
         {unresolved.length > 0 && (
           <button className="processing-link" onClick={showCaptures}>

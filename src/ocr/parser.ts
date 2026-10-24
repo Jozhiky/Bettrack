@@ -221,7 +221,9 @@ export function parseTicket(
       ),
     ) ?? (house === 'Betano' && header ? settledTicketHeader(header) : undefined);
   if (visibleStatus)
-    warnings.push(`Estado visible: ${visibleStatus}. Confirma la liquidación después de guardar.`);
+    warnings.push(
+      `Estado visible: ${visibleStatus}. Revisa la liquidación y el importe realizado antes de confirmar.`,
+    );
   const expectedSelections =
     headerInfo?.expectedSelections ?? text.match(/combinada\s+de\s+(\d+)/i)?.[1];
   if (expectedSelections && selections.length !== Number(expectedSelections))

@@ -14,11 +14,16 @@ import { runBatch } from './batch';
 import {
   readDraft,
   readPlacementHistory,
-  needsNewProof,
+  canReviewCapture,
   reviewSelectionSchema,
   type ReviewDraft,
 } from '../ocr/review';
 import { id, timestamp, fingerprint, betSchema, selectionSchema, type Bet } from '../domain/model';
+import {
+  settlementEvidence,
+  validateHistoricalImport,
+  type HistoricalImport,
+} from '../ocr/settlement';
 
 export async function enqueueCaptures(
   files: File[],
@@ -145,6 +150,7 @@ export interface CaptureReviewConfirmation {
   imageId: string;
   selections: ParsedTicket['selections'];
   acknowledged: boolean;
+  historical?: HistoricalImport;
 }
 export async function confirmCaptureReview(
   uploadId: string,
@@ -152,6 +158,30 @@ export async function confirmCaptureReview(
   repository = repo,
 ) {
   return processCapture(uploadId, undefined, repository, confirmation);
+}
+export async function reopenHistoricalCapture(uploadId: string, repository = repo) {
+  const d = repository.database;
+  await transact(d, 'rw', [d.uploads, d.audit], async (d) => {
+    const before = await d.uploads.get(uploadId),
+      draft = before && readDraft(before.draftJson);
+    if (
+      !before ||
+      !['review', 'error'].includes(before.status) ||
+      !draft ||
+      !settlementEvidence(draft).candidate
+    )
+      throw Error('No hay un borrador histórico recuperable.');
+    if (before.status === 'review') return;
+    await d.uploads.update(uploadId, { status: 'review' });
+    await d.audit.add({
+      id: id(),
+      date: timestamp(),
+      action: 'Reabrir borrador histórico',
+      entityId: uploadId,
+      before: JSON.stringify({ status: before.status }),
+      after: JSON.stringify({ status: 'review', imageId: before.imageId }),
+    });
+  });
 }
 
 async function processCapture(
@@ -164,6 +194,21 @@ async function processCapture(
   await transact(d, 'rw', d.tables, async (d) => {
     const scopedRepository = new LocalRepository(d);
     const upload = await d.uploads.get(uploadId);
+    if (confirmation?.historical && upload?.status === 'saved') {
+      const reviewed = await d.audit
+        .filter((a) => a.entityId === uploadId && a.action === 'Revisión humana de captura')
+        .toArray();
+      if (
+        reviewed.some((a) => {
+          try {
+            return JSON.parse(a.after).confirmationJson === JSON.stringify(confirmation);
+          } catch {
+            return false;
+          }
+        })
+      )
+        return;
+    }
     if (
       confirmation &&
       (!upload ||
@@ -174,11 +219,17 @@ async function processCapture(
       throw new Error('El borrador cambió. Vuelve a abrir la revisión.');
     if (!upload || upload.status === 'saved' || upload.status === 'linked') return;
     const previous = readDraft(upload.draftJson);
+    const historical = confirmation?.historical
+      ? validateHistoricalImport(
+          confirmation.historical,
+          previous ?? { text: '', house: undefined },
+        )
+      : undefined;
     let parsed: ReviewDraft;
     if (confirmation) {
       if (!confirmation.acknowledged)
         throw new Error('Confirma explícitamente que cotejaste los datos con la imagen.');
-      if (!previous || needsNewProof(previous))
+      if (!previous || !canReviewCapture(previous))
         throw new Error('Añade un comprobante de colocación antes de revisar datos.');
       const selections = confirmation.selections.map((row) => {
         const s = reviewSelectionSchema.parse(row);
@@ -202,7 +253,9 @@ async function processCapture(
         throw new Error(
           'No se pueden omitir ni añadir selecciones en esta revisión. Añade una captura completa.',
         );
-      parsed = { ...previous, selections, humanReviewed: true };
+      if (await d.bets.get(uploadId))
+        throw new Error('La apuesta ya existe. No se puede sobrescribir mediante una captura.');
+      parsed = { ...previous, ...(historical?.header ?? {}), selections, humanReviewed: true };
     } else parsed = input!;
     // The original is already stored. Registration needs its metadata, not a
     // second Storage download of the pixels we have just recognized.
@@ -262,12 +315,20 @@ async function processCapture(
     // to review even if OCR identified an already placed ticket: the normal
     // registration path would otherwise create a pending stake movement.
     // Never trust cached visibleStatus alone; inspect the raw ticket header.
-    const settledHeader = parsed.house === 'Betano'
-      ? parsed.text.split(/\r?\n/).map((line) => settledTicketHeader(line)).find(Boolean)
-      : undefined;
-    if (settledHeader)
+    const settledHeader =
+      parsed.house === 'Betano'
+        ? parsed.text
+            .split(/\r?\n/)
+            .map((line) => settledTicketHeader(line))
+            .find(Boolean)
+        : undefined;
+    if (settledHeader && !historical)
       return needsReview(
-        `El boleto ya muestra estado global ${settledHeader}. No lo registramos como apuesta pendiente ni generamos movimientos automáticos: revisa su liquidación por separado.`,
+        `El boleto ya muestra estado global ${settledHeader}. Revisa fechas, retorno realizado y selecciones para confirmar su importación histórica completa.`,
+      );
+    if (settlementEvidence(parsed).candidate && confirmation && !historical)
+      throw new Error(
+        'Esta captura requiere importar su liquidación, no registrarla como pendiente.',
       );
 
     if (
@@ -285,7 +346,7 @@ async function processCapture(
         `Se reconocieron ${parsed.selections.length} de ${parsed.expectedSelections} selecciones. Necesitamos la captura completa.`,
       );
     const placementReason = placementReviewReason(placement);
-    if (placementReason) return needsReview(placementReason);
+    if (placementReason && !historical) return needsReview(placementReason);
     if (placementHold && !confirmation)
       return needsReview(
         'La misma imagen ya requería comprobar su colocación. Releer no la confirma: añade un comprobante o revisa explícitamente la evidencia recuperada.',
@@ -315,7 +376,9 @@ async function processCapture(
     // OCR only prepares a draft. Even a complete read needs a deliberate,
     // current preview confirmation before master data or financial writes.
     if (!confirmation)
-      return needsReview('Lectura lista. Coteja la captura y confirma el registro de esta apuesta.');
+      return needsReview(
+        'Lectura lista. Coteja la captura y confirma el registro de esta apuesta.',
+      );
     const houses = await d.houses.toArray();
     let house = houses.find((h) => h.name.toLowerCase() === parsed.house!.toLowerCase());
     if (house && house.currency !== 'PEN')
@@ -338,9 +401,13 @@ async function processCapture(
     }
     const raw = {
       id: betId,
-      date: upload.createdAt,
-      dateSource: 'upload',
-      timingUnknown: true,
+      date: historical?.betDate ?? upload.createdAt,
+      dateSource: historical
+        ? settlementEvidence(previous!).betDate === historical.betDate
+          ? 'ticket'
+          : 'manual'
+        : 'upload',
+      timingUnknown: !historical,
       houseId: house!.id,
       streamerId: '',
       kind: parsed.kind,
@@ -380,7 +447,10 @@ async function processCapture(
             stake: bet.stake,
             odds: bet.odds,
             potential: bet.potential,
-            initialStatus: 'Pendiente',
+            initialStatus: historical?.kind ?? 'Pendiente',
+            historical,
+            uploadDate: upload.createdAt,
+            confirmationJson: historical ? JSON.stringify(confirmation) : undefined,
             acknowledged: true,
             interpretation:
               'Texto cotejado por el usuario; atributos no reconocidos no se infieren',
@@ -417,6 +487,16 @@ async function processCapture(
       }
     }
     await scopedRepository.saveBet(bet, rows, undefined, true);
+    if (historical)
+      await scopedRepository.settle({
+        id: `settlement-${betId}`,
+        betId,
+        date: historical.settlementDate,
+        closedStake: historical.closedStake,
+        returned: historical.returned,
+        kind: historical.kind,
+        note: 'Importación histórica revisada desde captura; importe realizado confirmado.',
+      });
     if (confirmation) await auditReview('saved');
     await d.uploads.update(uploadId, {
       status: 'saved',
