@@ -1,6 +1,7 @@
 # Betano: rayo de apuesta en vivo
 
 24/10/2026 · rama `codex/betano-live-lightning`, basada en PR #9 desplegado.
+Publicado para revisión en [PR #10](https://github.com/Jozhiky/Bettrack/pull/10).
 
 El usuario confirmó que el rayo naranja del widget del partido identifica una
 apuesta en vivo. El lector anterior solo reconocía etiquetas textuales de modalidad:
@@ -30,7 +31,7 @@ modalidad desconocida. Reproducido con una prueba que devolvía unknown en vez d
 
 ## Validación
 
-- **698/698** unitarias, TypeScript de aplicación y suites OCR/carga y build.
+- **700/700** unitarias, TypeScript de aplicación y suites OCR/carga y build.
 - Captura aportada comprobada localmente con Tesseract real y detector: modalidad
   live, estado Cashout, stake/retorno exactos y neto en céntimos. La imagen y el
   informe privado permanecen fuera de Git y del QA remoto.
@@ -43,9 +44,13 @@ modalidad desconocida. Reproducido con una prueba que devolvía unknown en vez d
   valores erróneos, selecciones omitidas/adicionales o estados financieros falsos.
   Corpus, admisiones, oráculos y recursos OCR intactos.
 - Carga y revisión UI en 375/768/1440, consentimiento y teclado conservados.
+- El primer y último partido de una captura muy alta también conservan el rayo;
+  la exclusión del logotipo se mide por anchura y no recorta extremos del boleto.
 - El harness FASE 3 dejó de usar el hash ficticio fixture-hash y calcula el SHA real
   del Blob: la nueva prueba de procedencia no admite asociar un icono a otra imagen.
   No se alteró ningún valor esperado, imagen u oráculo.
+- FASE 3 real: tres repeticiones, siete diferencias literales conocidas, ninguna
+  nueva y paridad 7/7 entre ejecución instrumentada y normal.
 
 Evidencia local ignorada: `test-results/live-lightning/`, `automatic-qa/`,
 `ocr-phase4b/`, `ocr-phase3/`, `capture-upload/` y `ocr-phase3-ui/`.

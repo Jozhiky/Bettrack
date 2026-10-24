@@ -40,7 +40,9 @@ export function findLiveLightning(
 ): VisualMode['bbox'] | undefined {
   const { width: w, height: h, data } = pixels,
     mask = new Uint8Array(w * h);
-  for (let y = Math.floor(h * 0.15); y < Math.floor(h * 0.92); y++)
+  // A long combination may have its only live leg near either end. Bound the
+  // logo exclusion by ticket WIDTH, never by a percentage of the full height.
+  for (let y = Math.floor(w * 0.12); y < h; y++)
     for (let x = Math.floor(w * 0.75); x < Math.ceil(w * 0.98); x++) {
       const p = (y * w + x) * 4,
         r = data[p],

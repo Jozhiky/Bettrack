@@ -71,11 +71,12 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 
 ## Modalidad en vivo por rayo Betano — preparada, todavía no desplegada
 
-- Rama `codex/betano-live-lightning`: reconoce el rayo por píxeles y muestra
+- [PR #10](https://github.com/Jozhiky/Bettrack/pull/10), rama `codex/betano-live-lightning`:
+  reconoce el rayo por píxeles y muestra
   «⚡ En vivo», separado de colocación/estado/cobro. No convierte ofertas en cashouts.
 - Recupera metadatos visuales de borradores históricos sin volver a subir imágenes;
   conserva originales y retenciones, audita la lectura y no reescribe apuestas guardadas.
-- **698/698**, TypeScript/build; captura aportada validada localmente sin publicarla,
+- **700/700**, TypeScript/build; captura aportada validada localmente sin publicarla,
   cinco grupos QA y UI 375/768/1440. OCR 1067/1089, mismas 22 diferencias, sin regresiones.
 - Sin migraciones/dependencias nuevas ni acceso a datos de producción en este trabajo.
 - [Detalles y límites](BETANO_LIVE_LIGHTNING.md). Publicación de esta nueva versión pendiente.

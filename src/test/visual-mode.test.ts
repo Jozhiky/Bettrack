@@ -50,11 +50,17 @@ it('does not equate a live clock or an absent icon to placement mode; conflictin
     'unknown',
   );
 });
-it.each([1, 2, 3])(
-  'recognizes the compact zigzag at scale %i without relying on OCR text',
-  (scale) => {
+it.each([
+  [1, 1, false],
+  [2, 1, false],
+  [3, 1, false],
+  [1, 8, false],
+  [1, 8, true],
+] as const)(
+  'recognizes the zigzag at scale %i / height factor %i / last leg %s',
+  (scale, heightFactor, lastLeg) => {
     const width = 360 * scale,
-      height = 306 * scale,
+      height = 306 * scale * heightFactor,
       data = new Uint8ClampedArray(width * height * 4);
     for (let p = 0; p < data.length; p += 4) data.set([32, 36, 54, 255], p);
     const points = [
@@ -75,7 +81,11 @@ it.each([1, 2, 3])(
             [c, d] = points[j];
           if (b > v !== d > v && u < ((c - a) * (v - b)) / (d - b) + a) inside = !inside;
         }
-        if (inside) data.set([255, 85, 50, 255], ((167 * scale + y) * width + 322 * scale + x) * 4);
+        if (inside)
+          data.set(
+            [255, 85, 50, 255],
+            (((lastLeg ? height - 60 * scale : 167 * scale) + y) * width + 322 * scale + x) * 4,
+          );
       }
     expect(findLiveLightning({ width, height, data })).toBeDefined();
   },
