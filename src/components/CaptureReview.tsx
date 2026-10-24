@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { CaptureUpload } from '../domain/model';
 import { money, displayDate } from '../domain/model';
 import { confirmCaptureReview } from '../data/captures';
-import { readDraft, needsNewProof, reviewSelectionSchema, draftSettlement } from '../ocr/review';
+import { readDraft, canReviewCapture, reviewSelectionSchema } from '../ocr/review';
+import { HistoricalImportFields, useHistoricalImport } from './HistoricalImportFields';
 import { useApp } from '../app/context';
 import { Button, Field, Modal } from './ui';
 
@@ -23,7 +24,10 @@ export function CaptureReview({
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const settled = original && draftSettlement(original);
+  const history = useHistoricalImport(original);
+  const settled = history.kind;
+  const header = history.data?.header ?? original;
+  const saving = useRef(false);
   const stale =
     upload.draftJson !== snapshot.draftJson ||
     upload.imageId !== snapshot.imageId ||
@@ -31,13 +35,16 @@ export function CaptureReview({
   const valid =
     !stale &&
     original &&
-    !settled &&
-    !needsNewProof(original) &&
-    original.house &&
-    original.kind &&
-    original.stake !== undefined &&
-    original.odds !== undefined &&
-    original.potential !== undefined &&
+    canReviewCapture(original) &&
+    (history.candidate
+      ? !!history.data
+      : !!(
+          original.house &&
+          original.kind &&
+          original.stake !== undefined &&
+          original.odds !== undefined &&
+          original.potential !== undefined
+        )) &&
     rows.length > 0 &&
     (!original.expectedSelections || original.expectedSelections === rows.length) &&
     rows.every((s) => s.odds !== null && reviewSelectionSchema.safeParse(s).success);
@@ -55,7 +62,8 @@ export function CaptureReview({
     );
   };
   const save = async () => {
-    if (!valid || !accepted || busy) return;
+    if (!valid || !accepted || saving.current) return;
+    saving.current = true;
     setBusy(true);
     try {
       const done = await run(
@@ -65,17 +73,25 @@ export function CaptureReview({
             imageId: snapshot.imageId,
             selections: rows,
             acknowledged: accepted,
+            ...(history.candidate ? { historical: history.data } : {}),
           }),
         'Revisión procesada',
       );
       if (done) onClose();
     } finally {
       setBusy(false);
+      saving.current = false;
     }
   };
   return (
     <Modal
-      title={preview ? 'Confirmar registro de apuesta' : 'Revisar datos de la captura'}
+      title={
+        preview
+          ? history.candidate
+            ? 'Confirmar importación histórica'
+            : 'Confirmar registro de apuesta'
+          : 'Revisar datos de la captura'
+      }
       description="La captura original se conserva y las correcciones quedan en el historial de auditoría."
       onClose={onClose}
       wide
@@ -92,35 +108,36 @@ export function CaptureReview({
           </a>
         )}
         <div>
+          <HistoricalImportFields form={history} preview={preview} />
           <dl className="capture-review-summary">
             <div>
               <dt>Casa</dt>
-              <dd>{original?.house ?? 'No reconocida'}</dd>
+              <dd>{header?.house ?? 'No reconocida'}</dd>
             </div>
             <div>
               <dt>Monto apostado</dt>
-              <dd>{original?.stake !== undefined ? money(original.stake) : 'No reconocido'}</dd>
+              <dd>{header?.stake !== undefined ? money(header.stake) : 'No reconocido'}</dd>
             </div>
             <div>
               <dt>Cuota total</dt>
-              <dd>{original?.odds ?? 'No reconocida'}</dd>
+              <dd>{header?.odds ?? 'No reconocida'}</dd>
             </div>
             <div>
               <dt>Retorno potencial</dt>
-              <dd>
-                {original?.potential !== undefined ? money(original.potential) : 'No reconocido'}
-              </dd>
+              <dd>{header?.potential !== undefined ? money(header.potential) : 'No reconocido'}</dd>
             </div>
             <div>
               <dt>Tipo</dt>
-              <dd>{original?.kind ?? 'No reconocido'}</dd>
+              <dd>{header?.kind ?? 'No reconocido'}</dd>
             </div>
             <div>
               <dt>Estado</dt>
               <dd>
                 {settled
-                  ? `${settled} · liquidado, registro retenido`
-                  : 'En revisión · registro inicial Pendiente'}
+                  ? `${settled} · liquidación histórica por confirmar`
+                  : history.candidate
+                    ? 'Liquidación histórica por aclarar'
+                    : 'En revisión · registro inicial Pendiente'}
               </dd>
             </div>
             {original?.cashoutOffer !== undefined && (
@@ -145,8 +162,8 @@ export function CaptureReview({
             )}
           </dl>
           <p className="capture-reason">
-            {settled ? (
-              'Boleto ya liquidado. El registro como pendiente está bloqueado; revisa su liquidación por separado.'
+            {history.candidate ? (
+              'Se importará directamente con su liquidación definitiva, solo después de cotejar fechas, importe realizado y cierre total. No se guardará como pendiente.'
             ) : (
               <>
                 Se registrará Pendiente y se reservará{' '}
@@ -274,8 +291,9 @@ export function CaptureReview({
                   checked={accepted}
                   onChange={(e) => setAccepted(e.target.checked)}
                 />{' '}
-                He cotejado cada selección y cuota con la imagen y confirmo que la apuesta ya está
-                colocada.
+                {history.candidate
+                  ? 'He cotejado cada selección, cuota, fecha e importe realizado y confirmo que el estado corresponde al boleto completo y el cierre al stake completo. Autorizo importar el boleto y su liquidación.'
+                  : 'He cotejado cada selección y cuota con la imagen y confirmo que la apuesta ya está colocada.'}
               </label>
               <div className="quick-results">
                 <Button
@@ -289,17 +307,24 @@ export function CaptureReview({
                   Volver a corregir
                 </Button>
                 <Button disabled={!accepted || !valid || busy} onClick={() => void save()}>
-                  {busy ? 'Guardando…' : 'Confirmar y registrar apuesta'}
+                  {busy
+                    ? 'Guardando…'
+                    : history.candidate
+                      ? 'Confirmar e importar liquidada'
+                      : 'Confirmar y registrar apuesta'}
                 </Button>
               </div>
             </>
           ) : (
             <Button
-              disabled={!!settled}
+              disabled={busy}
               onClick={() => {
                 if (!valid) {
                   setError(
-                    'Faltan datos válidos o comprobante de colocación. No inventes información: añade una captura completa si no es visible.',
+                    history.candidate
+                      ? history.error ||
+                          'Faltan selecciones o cuotas válidas. Coteja cada campo antes de importar.'
+                      : 'Faltan datos válidos o comprobante de colocación. No inventes información: añade una captura completa si no es visible.',
                   );
                   return;
                 }

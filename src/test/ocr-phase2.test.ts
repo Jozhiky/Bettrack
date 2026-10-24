@@ -6,6 +6,7 @@ import { isMarketLine } from '../ocr/markets';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
 import { registerCapture } from './confirm-ready-capture';
+import { confirmCaptureReview } from '../data/captures';
 import { position } from '../domain/model';
 
 vi.mock('../integrations/supabase', () => ({
@@ -294,22 +295,36 @@ describe('Phase 2 registration safety, isolated database only', () => {
           reason: '',
         });
         await registerCapture('upload', p, repository);
+        if (status !== 'Pendiente') {
+          const upload = (await db.uploads.get('upload'))!;
+          expect(await db.bets.count()).toBe(0);
+          expect(await db.movements.count()).toBe(0);
+          await confirmCaptureReview('upload', {
+            expectedDraft: upload.draftJson,
+            imageId: 'image',
+            selections: p.selections,
+            acknowledged: true,
+            historical: {
+              kind: status === 'Cashout ejecutado' ? 'Cashout' : status as 'Ganada' | 'Perdida',
+              betDate: '2025-12-20T12:00:00.000Z',
+              settlementDate: '2025-12-21T12:00:00.000Z',
+              closedStake: 1000,
+              returned: status === 'Perdida' ? 0 : status === 'Cashout ejecutado' ? 500 : 4000,
+              fullClosureConfirmed: true,
+              header: { house: 'Betano', kind: 'Combinada', stake: 1000, odds: 4, potential: 4000 },
+            },
+          }, repository);
+        }
         const bet = (await db.bets.get('upload'))!;
-        expect(position(bet, []).status).toBe('Pendiente');
-        expect(await db.settlements.count()).toBe(0);
+        expect(position(bet, await db.settlements.toArray()).status).toBe(
+          status === 'Cashout ejecutado' ? 'Cashout' : status,
+        );
+        expect(await db.settlements.count()).toBe(status === 'Pendiente' ? 0 : 1);
         if (status !== 'Pendiente') {
           const kind =
             status === 'Cashout ejecutado' ? 'Cashout' : (status as 'Ganada' | 'Perdida');
-          await repository.settle({
-            id: 'settlement',
-            betId: bet.id,
-            date: bet.date,
-            kind,
-            closedStake: bet.stake,
-            returned: kind === 'Perdida' ? 0 : kind === 'Cashout' ? 500 : 4000,
-            note: '',
-          });
           expect(position(bet, await db.settlements.toArray()).status).toBe(kind);
+          expect(await db.movements.count()).toBe(2);
         }
       } finally {
         await db.delete();
