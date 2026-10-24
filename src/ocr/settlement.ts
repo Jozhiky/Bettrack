@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { betSchema, settlementSchema, toCents } from '../domain/model';
 import { settledTicketHeader, betanoHeader } from './header';
 import type { ParsedTicket } from './parser';
+import { matchesSelectionProduct } from '../domain/odds';
 
 export const historicalImportSchema = z
   .object({
@@ -11,17 +12,20 @@ export const historicalImportSchema = z
     closedStake: settlementSchema.shape.closedStake,
     returned: settlementSchema.shape.returned,
     fullClosureConfirmed: z.literal(true),
+    executionConfirmed: z.literal(true).optional(),
     header: z.object({
       house: z.enum(['Betano', 'Bet365']),
       kind: betSchema.shape.kind,
       stake: betSchema.shape.stake,
       odds: betSchema.shape.odds,
       potential: betSchema.shape.potential,
+      oddsSource: betSchema.shape.oddsSource,
+      oddsCalculation: betSchema.shape.oddsCalculation,
     }),
   })
   .strict();
 export type HistoricalImport = z.infer<typeof historicalImportSchema>;
-type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake'>;
+type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds'>;
 const money = '(?:S\\s*\\/|PEN)\\s*([0-9]+(?:[.,][0-9]+)*)';
 // Whole affirmative execution receipts only. Buttons, instructions and conditions do not match.
 const execution = new RegExp(
@@ -53,8 +57,19 @@ export function settlementEvidence(draft: Draft) {
   const kinds = new Set<HistoricalImport['kind']>();
   const evidence: string[] = [];
   let manualState = false;
+  let headerCashout = false;
   if (draft.house === 'Betano') {
     for (const line of lines) {
+      if (
+        betanoHeader(line) &&
+        /^(?:simple|doble|triple|combinada(?:\s+de\s+\d+)?|bet builder)\s+[S$5]\s*\/\s*\d+[.,]\d{2}\s+cash\s*out$/i.test(
+          line,
+        )
+      ) {
+        kinds.add('Cashout');
+        evidence.push(line);
+        headerCashout = true;
+      }
       const status = settledTicketHeader(line);
       if (status) {
         kinds.add(status);
@@ -102,6 +117,11 @@ export function settlementEvidence(draft: Draft) {
     }
   }
   const distinct = [...new Set(amounts)];
+  const suggestions = lines.flatMap((line) => {
+    const match = line.match(/^ganancias\s*(?:[S$5]\s*\/|PEN)?\s*([0-9]+(?:[.,][0-9]+)*)[.!]?$/i);
+    const value = match && amount(match[1]);
+    return typeof value === 'number' ? [value] : [];
+  });
   const single = kinds.size === 1 && !manualState ? [...kinds][0] : undefined;
   const closed = lines
     .map((l) => l.match(new RegExp(`^stake cerrado\\s*:?\\s*${money}$`, 'i')))
@@ -117,26 +137,47 @@ export function settlementEvidence(draft: Draft) {
     evidence,
     candidate: kinds.size > 0 || partial || ambiguousStake,
     manualState,
+    executionNeedsConfirmation: headerCashout && receipts.length === 0,
+    suggestedReturn:
+      kinds.size === 1 && new Set(suggestions).size === 1 ? suggestions[0] : undefined,
     partial: partial || ambiguousStake,
     closedStake,
     returned:
-      single === 'Perdida' && !distinct.some((n) => n !== 0)
+      single === 'Perdida' && ![...distinct, ...suggestions].some((n) => n !== 0)
         ? 0
         : distinct.length === 1
           ? distinct[0]
           : undefined,
     conflictingAmounts:
-      distinct.length > 1 || (single === 'Perdida' && distinct.some((n) => n !== 0)),
+      distinct.length > 1 ||
+      (single === 'Perdida' && [...distinct, ...suggestions].some((n) => n !== 0)),
     betDate: labeledDate(lines, 'apuesta'),
     settlementDate: labeledDate(lines, '(?:liquidación|liquidacion|cierre)'),
   };
 }
-export function validateHistoricalImport(raw: unknown, draft: Draft): HistoricalImport {
+export function validateHistoricalImport(
+  raw: unknown,
+  draft: Draft,
+  rows: readonly { odds?: number | null }[] = [],
+): HistoricalImport {
   const data = historicalImportSchema.parse(raw),
     evidence = settlementEvidence(draft);
+  if (
+    data.header.oddsSource === 'selection-product' &&
+    (draft.odds !== undefined ||
+      data.header.kind !== 'Combinada' ||
+      !matchesSelectionProduct(data.header.odds, data.header.oddsCalculation, rows))
+  )
+    throw Error(
+      'Revisa la cuota calculada con todas las selecciones; conserva el total visible si existe.',
+    );
   if (!evidence.kinds.includes(data.kind))
     throw Error(
       'El estado final no tiene evidencia global suficiente. Una oferta cashout no acredita ejecución.',
+    );
+  if (data.kind === 'Cashout' && evidence.executionNeedsConfirmation && !data.executionConfirmed)
+    throw Error(
+      'Confirma que el Cash Out de la cabecera fue ejecutado y cobrado; una oferta no basta.',
     );
   if (
     evidence.partial ||

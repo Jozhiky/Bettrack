@@ -51,6 +51,220 @@ function ticket(status = 'Ganada') {
   return parsed;
 }
 describe('historical import contract', () => {
+  it.each(['none', 'wrong-total', 'changed-leg', 'visible-total'])(
+    'validates reviewed selection-product provenance: %s',
+    async (fault) =>
+      fixture(async (db, repo) => {
+        const p = ticket('Perdida');
+        p.text = 'Betano\nCombinada de 3 S/10.00 Perdida';
+        p.expectedSelections = 3;
+        delete p.odds;
+        delete p.potential;
+        p.selections = [2.02, 2.15, 1.36].map((odds, i) => ({
+          ...p.selections[0],
+          event: 'Equipo QA' + i + ' vs. Equipo QB' + i,
+          odds,
+        }));
+        if (fault === 'visible-total') p.odds = 6;
+        await registerCapture('upload', p, repo);
+        const u = (await db.uploads.get('upload'))!;
+        const c = {
+          expectedDraft: u.draftJson,
+          imageId: 'image',
+          selections: structuredClone(p.selections),
+          acknowledged: true,
+          historical: {
+            kind: 'Perdida' as const,
+            returned: 0,
+            closedStake: 1000,
+            betDate: '2026-10-20T15:00:00.000Z',
+            settlementDate: '2026-10-21T18:00:00.000Z',
+            fullClosureConfirmed: true as const,
+            header: {
+              house: 'Betano' as const,
+              kind: 'Combinada' as const,
+              stake: 1000,
+              odds: 5.9,
+              potential: null,
+              oddsSource: 'selection-product' as const,
+              oddsCalculation: {
+                method: 'product-truncate-2' as const,
+                inputs: [2.02, 2.15, 1.36],
+              },
+            },
+          },
+        };
+        if (fault === 'wrong-total') c.historical.header.odds = 5.91;
+        if (fault === 'changed-leg') c.selections[0].odds = 2.03;
+        if (fault !== 'none') {
+          await expect(confirmCaptureReview('upload', c, repo)).rejects.toThrow('cuota calculada');
+          expect(await db.bets.count()).toBe(0);
+          expect(await db.movements.count()).toBe(0);
+        } else {
+          await confirmCaptureReview('upload', c, repo);
+          const s = await repo.snapshot();
+          expect(s.bets[0]).toMatchObject({
+            odds: 5.9,
+            potential: null,
+            oddsSource: 'selection-product',
+            oddsCalculation: { method: 'product-truncate-2', inputs: [2.02, 2.15, 1.36] },
+          });
+          expect(s.movements).toHaveLength(2);
+          expect(totals(s).profit).toBe(-1000);
+        }
+      }),
+  );
+  it.each([
+    ['Ganada', 1400, null, null],
+    ['Ganada', 1400, 4, null],
+    ['Ganada', 1400, null, 4000],
+    ['Perdida', 0, null, null],
+    ['Perdida', 0, 4, null],
+    ['Perdida', 0, null, 4000],
+    ['Cashout', 700, null, null],
+    ['Cashout', 700, 4, null],
+    ['Cashout', 700, null, 4000],
+  ] as const)(
+    'preserves unknown historical terms for %s (%i, %s, %s)',
+    async (kind, returned, odds, potential) =>
+      fixture(async (db, repo) => {
+        const p = ticket(kind === 'Cashout' ? 'Cash Out' : kind);
+        delete p.odds;
+        delete p.potential;
+        await registerCapture('upload', p, repo);
+        const u = (await db.uploads.get('upload'))!;
+        const confirmation = {
+          expectedDraft: u.draftJson,
+          imageId: 'image',
+          selections: p.selections,
+          acknowledged: true,
+          historical: {
+            kind,
+            returned,
+            closedStake: 1000,
+            betDate: '2026-10-20T15:00:00.000Z',
+            settlementDate: '2026-10-21T18:00:00.000Z',
+            fullClosureConfirmed: true as const,
+            executionConfirmed: true as const,
+            header: {
+              house: 'Betano' as const,
+              kind: 'Combinada' as const,
+              stake: 1000,
+              odds,
+              potential,
+            },
+          },
+        };
+        await confirmCaptureReview('upload', confirmation, repo);
+        const s = await repo.snapshot();
+        expect(s.bets[0]).toMatchObject({ odds, potential, historical: true });
+        expect(totals(s).profit).toBe(returned - 1000);
+        expect(totals(s).average).toBe(odds);
+        const before = await repo.snapshot();
+        await expect(repo.undoSettlement(s.settlements[0].id)).rejects.toThrow('Completa la cuota');
+        expect(await repo.snapshot()).toEqual(before);
+        const altered = {
+          ...confirmation,
+          historical: { ...confirmation.historical, returned: returned + 1 },
+        };
+        await expect(confirmCaptureReview('upload', altered, repo)).rejects.toThrow(
+          'borrador cambió',
+        );
+        expect(await repo.snapshot()).toEqual(before);
+      }),
+  );
+  it('requires separate execution attestation for a terminal Cash Out header', async () =>
+    fixture(async (db, repo) => {
+      const p = ticket('Cash Out');
+      await registerCapture('upload', p, repo);
+      const u = (await db.uploads.get('upload'))!;
+      await expect(
+        confirmCaptureReview(
+          'upload',
+          {
+            expectedDraft: u.draftJson,
+            imageId: 'image',
+            selections: p.selections,
+            acknowledged: true,
+            historical: {
+              kind: 'Cashout',
+              returned: 700,
+              closedStake: 1000,
+              betDate: '2026-10-20T15:00:00.000Z',
+              settlementDate: '2026-10-21T18:00:00.000Z',
+              fullClosureConfirmed: true,
+              header: {
+                house: 'Betano',
+                kind: 'Combinada',
+                stake: 1000,
+                odds: null,
+                potential: null,
+              },
+            },
+          },
+          repo,
+        ),
+      ).rejects.toThrow('Confirma que el Cash Out');
+      expect(await db.bets.count()).toBe(0);
+      expect(await db.movements.count()).toBe(0);
+    }));
+  it('does not let positive Ganancias silently become a zero-return loss', () => {
+    const p = ticket('Perdida');
+    p.text += '\nGanancias S/5.00';
+    expect(settlementEvidence(p)).toMatchObject({ conflictingAmounts: true, returned: undefined });
+  });
+  it('recognizes a terminal Betano Cash Out header without treating an offer as execution', () => {
+    const p = ticket('Cash Out');
+    p.text += '\nGanancias S/7.00';
+    expect(settlementEvidence(p)).toMatchObject({
+      candidate: true,
+      kind: 'Cashout',
+      executionNeedsConfirmation: true,
+      returned: undefined,
+      suggestedReturn: 700,
+    });
+    expect(
+      settlementEvidence({ ...p, text: 'Betano\nSimple S/10.00\nCASH OUT S/7.00' }).candidate,
+    ).toBe(false);
+  });
+  it('imports a fully settled ticket without inventing a missing global quote or potential', async () =>
+    fixture(async (db, repo) => {
+      const p = ticket('Perdida');
+      delete p.odds;
+      delete p.potential;
+      await registerCapture('upload', p, repo);
+      const u = (await db.uploads.get('upload'))!;
+      await confirmCaptureReview(
+        'upload',
+        {
+          expectedDraft: u.draftJson,
+          imageId: 'image',
+          selections: p.selections,
+          acknowledged: true,
+          historical: {
+            kind: 'Perdida',
+            betDate: '2026-10-20T15:00:00.000Z',
+            settlementDate: '2026-10-21T18:00:00.000Z',
+            closedStake: 1000,
+            returned: 0,
+            fullClosureConfirmed: true,
+            header: {
+              house: 'Betano',
+              kind: 'Combinada',
+              stake: 1000,
+              odds: null,
+              potential: null,
+            },
+          },
+        } as unknown as Parameters<typeof confirmCaptureReview>[1],
+        repo,
+      );
+      const s = await repo.snapshot();
+      expect(s.bets[0]).toMatchObject({ odds: null, potential: null, historical: true });
+      expect(s.settlements).toHaveLength(1);
+      expect(s.movements).toHaveLength(2);
+      expect(totals(s).profit).toBe(-1000);
+    }));
   it('reproduces the settled review block and requires an atomic confirmed import', async () =>
     fixture(async (db, repo) => {
       const p = ticket();

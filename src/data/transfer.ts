@@ -1,5 +1,6 @@
 import { transact } from './cloudStore';
 import { canonicalJSON } from './jsonEquality';
+import { matchesSelectionProduct } from '../domain/odds';
 import Papa from 'papaparse';
 import { z } from 'zod';
 import { repo, LocalRepository } from './repository';
@@ -135,11 +136,15 @@ export function validateBackup(raw: unknown): Backup {
     )
       throw new Error('Referencia de apuesta inválida.');
     const sels = d.selections.filter((s) => s.betId === bet.id);
+    if (bet.oddsSource === 'selection-product' && !matchesSelectionProduct(bet.odds,bet.oddsCalculation,sels))
+      throw new Error('Cuota calculada y selecciones inconsistentes en la copia.');
     if (!sels.length) throw new Error('Apuesta sin selecciones.');
     const count = selectionCount(sels);
     if ((bet.kind === 'Simple' && sels.length !== 1) || (bet.kind === 'Combinada' && count < 2))
       throw new Error('Tipo y número de selecciones inconsistentes.');
     const p = position(bet, d.settlements);
+    if ((bet.odds === null || bet.potential === null) && (p.remaining !== 0 || !d.settlements.some(s => s.betId === bet.id && settlementSchema.safeParse(s).success)))
+      throw new Error('Histórico con cuota o potencial desconocidos sin liquidación final completa.');
     if (p.remaining < 0) throw new Error('Stake liquidado más de una vez.');
     const moves = d.movements.filter((m) => m.betId === bet.id && m.kind === 'Apuesta colocada');
     if (
@@ -305,7 +310,8 @@ export function exportCSV(data: Snapshot) {
           .join(' / '),
         'Monto apostado': (b.stake / 100).toFixed(2),
         Cuota: b.odds,
-        'Retorno potencial': (b.potential / 100).toFixed(2),
+        'Origen de cuota': b.oddsSource === 'selection-product' ? 'Calculada de las selecciones' : b.oddsSource || '',
+        'Retorno potencial': b.potential === null ? '' : (b.potential / 100).toFixed(2),
         'Bono potencial': b.bonus ? (b.bonus.amount / 100).toFixed(2) : '',
         'Tratamiento del bono': b.bonus?.treatment || '',
         'Monto cashout': p.status === 'Cashout' ? (p.returned / 100).toFixed(2) : '',

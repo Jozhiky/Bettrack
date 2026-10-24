@@ -102,7 +102,7 @@ try {
   const now = new Date().toISOString();
   const seeded = [];
   for (let i = 0; i < 21; i++) {
-    const kind = i === 0 || i === 7 ? 'Ganada' : i === 1 || i >= 9 ? 'Perdida' : 'Cashout';
+    const kind = [0, 7, 10, 11].includes(i) ? 'Ganada' : i === 1 || i >= 9 ? 'Perdida' : 'Cashout';
     const returned =
       i === 0 || i === 2 || i === 7
         ? 14000
@@ -114,21 +114,20 @@ try {
     const event = i === 8 ? 'Equipo QA0 vs. Equipo QB0' : `Equipo QA${i} vs. Equipo QB${i}`;
     const text = [
       'Betano',
-      `Simple S/100.00${kind === 'Cashout' || i === 20 ? '' : ' ' + kind}`,
+      `${i === 1 ? 'Combinada de 3' : 'Simple'} S/100.00${i === 20 ? '' : kind === 'Cashout' ? ' Cash Out' : ' ' + kind}`,
       event,
       'Goles totales',
       'Más de 2.5',
       '2.00',
-      'Cuota total 2.00',
-      'Retorno potencial S/200.00',
+      ...(i === 20 ? ['Cuota total 2.00', 'Retorno potencial S/200.00'] : []),
       i === 20
         ? 'CASH OUT S/80.00'
         : kind === 'Cashout'
           ? i === 5
-            ? 'Cashout realizado'
-            : `Cashout cobrado S/${(returned / 100).toFixed(2)}`
+            ? ''
+            : `Ganancias S/${(returned / 100).toFixed(2)}`
           : kind === 'Ganada'
-            ? 'Pago final S/140.00'
+            ? 'Ganancias S/140.00'
             : '',
       ...(i === 6 ? ['Cashout parcial', 'Stake cerrado S/50.00'] : []),
     ]
@@ -161,21 +160,18 @@ try {
     );
     const draft = {
       house: 'Betano',
-      kind: 'Simple',
+      kind: i === 1 ? 'Combinada' : 'Simple',
       stake: 10000,
-      odds: 2,
-      ...(i === 7 ? {} : { potential: 20000 }),
+      ...(i === 20 ? { odds: 2, potential: 20000 } : {}),
       text,
-      selections: [
-        {
-          event,
-          market: 'Goles totales',
-          pick: 'Más de 2.5',
-          odds: 2,
-          sport: 'Fútbol',
-          league: '',
-        },
-      ],
+      selections: Array.from({ length: i === 1 ? 3 : 1 }, (_, leg) => ({
+        event: leg ? event + ' ' + leg : event,
+        market: 'Goles totales',
+        pick: 'Más de 2.5',
+        odds: i === 1 ? [2.02, 2.15, 1.36][leg] : 2,
+        sport: 'Fútbol',
+        league: '',
+      })),
       warnings: [],
       confidence: {},
     };
@@ -237,7 +233,19 @@ try {
     await expect(p.getByRole('dialog')).toBeVisible();
     await p.getByLabel('Fecha de apuesta', { exact: true }).fill('2026-10-20T10:00');
     await p.getByLabel('Fecha de liquidación', { exact: true }).fill('2026-10-21T12:00');
-    if (i === 7) await p.getByLabel('Retorno potencial original', { exact: true }).fill('200');
+    await expect(p.getByLabel('Cuota total histórica', { exact: true })).toHaveValue('');
+    await expect(p.getByLabel('Retorno potencial original', { exact: true })).toHaveValue('');
+    if (i === 1) {
+      await p.getByRole('button', { name: 'Usar cuota calculada', exact: true }).click();
+      await expect(p.getByLabel('Cuota total histórica', { exact: true })).toHaveValue('5.90');
+    }
+    if (f.kind === 'Cashout')
+      await p.getByRole('checkbox', { name: /He verificado que el Cash Out/ }).check();
+    const suggestion = p.getByRole('button', {
+      name: 'Usar importe mostrado como retorno total recibido',
+      exact: true,
+    });
+    if (await suggestion.count()) await suggestion.click();
   };
   const preview = async (p) => {
     await p.getByRole('button', { name: 'Ver resumen antes de registrar', exact: true }).click();
@@ -254,6 +262,21 @@ try {
   await open(a.p, 0);
   await preview(a.p);
   assert.equal((await snapshot()).records.movements.length, 0);
+  // Older backends must block a null quote BEFORE the financial RPC, even after consent.
+  await a.p.route(qaOrigin + '/rest/v1/rpc/bt_capabilities', (route) =>
+    route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'PGRST202', message: 'QA injected older backend' }),
+    }),
+  );
+  await submit(a.p);
+  await expect(
+    a.p.getByRole('alert').filter({ hasText: 'El backend todavía no admite históricos' }),
+  ).toBeVisible();
+  assert.equal((await snapshot()).records.movements.length, 0);
+  assert.equal((await snapshot()).records.bets.length, 0);
+  await a.p.unroute(qaOrigin + '/rest/v1/rpc/bt_capabilities');
   await submit(a.p);
   await count(1);
   let s = await snapshot();
@@ -264,7 +287,7 @@ try {
   assert.equal(s.records.settlements[0].date, '2026-10-21T17:00:00.000Z');
   assert.equal(s.records.bets[0].createdAt, now);
   passed.push(
-    '20 legacy drafts recovered without reread/reupload; exact historical dates and paid win atomic',
+    '20 realistic legacy drafts: 4 wins, 10 losses, 6 header cashouts; missing quote/potential preserved; older backend safely blocked',
   );
   await open(a.p, 1);
   await preview(a.p);
@@ -338,6 +361,10 @@ try {
     .click();
   await a.p.getByLabel('Fecha de apuesta', { exact: true }).fill('2026-10-20T10:00');
   await a.p.getByLabel('Fecha de liquidación', { exact: true }).fill('2026-10-21T12:00');
+  await a.p.getByRole('checkbox', { name: /He verificado que el Cash Out/ }).check();
+  await a.p
+    .getByRole('button', { name: 'Usar importe mostrado como retorno total recibido', exact: true })
+    .click();
   await preview(a.p);
   await submit(a.p);
   await expect
@@ -351,6 +378,14 @@ try {
   assert.equal(s.records.bets.length, 7);
   assert.equal(s.records.movements.length, 14);
   assert.equal(s.records.settlements.length, 7);
+  assert(s.records.bets.every((b) => b.potential === null && b.historical === true));
+  assert.equal(s.records.bets.filter((b) => b.odds === null).length, 6);
+  const calculatedBet = s.records.bets.find((b) => b.oddsSource === 'selection-product');
+  assert.equal(calculatedBet?.odds, 5.9);
+  assert.deepEqual(calculatedBet.oddsCalculation, {
+    method: 'product-truncate-2',
+    inputs: [2.02, 2.15, 1.36],
+  });
   assert.equal(s.records.images.length, 21);
   assert.equal((await snapshot(other)).records.bets.length, 0);
   assert.equal(s.records.uploads.find((u) => u.id === fixtures[6].uploadId).status, 'review');
@@ -365,6 +400,25 @@ try {
     assert.equal(packet.filter((c) => c.collection === 'movements').length, 2);
   }
   passed.push('every financial request carries bet, settlement, stake and actual return together');
+  // The deferred database guard must reject reopening a null-quote historical wager.
+  const historicalBet = s.records.bets[0];
+  const historicalSettlement = s.records.settlements.find((x) => x.betId === historicalBet.id);
+  const historicalReturn = s.records.movements.find(
+    (x) => x.settlementId === historicalSettlement.id,
+  );
+  const removal = await owner.rpc('bt_commit', {
+    expected_version: s.version,
+    changes: [
+      { collection: 'settlements', id: historicalSettlement.id, payload: null },
+      { collection: 'movements', id: historicalReturn.id, payload: null },
+    ],
+  });
+  assert(removal.error?.message.includes('BT_HISTORICAL_REQUIRES_FINAL_SETTLEMENT'));
+  const rejected = await snapshot();
+  assert.equal(rejected.version, s.version);
+  assert.equal(rejected.records.settlements.length, 7);
+  assert.equal(rejected.records.movements.length, 14);
+  passed.push('database deferred guard rolls back attempts to reopen unknown-quote history');
   for (const width of [375, 768, 1440]) {
     await a.p.setViewportSize({ width, height: 950 });
     await a.p.goto('/apuestas');
@@ -399,6 +453,8 @@ try {
   );
   await expect(a.p.locator('.kpi').filter({ hasText: 'Resultado neto' })).toContainText('40.00');
   await expect(a.p.locator('.kpi').filter({ hasText: 'Resultado neto' })).toContainText('-');
+  await a.p.goto('/estadisticas');
+  await expect(a.p.locator('.kpi').filter({ hasText: 'Cuota promedio' })).toContainText('5.90');
   passed.push('responsive legacy inbox, persisted closed history and dashboard net -40.00');
   assert.equal(
     (await snapshot()).records.movements.length,

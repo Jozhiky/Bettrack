@@ -38,11 +38,11 @@ export function BetCard({ bet, onSelect }: { bet: Bet; onSelect: (id: string) =>
       <div className="ticket-amounts">
         <span>
           {pending ? 'Cuota total' : 'Apostado'}
-          <strong>{pending ? bet.odds.toFixed(2) : money(bet.stake, house?.currency)}</strong>
+          <strong>{pending ? bet.odds?.toFixed(2) ?? 'No visible' : money(bet.stake, house?.currency)}</strong>
         </span>
         <span title={pending ? 'Retorno estimado: aún no es dinero cobrado.' : undefined}>
           {pending ? 'Retorno potencial' : 'Cobrado'}
-          <strong>{money(pending ? bet.potential : p.returned, house?.currency)}</strong>
+          <strong>{pending && bet.potential === null ? 'No visible' : money(pending ? bet.potential! : p.returned, house?.currency)}</strong>
         </span>
       </div>
       {pending && p.needsReview && (

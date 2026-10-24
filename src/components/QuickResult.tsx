@@ -75,7 +75,7 @@ export function QuickResult({ bet, onDetail, inline = false }: { bet: Bet; onDet
           variant="secondary"
           disabled={busy}
           onClick={() =>
-            bet.bonus?.treatment === 'Sin confirmar'
+            bet.potential === null || bet.bonus?.treatment === 'Sin confirmar'
               ? open('Ganada')
               : void finish(
                   'Ganada',

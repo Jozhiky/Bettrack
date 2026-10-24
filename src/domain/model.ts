@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { matchesSelectionProduct } from './odds';
 export const id = () => crypto.randomUUID();
 export const timestamp = () => new Date().toISOString();
 const cents = z.number().int().safe().min(0).max(1_000_000_000_00);
@@ -42,33 +43,79 @@ export const selectionSchema = z.object({
     .optional(),
 });
 export type Selection = z.infer<typeof selectionSchema>;
-export const betSchema = z.object({
-  id: z.string().min(1),
-  date: z.iso.datetime(),
-  dateSource: z.enum(['manual', 'ticket', 'upload']).optional(),
-  timingUnknown: z.boolean().optional(),
-  houseId: z.string().min(1),
-  streamerId: z.string(),
-  kind: z.enum(kinds),
-  live: z.boolean(),
-  odds: z.number().min(1).max(100000),
-  stake: cents.positive(),
-  potential: cents,
-  bonus: z.object({ amount: cents, treatment: z.enum(bonusTreatments) }).optional(),
-  notes: z.string().max(10000),
-  source: z.enum(['manual', 'ocr', 'import']),
-  imageId: z.string().optional(),
-  fingerprint: z.string(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
-});
+export const betSchema = z
+  .object({
+    id: z.string().min(1),
+    date: z.iso.datetime(),
+    dateSource: z.enum(['manual', 'ticket', 'upload']).optional(),
+    timingUnknown: z.boolean().optional(),
+    houseId: z.string().min(1),
+    streamerId: z.string(),
+    kind: z.enum(kinds),
+    live: z.boolean(),
+    odds: z.number().min(1).max(100000).nullable(),
+    stake: cents.positive(),
+    potential: cents.nullable(),
+    historical: z.literal(true).optional(),
+    oddsSource: z.enum(['ticket', 'manual', 'selection-product']).optional(),
+    oddsCalculation: z
+      .object({
+        method: z.literal('product-truncate-2'),
+        inputs: z.array(z.number().min(1).max(100000)).min(2).max(100),
+      })
+      .optional(),
+    bonus: z.object({ amount: cents, treatment: z.enum(bonusTreatments) }).optional(),
+    notes: z.string().max(10000),
+    source: z.enum(['manual', 'ocr', 'import']),
+    imageId: z.string().optional(),
+    fingerprint: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+  })
+  .superRefine((b, ctx) => {
+    if (
+      b.oddsSource === 'selection-product' &&
+      (b.kind !== 'Combinada' ||
+        !matchesSelectionProduct(
+          b.odds,
+          b.oddsCalculation,
+          b.oddsCalculation?.inputs.map((odds) => ({ odds })) ?? [],
+        ))
+    )
+      ctx.addIssue({
+        code: 'custom',
+        message: 'La cuota calculada no coincide con su producto y truncamiento registrados.',
+      });
+    if (b.oddsCalculation && b.oddsSource !== 'selection-product')
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Una cuota manual o leída no lleva un cálculo atribuido.',
+      });
+    if (
+      (b.odds === null || b.potential === null) &&
+      (!b.historical ||
+        !['ocr', 'import'].includes(b.source) ||
+        !['manual', 'ticket'].includes(b.dateSource ?? '') ||
+        b.timingUnknown !== false)
+    )
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'Cuota y potencial desconocidos solo se conservan en importaciones históricas liquidadas.',
+      });
+  });
 export type Bet = z.infer<typeof betSchema>;
 // Compatibility at storage boundaries only; new bets use betSchema.
-export const storedBetSchema = betSchema.extend({
-  kind: z
-    .enum(['Simple', 'Combinada', 'Doble', 'Triple', 'Bet Builder'])
-    .transform((kind): Bet['kind'] => (kind === 'Simple' ? 'Simple' : 'Combinada')),
-});
+export const storedBetSchema = z.preprocess((value) => {
+  if (
+    value &&
+    typeof value === 'object' &&
+    'kind' in value &&
+    ['Doble', 'Triple', 'Bet Builder'].includes(String(value.kind))
+  )
+    return { ...value, kind: 'Combinada' };
+  return value;
+}, betSchema);
 export const selectionCount = (rows: Pick<Selection, 'builderMarkets'>[]) =>
   rows.reduce((sum, row) => sum + Math.max(1, row.builderMarkets?.length ?? 0), 0);
 export const uploadSchema = z.object({
@@ -308,7 +355,9 @@ export function totals(data: Snapshot, currency = 'PEN') {
     roi: initial + deposits ? (profit / (initial + deposits)) * 100 : 0,
     gains: ps.reduce((a, p) => a + Math.max(0, p.profit), 0),
     losses: ps.reduce((a, p) => a + Math.min(0, p.profit), 0),
-    average: bets.length ? bets.reduce((a, b) => a + b.odds, 0) / bets.length : 0,
+    average: bets.some((b) => b.odds !== null)
+      ? bets.reduce((a, b) => a + (b.odds ?? 0), 0) / bets.filter((b) => b.odds !== null).length
+      : null,
     pending: ps.filter((p) => p.status === 'Pendiente').length,
     won: ps.filter((p) => p.status === 'Ganada').length,
     lost: ps.filter((p) => p.status === 'Perdida').length,

@@ -7,7 +7,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main`. La cadena #2 → #3 → #4 → #5 → #6 y después #7 fue integrada con autorización.
+  `codex/fix-settled-ticket-evidence`, basada en `main` `a3a4c1f`.
+  La cadena #2 → #3 → #4 → #5 → #6 y después #7 fue integrada con autorización.
   **SHA desplegado:** `9e303dfbf21b7d4caf6f90db1a3db03110747610`, versión Hosting
   `5d98aa40a5a60592`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
@@ -41,6 +42,26 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   SHA/CRC/PNG/RGBA, privacidad visual, texto y regiones cotejados. No se ejecutó OCR
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
+
+## Revalidación histórica — SQL autorizado, corrección validada para desplegar
+
+- Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
+  seis con cabecera terminal `Cash Out` no reconocida. Reproducidos ambos bloqueos.
+  No se copiaron originales privados al QA ni se escribieron datos productivos.
+- Preserva valores desconocidos como null solo en históricos atómicamente
+  liquidados; cabecera Cash Out requiere prueba humana de ejecución/cobro total.
+  Ganancias es sugerencia por cotejar. Fechas y consentimiento siguen obligatorios.
+- **648/648**, TypeScript/build; 17 QA previos + 8 grupos históricos con datos
+  sintéticos equivalentes; UI 375/768/1440. OCR 1065/1089 y 24 diferencias, sin
+  regresiones. Nueva migración aplicada únicamente al QA autorizado.
+- Hosting está autorizado, pero el esquema productivo conserva una restricción
+  que impide guardar esas ausencias. **Usuario autorizó explícitamente la migración
+  productiva del PR #8** y pidió calcular la cuota combinada con cuotas de selección:
+  producto completo truncado a dos decimales (2.02×2.15×1.36 → 5.90), con procedencia
+  visible. Añadido validado con procedencia persistida y sin duplicar Bet Builder;
+  reversión compatible construida y verificada en 375/768/1440, sin backend real.
+- [Causas, migración, validación y plan de publicación/reversión compatible](SETTLED_CAPTURE_REVALIDATION.md).
+  No volver al frontend #7 después de importar null sin una versión compatible.
 
 ## Importación histórica — validada y desplegada 24/10/2026
 

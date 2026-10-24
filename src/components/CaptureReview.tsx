@@ -24,7 +24,7 @@ export function CaptureReview({
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const history = useHistoricalImport(original);
+  const history = useHistoricalImport(original, rows);
   const settled = history.kind;
   const header = history.data?.header ?? original;
   const saving = useRef(false);
@@ -124,7 +124,7 @@ export function CaptureReview({
             </div>
             <div>
               <dt>Retorno potencial</dt>
-              <dd>{header?.potential !== undefined ? money(header.potential) : 'No reconocido'}</dd>
+              <dd>{header?.potential != null ? money(header.potential) : 'No visible'}</dd>
             </div>
             <div>
               <dt>Tipo</dt>
