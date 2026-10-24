@@ -1,0 +1,86 @@
+{
+  "baseCommit": "ef709b80207dbb34db1d74f5ce724a030456c071",
+  "note": "Freeze reviewed fixtures, not current parser output. Text hashes allow only CRLF/LF equivalence. Never regenerate automatically to hide a change.",
+  "files": [
+    {
+      "path": "tests/ocr-phase1/cases.json",
+      "mode": "text-lf",
+      "sha256": "7d60102e11be642e21e88c15d437aee47bcc9d60ffc95a0f4fc4009f4f1cf1e0"
+    },
+    {
+      "path": "tests/ocr-phase1/known-failures.json",
+      "mode": "text-lf",
+      "sha256": "84048f997adeecc46c43c058e5b5c40f5345503a837f5ecc392be3dcb63292f2"
+    },
+    {
+      "path": "tests/ocr-phase1/controlled.ts",
+      "mode": "text-lf",
+      "sha256": "56a287e10625e7e1b0c425369e706dcd207b542df8b0ae6f7a3965fb34813545"
+    },
+    {
+      "path": "tests/ocr-phase1/assets.lock.json",
+      "mode": "text-lf",
+      "sha256": "7d66b9235e172e4851e395c2e1ea84777316a7b9bee080094c4823a15dee834c"
+    },
+    {
+      "path": "tests/ocr-phase3/cases.json",
+      "mode": "text-lf",
+      "sha256": "fefc8f2d283d119ec6691b7fdfc395cdf912a1e79f4267c90ee79e84c152e9e2"
+    },
+    {
+      "path": "tests/ocr-phase3/semantics.json",
+      "mode": "text-lf",
+      "sha256": "bbba2beb4ce0dfa7c2af4f2c2aae8ec0dc627fde78f9086eca2695a1e04a1540"
+    },
+    {
+      "path": "tests/ocr-phase3/known-failures.json",
+      "mode": "text-lf",
+      "sha256": "61e10c7e37390fb42e0313b094574bb7a343c892fe41e3d88a606b9da1c8c1b8"
+    },
+    {
+      "path": "tests/ocr-phase3/reference-known-failures.json",
+      "mode": "text-lf",
+      "sha256": "9d0108cadaf64d219aea190bebd4b6eca4d2d6263f4ccf9ba135fd113ad6aafa"
+    },
+    {
+      "path": "tests/ocr-phase3/eleven-builders.ocr.json",
+      "mode": "text-lf",
+      "sha256": "f7d5cbb43707940641175220f34f4e907290ff79210f291dd9be0bb95ac96b4d"
+    },
+    {
+      "path": "tests/ocr-phase1/images/timed-goal.png",
+      "mode": "bytes",
+      "sha256": "36b972fb4885c1161a64690c856e34e46de0e5b28dfb9ce96ffcbf8f0b09a7b5"
+    },
+    {
+      "path": "tests/ocr-phase1/images/player-builders.png",
+      "mode": "bytes",
+      "sha256": "1092c912cb007bb3c4a0914cc715c4ef76f994a10ce02aea9d7409152e46883d"
+    },
+    {
+      "path": "tests/ocr-phase1/images/handicap-combination.png",
+      "mode": "bytes",
+      "sha256": "b7eda0dd740d19b95b45058279e98d3249e272a7d4ea1d4e05aeb53e446f78b3"
+    },
+    {
+      "path": "tests/ocr-phase1/images/first-half-corners.png",
+      "mode": "bytes",
+      "sha256": "203f56c3952dccb82d9049f18cacaaf6ef8988a680a765d701ff764e01495a91"
+    },
+    {
+      "path": "tests/ocr-phase1/images/mixed-builders.png",
+      "mode": "bytes",
+      "sha256": "8270d859ebe6c5d2cbf285337bc5a938d356097bf362d2101842707c47afeb37"
+    },
+    {
+      "path": "tests/ocr-phase3/images/scorer-builders.png",
+      "mode": "bytes",
+      "sha256": "ef8599210cd9ade183583054e3b2f6f3884f9e7e0b49d379c76af18753e7041a"
+    },
+    {
+      "path": "tests/ocr-phase3/images/eleven-builders.png",
+      "mode": "bytes",
+      "sha256": "a40705502ab2cd62555f53496b99e1e6fbd3d785292889c50157491efed29ba2"
+    }
+  ]
+}

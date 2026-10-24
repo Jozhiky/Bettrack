@@ -9,12 +9,18 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama al preparar este handoff: `main`.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Último commit **funcional auditado**: `915da4bab07c0b9fa11914683d92f9d678fc2c89`
-  (FASE 3). Este handoff se publica en un commit documental posterior; consultar
-  `git log -1 --oneline` para el HEAD actual, sin volver al commit anterior.
+  (FASE 3). `main` incorpora después documentación y preparación de FASE 4A;
+  consultar `git log -1 --oneline` para el HEAD actual, sin volver al commit anterior.
 - FASE 3 publicada en GitHub, **sin despliegue**. No asumir que Firebase ejecuta ese
   código. Hosting existente: `https://bettrack-wostcloud1.web.app`.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
+- FASE 4A: preparación del corpus y pruebas, sin cambios productivos. Se revisaron
+  visualmente las 7 imágenes; **0 capturas nuevas recibidas**, manifiesto nuevo vacío.
+  Suite completa: 502 pruebas aprobadas; suite 4A + controles 2/2.1: 120 aprobadas;
+  TypeScript, build y diff verificados (build avisa de chunks mayores de 500 kB).
+  No se repitió OCR ni UI: siguen vigentes sus límites
+  documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
 ## Arquitectura esencial
 
@@ -49,6 +55,10 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - FASE 3: dos imágenes reales nuevas, viñeta `©` dentro de Builder, conservación
   de evidencia en relecturas/borradores incompletos y revisión explícita auditable.
   [Informe](OCR_PHASE3_REPORT.md), [métricas](OCR_PHASE3_METRICS.json).
+- FASE 4A (preparación): [inventario y capturas solicitadas](OCR_PHASE4A_CORPUS.md),
+  [admisión, anonimización y comandos](../tests/ocr-phase4a/README.md).
+  Contrato con evidencia por campo, carpetas por escenario y protección de 16 archivos
+  históricos; oráculos anteriores intactos. Primer período sigue siendo solo sintético.
 
 ## Límites y próximos pasos posibles
 
@@ -63,8 +73,11 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
-- Priorizar, según la próxima instrucción: auditoría independiente de FASE 3,
-  ampliar corpus autorizado, mejorar identidad/ámbito con regresiones y medir lotes.
+- Siguiente prioridad tras FASE 4A: recibir capturas autorizadas de NBA/períodos,
+  preparación/aceptación y liquidaciones/cashout ejecutado según el inventario.
+  Admitirlas con el contrato 4A y después conectar casos nuevos al ejecutor OCR aislado;
+  esta preparación no ejecuta automáticamente OCR sobre el manifiesto nuevo.
+  Mejorar identidad/ámbito y medir lotes solo en una tarea posterior autorizada.
   No cambiar motor ni prometer aceleración general: mejoró un caso, no todas las medianas.
 - Sincronización cloud no se validó en FASE 3. Requiere QA separado, datos sintéticos
   y limpieza controlada antes de ejecutar pruebas de escritura. No iniciar una fase
@@ -104,6 +117,7 @@ npx.cmd tsc -p tests/ocr-phase3/tsconfig.json
 npm.cmd run test:ocr:phase3             # tolera solo discrepancias documentadas exactas
 npm.cmd run test:ocr:phase3:strict      # salida 1 mientras existan los 7 fallos conocidos
 npm.cmd run test:ocr:phase3:ui          # UI aislada; no escribe en Supabase
+npm.cmd run test:ocr:phase4a            # admisión/regresión; sin OCR ni cloud
 ```
 
 Reproducción/comparación: [README FASE 3](../tests/ocr-phase3/README.md). No cargar sus
