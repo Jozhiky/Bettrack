@@ -7,17 +7,16 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main` como referencia desplegada; nuevo trabajo en `codex/automated-ticket-batch`.
-  La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 fue integrada con autorización.
-  **SHA desplegado:** `97dc8beae5c22e48314c178483e92635e59e5017`, versión Hosting
-  `5de3256218949269`. Los commits documentales posteriores no cambian esa versión.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 → #9 fue integrada con autorización.
+  **SHA desplegado:** `f763ade27c5d57e0f513ef5edf259e9bcf81671a`, versión Hosting
+  `05009865f34f9c83`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
-  El despliegue actual incluye las correcciones y barreras de PR #2–#8;
+  El despliegue actual incluye las correcciones y barreras de PR #2–#9;
   consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
 - Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
-  el 24/10/2026**, Hosting y después únicamente el ajuste de esquema Supabase
-  autorizado de #8. Sin modificaciones a datos reales, Auth, Storage ni RLS.
+  el 24/10/2026**, con los ajustes de esquema Supabase autorizados de #8 y #9.
+  Sin modificaciones a datos reales, Auth, Storage ni RLS.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
 - FASE 4B (rama feat/ocr-phase4b-isolated-measurement): banco **aislado y de solo lectura**
@@ -44,7 +43,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## Lote histórico automático — PR #9 validado en QA, pendiente de permiso de esquema
+## Lote histórico automático — PR #9 desplegado con esquema autorizado
 
 - Resumen único y consentimiento del lote, sin fechas ni revisión individual
   obligatoria. Recupera borradores existentes; separa fecha contable, fechas
@@ -55,14 +54,20 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - **680/680**, TypeScript/build; QA 17 previos + 8 históricos + 5 grupos de lote;
   OCR **1067/1089**, 22 diferencias, dos mejoras y cero regresiones por check.
   UI/carga y reversión compatible verificadas a 375/768/1440.
-- Nueva migración `20261024210047_automatic_historical_booking.sql` **solo QA**,
-  registrada como `20261024210641_automatic_historical_booking`. Requiere permiso
-  específico para producción; no modificar datos reales durante la publicación.
+- Usuario autorizó la nueva migración y publicación. Fuente
+  `20261024210047_automatic_historical_booking.sql`; registros remotos QA
+  `20261024210641_automatic_historical_booking` y producción
+  `20261024215600_automatic_historical_booking`. No hacer db push global por timestamps.
+- Esquema verificado: funciones iguales a QA, `bt_commit`/RLS intactos; 20 imágenes
+  y 20 borradores idénticos antes/después, sin apuestas ni movimientos creados por el agente.
+- Publicación verificada: 45 hashes, 15 activos OCR, cinco rutas, SW y resumen de
+  lote en tres tamaños; sesión visual sintética, cero backend real ni finanzas.
 - Reversión nueva debe leer `dateSource: accounting`: no usar #8 ni su rollback
-  antiguo después de crear registros así. Producción todavía conserva #8.
+  antiguo después de crear registros así. Canal nuevo `rollback-pr9-compatible`,
+  versión `147f7955f5aebaf5`, publicado y verificado, expira 31/10/2026.
 - [Comportamiento, evidencia, límites y procedimiento mínimo](AUTOMATIC_HISTORICAL_IMPORT.md).
-  [PR #9 abierto](https://github.com/Jozhiky/Bettrack/pull/9), implementación `34b3612`;
-  comprobado sin conflictos con main. GitHub no equivale a despliegue.
+  [PR #9 fusionado](https://github.com/Jozhiky/Bettrack/pull/9), implementación `34b3612`.
+  [Recibo de autorización, esquema, Hosting y reversión](AUTOMATIC_IMPORT_DEPLOYMENT_2026_10_24.md).
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 

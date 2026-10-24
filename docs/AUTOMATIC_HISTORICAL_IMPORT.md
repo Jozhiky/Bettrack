@@ -1,8 +1,9 @@
 # Importación histórica automática por lote
 
 24/10/2026 · rama `codex/automated-ticket-batch` · base `731e918` (PR #8 desplegado).
-Publicado para revisión en [PR #9](https://github.com/Jozhiky/Bettrack/pull/9),
-implementación `34b36125551aceee20bafb85125090a8f1db80d7`.
+Integrado y desplegado con autorización en [PR #9](https://github.com/Jozhiky/Bettrack/pull/9).
+Implementación `34b36125551aceee20bafb85125090a8f1db80d7`; merge desplegado
+`f763ade27c5d57e0f513ef5edf259e9bcf81671a`.
 
 ## Problema y comportamiento
 
@@ -89,19 +90,21 @@ Evidencia local ignorada: `test-results/automatic-qa/report.json`,
 `automatic-ocr-comparison.json`, `persistence-qa/`, `settled-qa/`,
 `compatible-rollback/report.json`, `ocr-phase4b/`, `ocr-phase3-ui/`, `capture-upload/`.
 
-## Esquema y publicación pendiente de autorización específica
+## Esquema y publicación autorizados y aplicados
 
 Fuente: [20261024210047_automatic_historical_booking.sql](../supabase/migrations/20261024210047_automatic_historical_booking.sql).
-Aplicada **solo al QA**, registrada allí como `20261024210641_automatic_historical_booking`.
+Aplicada al QA (`20261024210641_automatic_historical_booking`) y, tras autorización
+expresa, a producción (`20261024215600_automatic_historical_booking`).
 No ejecutar db push global por las diferencias de timestamp de migraciones anteriores.
 
 Extiende únicamente la guardia final y capacidades para permitir una fecha contable
 con cronología histórica separada y exigir cierre completo atómico. No reescribe
 filas ni cambia `bt_commit`, RLS, Auth, Storage, usuarios o registros existentes.
 El frontend bloquea el lote antes del RPC financiero si falta la capacidad nueva.
-Producción mantiene PR #8: este trabajo no ha modificado su esquema ni datos.
+Producción publica PR #9 y su esquema autorizado; no se modificaron datos existentes.
+[Recibo y verificaciones de publicación](AUTOMATIC_IMPORT_DEPLOYMENT_2026_10_24.md).
 
-Procedimiento tras autorización del usuario:
+Procedimiento aplicado tras autorización del usuario:
 
 1. Confirmar SHA remoto e integrar el PR sin forzar conflictos. Repetir gates si
    cambia el código; revisar configuración de destino, bundle y activos OCR.
@@ -114,7 +117,8 @@ Procedimiento tras autorización del usuario:
 4. Desplegar únicamente `hosting:bettrack`, proyecto `wostcloud1`, sitio
    `bettrack-wostcloud1`; verificar recursos, PWA, login y resumen con fixtures
    interceptados, sin registrar finanzas reales. El usuario confirma luego su lote.
-5. Si hay fallo crítico, restaurar la reversión compatible. **PR #8 y su reversión
+5. Ante un fallo crítico, detenerse e informar; la reversión compatible está preparada
+   para restaurar Hosting si se autoriza. **PR #8 y su reversión
    antigua no son lectores de accounting** después de crear el primer registro nuevo.
 
 Comandos reproducibles de QA: `npm.cmd run test:automatic:qa`,
