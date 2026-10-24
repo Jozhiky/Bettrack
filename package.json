@@ -27,6 +27,7 @@
     "test:ocr:phase4b:unit": "vitest run --maxWorkers=4 src/test/ocr-phase4b-evaluation.test.ts",
     "test:ocr:phase4b": "node scripts/ocr-phase4b/run.mjs",
     "test:ocr:phase4b:strict": "node scripts/ocr-phase4b/run.mjs --strict",
+    "test:ocr:phase4c2": "vitest run --maxWorkers=4 && tsc --noEmit && npm run build && node scripts/ocr-phase4b/run.mjs",
     "test:ocr:compare": "node scripts/ocr-phase1/compare-phase2.mjs",
     "assets:ocr": "node scripts/prepare-ocr.mjs",
     "deploy:firebase": "npm run build && npx -y firebase-tools@latest deploy --only hosting:bettrack --project wostcloud1"
