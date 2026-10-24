@@ -7,8 +7,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `codex/capture-upload-safe-review`, basada en `cfe60aa` de FASE 4C.2
-  (PR #4, sobre #3; #2/#3/#4 siguen sin fusionar).
+  `codex/persistence-readiness`, basada en `b3b9ffd` de PR #5.
+  La cadena #2 → #3 → #4 → #5 sigue sin fusionar.
   `main` permanece en `31e73126b1223a8b41ddc5a04e35d117a61fd7fa`, sin fusionar.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Último commit **funcional auditado**: `915da4bab07c0b9fa11914683d92f9d678fc2c89`
@@ -109,6 +109,27 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Evidencia, comandos y limitaciones: [validación de carga](CAPTURE_UPLOAD_VALIDATION.md).
   Las PR #2/#3/#4 siguen sin fusionar; esta rama se revisa sobre #4.
 
+## Persistencia real verificada — 24/10/2026
+
+- El usuario autorizó QA en «Jozhiky 2» condicionado a coste cero. Proyecto
+  `bettrack-qa-isolated` creado tras cotización 0 USD/mes; organización Free.
+  Producción solo se consultó por metadatos/definiciones/configuración pública.
+- **17/17 escenarios** con Auth/Storage/RPC/Realtime reales: guardar/recargar,
+  segunda sesión, aislamiento entre cuentas, tres formatos, consentimiento,
+  duplicados/cargos concurrentes, offline, 503 y respuesta perdida tras commit.
+  375/768/1440 px y liquidación manual separada de oferta/potencial aprobados.
+- 581/581 unitarias, 3/3 controles de destino, TypeScript/build, UI RAM y OCR real
+  aprobados: 1065/1089, mismas 24 diferencias y 0 regresiones. Se estabilizó la
+  importación Tesseract del banco Vite con caché por servidor/dependencias explícitas.
+- Diferencia previa de esquema: producción permite Simple Builder con varias hojas;
+  la migración final cuenta hojas donde producción cuenta filas. QA se alineó
+  **solo con la función desplegada**, sin cambiar migraciones ni producción.
+- Fixtures/credenciales solo en `.env.qa-isolated.json` ignorado. No usar `test:e2e`
+  histórico contra producción. Nuevo ejecutor seguro: `npm.cmd run test:persistence:qa`.
+- [Informe, límites y plan de integración/Hosting](PERSISTENCE_PRODUCTION_READINESS.md).
+  Listo para despliegue controlado de cuentas existentes, pendiente de autorización
+  de integración/publicación. Ningún merge ni despliegue realizado.
+
 ## Arquitectura esencial
 
 | Área | Punto de entrada / responsabilidad |
@@ -177,9 +198,9 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
   ejecutado. bet365 `preparation-flamengo` continúa fuera de las 28 imágenes.
   Mantener grupos temporales sin transferir aceptación/importes entre instantáneas.
   No cambiar motor ni prometer aceleración general a partir de una sola medición.
-- Sincronización cloud no se validó en FASE 3. Requiere QA separado, datos sintéticos
-  y limpieza controlada antes de ejecutar pruebas de escritura. No iniciar una fase
-  nueva ni desplegar por el solo hecho de leer estos pendientes.
+- La sincronización ya se validó en el QA aislado autorizado, según el informe de
+  persistencia. La autorización no incluye escrituras de prueba en producción,
+  merge de la cadena ni despliegue. Solicitar aprobación final de integración/Hosting.
 
 ## Comandos mínimos
 

@@ -3,15 +3,38 @@ import react from '@vitejs/plugin-react';
 import tailwind from '@tailwindcss/vite';
 import { auditPlugin } from '../ocr-phase1/instrumentation.mjs';
 import { fileURLToPath } from 'node:url';
+import { randomUUID } from 'node:crypto';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 export async function createCaptureQaServer(port = 0) {
   return createServer({
     root,
     configFile: false,
-    cacheDir: 'node_modules/.vite-capture-upload',
+    // A demo may remain open while the runner starts another Vite server.
+    // Sharing optimizer output can invalidate an in-flight Tesseract import.
+    cacheDir: `node_modules/.vite-capture-upload-${randomUUID()}`,
     optimizeDeps: {
+      noDiscovery: true,
       entries: ['tests/capture-upload/browser.tsx'],
-      include: ['react', 'react-dom/client', 'dexie', 'fake-indexeddb/auto', 'tesseract.js', 'zod'],
+      include: [
+        'react',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react-router-dom',
+        'dexie',
+        'fake-indexeddb/auto',
+        'tesseract.js',
+        'zod',
+        '@radix-ui/react-dialog',
+        '@hookform/resolvers/zod',
+        'react-hook-form',
+        'lucide-react',
+        'clsx',
+        'tailwind-merge',
+        'papaparse',
+        'recharts',
+        '@jsquash/webp/encode',
+      ],
     },
     plugins: [
       {
