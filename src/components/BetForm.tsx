@@ -132,6 +132,7 @@ export function BetForm({
           initial?.date && v.date === localInput(initial.date) ? initial.date : fromLocal(v.date),
         dateSource:
           initial?.date && v.date === localInput(initial.date) ? initial.dateSource : 'manual',
+        historicalTiming: initial?.historicalTiming,
         timingUnknown: initial?.timingUnknown && v.live === initial.live,
         houseId: v.houseId,
         streamerId: v.streamerId,

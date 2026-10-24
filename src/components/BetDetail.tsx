@@ -30,13 +30,14 @@ export function BetDetail({ betId, onClose }: { betId: string; onClose: () => vo
   const settlements = data.settlements.filter(s => s.betId === b.id);
   const rows = data.selections.filter(s => s.betId === b.id);
   return <Modal title={edit ? 'Editar apuesta' : 'Detalle de apuesta'}
-    description={`${data.houses.find(h => h.id === b.houseId)?.name} · ${b.dateSource === 'upload' ? 'Cargada ' : ''}${displayDate(b.date)}`}
+    description={`${data.houses.find(h => h.id === b.houseId)?.name} · ${b.dateSource === 'accounting' ? 'Registro contable ' : b.dateSource === 'upload' ? 'Cargada ' : ''}${displayDate(b.date)}`}
     onClose={onClose} wide detail onCloseAutoFocus={event => {
       event.preventDefault();
       if (opener.current?.isConnected) opener.current.focus({preventScroll:true});
     }}>
     {edit ? <BetForm initial={b} selections={rows} onDone={() => setEdit(false)} /> : <>
       <BetVisualSummary bet={b} rows={rows} settlements={settlements} currency={currency} />
+      {b.historicalTiming && <section aria-label="Cronología del boleto"><p>Apuesta: {b.historicalTiming.betAt ? displayDate(b.historicalTiming.betAt) : 'fecha histórica no visible'} · Liquidación: {b.historicalTiming.settledAt ? displayDate(b.historicalTiming.settledAt) : 'fecha histórica no visible'}</p><p>Carga: {displayDate(b.historicalTiming.uploadedAt)} · Registro contable: {displayDate(b.historicalTiming.recordedAt)}</p>{b.historicalTiming.events.map((e, i) => <p key={i}>{e.selection === null ? 'Horario sin partido asignado' : `Partido ${e.selection + 1}`}: {e.label}{e.at ? ` · ${displayDate(e.at)}` : ''}{e.relative ? ' · referencia del día de carga' : ''}</p>)}</section>}
       {p.status === 'Pendiente' && !p.needsReview && <section className="detail-result-actions" aria-label="Registrar resultado">
         <h3>¿Cómo terminó?</h3>
         <QuickResult bet={b} onDetail={() => {}} inline />

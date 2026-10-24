@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { betSchema, settlementSchema, toCents } from '../domain/model';
+import { betSchema, settlementSchema, historicalTimingSchema, toCents } from '../domain/model';
 import { settledTicketHeader, betanoHeader } from './header';
 import type { ParsedTicket } from './parser';
 import { matchesSelectionProduct } from '../domain/odds';
@@ -13,6 +13,8 @@ export const historicalImportSchema = z
     returned: settlementSchema.shape.returned,
     fullClosureConfirmed: z.literal(true),
     executionConfirmed: z.literal(true).optional(),
+    automatic: z.literal(true).optional(),
+    timing: historicalTimingSchema.optional(),
     header: z.object({
       house: z.enum(['Betano', 'Bet365']),
       kind: betSchema.shape.kind,
@@ -128,6 +130,33 @@ export function settlementEvidence(draft: Draft) {
     .flatMap((m) => (m?.[1] && amount(m[1]) !== undefined ? [amount(m[1])!] : []));
   const closedStakes = [...new Set(closed)];
   const closedStake = closedStakes.length === 1 ? closedStakes[0] : undefined;
+  // Betano's settled receipt pairs a terminal GLOBAL header with its stake and
+  // paid Ganancias footer. A cashout button or potential return cannot qualify.
+  const footerStake = lines.flatMap((line) => {
+    const m = line.match(/^apuesta\s*(?:[S$5]\s*\/|PEN)\s*([0-9]+(?:[.,][0-9]+)*)$/i);
+    const n = m && amount(m[1]);
+    return typeof n === 'number' ? [n] : [];
+  });
+  const terminal =
+    !!single &&
+    lines
+      .slice(0, 4)
+      .some(
+        (line) =>
+          settledTicketHeader(line) === single ||
+          (single === 'Cashout' && headerCashout && betanoHeader(line)),
+      );
+  const receiptPaid =
+    draft.house === 'Betano' &&
+    terminal &&
+    !manualState &&
+    footerStake.length === 1 &&
+    footerStake[0] === draft.stake &&
+    suggestions.length === 1 &&
+    !partial &&
+    !/^(?:cash\s*out|cerrar apuesta)\s*(?:[S$5]\s*\/|PEN)\s*\d/im.test(draft.text) &&
+    !/ganancias\s+(?:potenciales|posibles)|retorno\s+potencial/i.test(draft.text) &&
+    !distinct.some((n) => n !== suggestions[0]);
   const ambiguousStake =
     closedStakes.length > 1 ||
     (closedStake !== undefined && draft.stake !== undefined && closedStake !== draft.stake);
@@ -138,6 +167,8 @@ export function settlementEvidence(draft: Draft) {
     candidate: kinds.size > 0 || partial || ambiguousStake,
     manualState,
     executionNeedsConfirmation: headerCashout && receipts.length === 0,
+    receiptPaid,
+    receiptReturn: receiptPaid ? suggestions[0] : undefined,
     suggestedReturn:
       kinds.size === 1 && new Set(suggestions).size === 1 ? suggestions[0] : undefined,
     partial: partial || ambiguousStake,
@@ -163,6 +194,27 @@ export function validateHistoricalImport(
   const data = historicalImportSchema.parse(raw),
     evidence = settlementEvidence(draft);
   if (
+    data.automatic &&
+    (data.timing === undefined ||
+      !evidence.kind ||
+      evidence.manualState ||
+      (data.kind !== 'Perdida' && data.returned !== (evidence.returned ?? evidence.receiptReturn)))
+  )
+    throw Error('La preparación automática requiere estado y cobro acreditados por el boleto.');
+  if (
+    data.timing &&
+    (!data.automatic ||
+      data.betDate !== data.timing.recordedAt ||
+      data.settlementDate !== data.timing.recordedAt ||
+      [data.timing.betAt, data.timing.settledAt].some(
+        (at) => at && Date.parse(at) > Date.parse(data.betDate),
+      ) ||
+      (data.timing.betAt &&
+        data.timing.settledAt &&
+        Date.parse(data.timing.betAt) > Date.parse(data.timing.settledAt)))
+  )
+    throw Error('La fecha contable debe conservar la cronología original por separado.');
+  if (
     data.header.oddsSource === 'selection-product' &&
     (draft.odds !== undefined ||
       data.header.kind !== 'Combinada' ||
@@ -175,7 +227,12 @@ export function validateHistoricalImport(
     throw Error(
       'El estado final no tiene evidencia global suficiente. Una oferta cashout no acredita ejecución.',
     );
-  if (data.kind === 'Cashout' && evidence.executionNeedsConfirmation && !data.executionConfirmed)
+  if (
+    data.kind === 'Cashout' &&
+    evidence.executionNeedsConfirmation &&
+    !(data.automatic && evidence.receiptPaid) &&
+    !data.executionConfirmed
+  )
     throw Error(
       'Confirma que el Cash Out de la cabecera fue ejecutado y cobrado; una oferta no basta.',
     );

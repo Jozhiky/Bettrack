@@ -43,11 +43,31 @@ export const selectionSchema = z.object({
     .optional(),
 });
 export type Selection = z.infer<typeof selectionSchema>;
+// A booking instant is not evidence of the historical placement or settlement instant.
+export const historicalTimingSchema = z.object({
+  recordedAt: z.iso.datetime(),
+  uploadedAt: z.iso.datetime(),
+  betAt: z.iso.datetime().nullable(),
+  settledAt: z.iso.datetime().nullable(),
+  mode: z.enum(['prematch', 'live', 'unknown']),
+  events: z
+    .array(
+      z.object({
+        selection: z.number().int().min(0).max(99).nullable(),
+        label: z.string().max(200),
+        at: z.iso.datetime().nullable(),
+        relative: z.boolean(),
+        basis: z.enum(['ticket-calendar', 'upload-reference']),
+      }),
+    )
+    .max(100),
+});
 export const betSchema = z
   .object({
     id: z.string().min(1),
     date: z.iso.datetime(),
-    dateSource: z.enum(['manual', 'ticket', 'upload']).optional(),
+    dateSource: z.enum(['manual', 'ticket', 'upload', 'accounting']).optional(),
+    historicalTiming: historicalTimingSchema.optional(),
     timingUnknown: z.boolean().optional(),
     houseId: z.string().min(1),
     streamerId: z.string(),
@@ -74,6 +94,37 @@ export const betSchema = z
   })
   .superRefine((b, ctx) => {
     if (
+      b.dateSource === 'accounting' &&
+      (!b.historical ||
+        !b.historicalTiming ||
+        b.date !== b.historicalTiming.recordedAt ||
+        !['ocr', 'import'].includes(b.source))
+    )
+      ctx.addIssue({
+        code: 'custom',
+        message: 'El registro contable requiere procedencia y fechas históricas separadas.',
+      });
+    if (b.historicalTiming && b.dateSource !== 'accounting')
+      ctx.addIssue({
+        code: 'custom',
+        message: 'La cronología separada requiere una fecha de registro contable.',
+      });
+    if (b.historicalTiming) {
+      const t = b.historicalTiming;
+      if (
+        t.uploadedAt !== b.createdAt ||
+        Date.parse(t.uploadedAt) > Date.parse(t.recordedAt) ||
+        [t.betAt, t.settledAt].some((at) => at && Date.parse(at) > Date.parse(t.recordedAt)) ||
+        (t.betAt && t.settledAt && Date.parse(t.betAt) > Date.parse(t.settledAt)) ||
+        b.live !== (t.mode === 'live') ||
+        b.timingUnknown !== (t.mode === 'unknown')
+      )
+        ctx.addIssue({
+          code: 'custom',
+          message: 'La cronología y la procedencia del boleto son contradictorias.',
+        });
+    }
+    if (
       b.oddsSource === 'selection-product' &&
       (b.kind !== 'Combinada' ||
         !matchesSelectionProduct(
@@ -95,8 +146,8 @@ export const betSchema = z
       (b.odds === null || b.potential === null) &&
       (!b.historical ||
         !['ocr', 'import'].includes(b.source) ||
-        !['manual', 'ticket'].includes(b.dateSource ?? '') ||
-        b.timingUnknown !== false)
+        (!['manual', 'ticket'].includes(b.dateSource ?? '') && b.dateSource !== 'accounting') ||
+        (b.dateSource !== 'accounting' && b.timingUnknown !== false))
     )
       ctx.addIssue({
         code: 'custom',

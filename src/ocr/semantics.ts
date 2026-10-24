@@ -53,32 +53,32 @@ export function interpretMarket(
     ? null
     : /^jugador que anota o da una asistencia$/.test(label)
       ? 'scorer-or-assist'
-    : /\bhandicap\b/.test(label)
-      ? 'handicap'
-      : /puntos\s*\+\s*rebotes\s*\+\s*asistencias/.test(label)
-        ? 'points+rebounds+assists'
-        : /(?:tiros?|remates?) (?:al arco|a (?:la )?(?:puerta|porteria))/.test(label)
-          ? 'shots-on-target'
-          : family === 'shots'
-            ? 'shots'
-            : /\b(?:proximo|siguiente) gol\b/.test(label)
-              ? 'next-goal'
-              : [
-                    'goals',
-                    'corners',
-                    'saves',
-                    'assists',
-                    'points',
-                    'rebounds',
-                    'handicap',
-                    'scorer',
-                  ].includes(family)
-                ? family
-                : /ambos equipos anotan/.test(label)
-                  ? 'both-teams-to-score'
-                  : /tarjeta/.test(label)
-                    ? 'cards'
-                    : family;
+      : /\bhandicap\b/.test(label)
+        ? 'handicap'
+        : /puntos\s*\+\s*rebotes\s*\+\s*asistencias/.test(label)
+          ? 'points+rebounds+assists'
+          : /(?:tiros?|remates?) (?:al arco|a (?:la )?(?:puerta|porteria))/.test(label)
+            ? 'shots-on-target'
+            : family === 'shots'
+              ? 'shots'
+              : /\b(?:proximo|siguiente) gol\b/.test(label)
+                ? 'next-goal'
+                : [
+                      'goals',
+                      'corners',
+                      'saves',
+                      'assists',
+                      'points',
+                      'rebounds',
+                      'handicap',
+                      'scorer',
+                    ].includes(family)
+                  ? family
+                  : /ambos equipos anotan/.test(label)
+                    ? 'both-teams-to-score'
+                    : /tarjeta/.test(label)
+                      ? 'cards'
+                      : family;
 
   // A name must match an observed event participant exactly (NFC/case/space).
   // Accent folding a name could merge two distinct entities, so do not do it.
@@ -90,7 +90,7 @@ export function interpretMarket(
     (name) =>
       name &&
       ((identity(originalLabel).startsWith(`${identity(name)} `) &&
-        /^(?:[-–]\s*)?(?:goles|corners|tiros|remates|puntos|atajadas|asistencias)\b/.test(
+        /^(?:[-–]\s*)?(?:mas\s*\/\s*menos\s+)?(?:goles|corners|tarjetas|tiros|remates|puntos|atajadas|asistencias)\b/.test(
           normalized(identity(originalLabel).slice(identity(name).length).trim()),
         )) ||
         identity(originalLabel).endsWith(` de ${identity(name)}`)),
@@ -103,7 +103,10 @@ export function interpretMarket(
     ? participants.filter((team) => identity(team) === identity(scorerPick[2])).length
     : 0;
   const explicitPlayerPick =
-    family === 'scorer' && scorerPick && participants.length === 2 && scorerClubCount === 1 &&
+    family === 'scorer' &&
+    scorerPick &&
+    participants.length === 2 &&
+    scorerClubCount === 1 &&
     /^(?:anotar en cualquier momento|jugador que anota o da una asistencia)$/.test(label)
       ? scorerPick[1]
       : null;
@@ -171,7 +174,11 @@ export function interpretMarket(
       market: family ? 'recognized' : market ? 'review' : 'missing',
       sport: sport ? 'recognized' : 'missing',
       participant:
-        participant && (matches.length === 1 || !!explicitPlayerPick) ? 'recognized' : participant ? 'review' : 'missing',
+        participant && (matches.length === 1 || !!explicitPlayerPick)
+          ? 'recognized'
+          : participant
+            ? 'review'
+            : 'missing',
       scope: scope === 'unknown' ? 'review' : 'recognized',
       period: period === 'unspecified' ? 'missing' : 'recognized',
       selection: operator ? 'recognized' : pick ? 'review' : 'missing',
@@ -183,6 +190,7 @@ function isMatchLabel(label: string) {
   // Only whole grammatical labels establish match scope. Unknown trailing
   // names/qualifiers must not be silently converted into match totals.
   const base = label
+    .replace(/^asiatico\s*\(mas\s*\/\s*menos\)\s*[-–]\s*/, '')
     .replace(
       /\s+(?:(?:en|del|de la) )?(?:primer|primera|segundo|segunda|tercer|tercero|cuarto|1[ºoa]?|2[ºoa]?|3[ºoa]?|4[ºoa]?) (?:tiempo|mitad|periodo|cuarto)\b/g,
       '',
@@ -190,7 +198,7 @@ function isMatchLabel(label: string) {
     .replace(/\s+(?:del )?(?:partido completo|tiempo reglamentario)\b/g, '')
     .replace(/\s*mas\s*\/\s*menos\s*/g, ' ')
     .trim();
-  return /^(?:(?:total de )?(?:goles|corners|puntos)(?: totales)?|(?:tiros|remates)(?: totales| al arco| a (?:la )?(?:puerta|porteria))?|resultado del partido(?: \(1x2\))?|doble oportunidad|ambos equipos (?:anotan|reciben una tarjeta)|(?:proximo|siguiente) gol(?: antes de \d{1,2}:\d{2}(?: \(gol \d+\))?)?)$/.test(
+  return /^(?:(?:total de )?(?:goles|corners|tarjetas|puntos)(?: totales)?|(?:tiros|remates)(?: totales| al arco| a (?:la )?(?:puerta|porteria))?|resultado del partido(?: \(1x2\))?|doble oportunidad|ambos equipos (?:anotan|reciben una tarjeta)|(?:proximo|siguiente) gol(?: antes de \d{1,2}:\d{2}(?: \(gol \d+\))?)?)$/.test(
     base,
   );
 }
