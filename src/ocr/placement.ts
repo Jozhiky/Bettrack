@@ -1,11 +1,12 @@
 import { normalized } from './markets';
+import { settledTicketHeader } from './header';
 
 // Draft evidence only. This is independent of Pendiente/Ganada/Perdida/Cashout
 // and does not change the persisted Bet or financial schemas.
 export interface PlacementEvidence {
   status: 'preparation' | 'confirmed' | 'unknown';
   evidence: string[];
-  basis: 'creation-action' | 'receipt' | 'cashout-available' | 'conflicting' | 'insufficient';
+  basis: 'creation-action' | 'receipt' | 'settled-header' | 'cashout-available' | 'conflicting' | 'insufficient';
 }
 
 export function classifyPlacement(text: string, cashoutAvailable: boolean): PlacementEvidence {
@@ -30,11 +31,19 @@ export function classifyPlacement(text: string, cashoutAvailable: boolean): Plac
       normalized(line),
     ),
   );
-  if (preparation.length && (receipts.length || cashoutAvailable))
-    return { status: 'unknown', basis: 'conflicting', evidence: [...preparation, ...receipts] };
+  // A global Ganada/Perdida ticket header proves an already placed wager,
+  // but only with the Betano brand present in the OCR evidence. Do not
+  // transfer this conclusion to another bookmaker or to a selection icon.
+  const settledHeaders = /\bbetano\b/i.test(text)
+    ? lines.filter((line) => settledTicketHeader(line) !== undefined)
+    : [];
+  if (preparation.length && (receipts.length || cashoutAvailable || settledHeaders.length))
+    return { status: 'unknown', basis: 'conflicting', evidence: [...preparation, ...receipts, ...settledHeaders] };
   if (preparation.length)
     return { status: 'preparation', basis: 'creation-action', evidence: preparation };
   if (receipts.length) return { status: 'confirmed', basis: 'receipt', evidence: receipts };
+  if (settledHeaders.length === 1)
+    return { status: 'confirmed', basis: 'settled-header', evidence: settledHeaders };
   // Only the contextual cashout reader supplies this flag, never stored draft
   // metadata. An available offer supports placement, not execution/settlement.
   if (cashoutAvailable)
