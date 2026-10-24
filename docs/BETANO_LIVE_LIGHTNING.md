@@ -1,7 +1,8 @@
 # Betano: rayo de apuesta en vivo
 
 24/10/2026 · rama `codex/betano-live-lightning`, basada en PR #9 desplegado.
-Publicado para revisión en [PR #10](https://github.com/Jozhiky/Bettrack/pull/10).
+Fusionado y desplegado con autorización en [PR #10](https://github.com/Jozhiky/Bettrack/pull/10).
+SHA publicado `783b4d9a104fca02abb95fa130e2d7eac6b6f6ae`.
 
 El usuario confirmó que el rayo naranja del widget del partido identifica una
 apuesta en vivo. El lector anterior solo reconocía etiquetas textuales de modalidad:
@@ -57,7 +58,8 @@ Evidencia local ignorada: `test-results/live-lightning/`, `automatic-qa/`,
 
 ## Alcance de publicación
 
-Preparado para revisión y publicación. Producción sigue en PR #9; no se ha cambiado
-Supabase productivo, esquema ni registros existentes durante este trabajo.
-No aplicar correcciones retroactivas a apuestas ya guardadas. Publicar Hosting
-requiere autorización para esta nueva versión conforme a AGENTS.md.
+El usuario autorizó fusionar y desplegar el PR #10. Publicado exclusivamente en
+Firebase Hosting, sin migraciones ni pruebas contra datos productivos. La comprobación
+visual pública usó una sesión sintética interceptada y no modificó finanzas reales.
+No aplicar correcciones retroactivas a apuestas ya guardadas.
+[Recibo de publicación y reversión](LIVE_LIGHTNING_DEPLOYMENT_2026_10_24.md).

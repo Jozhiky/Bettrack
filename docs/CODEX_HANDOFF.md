@@ -7,12 +7,12 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 → #9 fue integrada con autorización.
-  **SHA desplegado:** `f763ade27c5d57e0f513ef5edf259e9bcf81671a`, versión Hosting
-  `05009865f34f9c83`. Los commits documentales posteriores no cambian esa versión.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 → #9 → #10 fue integrada con autorización.
+  **SHA desplegado:** `783b4d9a104fca02abb95fa130e2d7eac6b6f6ae`, versión Hosting
+  `bce1137d10a9d022`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
-  El despliegue actual incluye las correcciones y barreras de PR #2–#9;
+  El despliegue actual incluye las correcciones y barreras de PR #2–#10;
   consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
 - Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
   el 24/10/2026**, con los ajustes de esquema Supabase autorizados de #8 y #9.
@@ -69,7 +69,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   [PR #9 fusionado](https://github.com/Jozhiky/Bettrack/pull/9), implementación `34b3612`.
   [Recibo de autorización, esquema, Hosting y reversión](AUTOMATIC_IMPORT_DEPLOYMENT_2026_10_24.md).
 
-## Modalidad en vivo por rayo Betano — preparada, todavía no desplegada
+## Modalidad en vivo por rayo Betano — PR #10 desplegado con autorización
 
 - [PR #10](https://github.com/Jozhiky/Bettrack/pull/10), rama `codex/betano-live-lightning`:
   reconoce el rayo por píxeles y muestra
@@ -78,8 +78,14 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   conserva originales y retenciones, audita la lectura y no reescribe apuestas guardadas.
 - **700/700**, TypeScript/build; captura aportada validada localmente sin publicarla,
   cinco grupos QA y UI 375/768/1440. OCR 1067/1089, mismas 22 diferencias, sin regresiones.
-- Sin migraciones/dependencias nuevas ni acceso a datos de producción en este trabajo.
-- [Detalles y límites](BETANO_LIVE_LIGHTNING.md). Publicación de esta nueva versión pendiente.
+- Sin migraciones/dependencias nuevas ni pruebas financieras productivas.
+- Publicación verificada: 45 hashes, 15 activos OCR, cinco rutas y SW; recuperación
+  del rayo desde imagen existente en tres tamaños con backend sintético interceptado.
+  Campos originales conservados, cero peticiones reales ni finanzas antes del consentimiento.
+- Reversión compatible `147f7955f5aebaf5` verificada con accounting/live y guardada;
+  versión anterior `05009865f34f9c83` retenida. No se aplicó SQL en este despliegue.
+- [Detalles y límites](BETANO_LIVE_LIGHTNING.md).
+  [Recibo de publicación y reversión](LIVE_LIGHTNING_DEPLOYMENT_2026_10_24.md).
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
