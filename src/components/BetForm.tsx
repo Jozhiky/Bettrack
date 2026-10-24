@@ -7,6 +7,7 @@ import { Plus, Trash2, ShieldCheck } from 'lucide-react';
 import { useApp } from '../app/context';
 import { repo, LocalRepository } from '../data/repository';
 import { hashImage } from '../ocr/engine';
+import { matchesSelectionProduct } from '../domain/odds';
 import {
   id,
   timestamp,
@@ -161,6 +162,9 @@ export function BetForm({
         betId,
         odds: s.odds ? decimal(s.odds) : null,
       }));
+      if (initial?.oddsSource === 'selection-product' && matchesSelectionProduct(bet.odds,initial.oddsCalculation,rows)) {
+        bet.oddsSource='selection-product';bet.oddsCalculation=initial.oddsCalculation;
+      } else if (bet.odds !== null) bet.oddsSource = initial?.odds === bet.odds && initial?.oddsSource === 'ticket' ? 'ticket' : 'manual';
       bet.fingerprint = fingerprint(bet, rows);
       const storedImage = image
         ? { ...image, hash: image.hash || (await hashImage(image.blob)) }

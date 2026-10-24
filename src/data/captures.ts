@@ -223,6 +223,7 @@ async function processCapture(
       ? validateHistoricalImport(
           confirmation.historical,
           previous ?? { text: '', house: undefined },
+          confirmation.selections,
         )
       : undefined;
     let parsed: ReviewDraft;
@@ -426,6 +427,8 @@ async function processCapture(
       stake: parsed.stake,
       odds: historical ? historical.header.odds : parsed.odds,
       potential: historical ? historical.header.potential : parsed.potential,
+      oddsSource: historical?.header.oddsSource,
+      oddsCalculation: historical?.header.oddsCalculation,
       ...(historical ? { historical: true } : {}),
       bonus:
         parsed.bonusAmount !== undefined

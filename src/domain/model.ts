@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { matchesSelectionProduct } from './odds';
 export const id = () => crypto.randomUUID();
 export const timestamp = () => new Date().toISOString();
 const cents = z.number().int().safe().min(0).max(1_000_000_000_00);
@@ -56,6 +57,13 @@ export const betSchema = z
     stake: cents.positive(),
     potential: cents.nullable(),
     historical: z.literal(true).optional(),
+    oddsSource: z.enum(['ticket', 'manual', 'selection-product']).optional(),
+    oddsCalculation: z
+      .object({
+        method: z.literal('product-truncate-2'),
+        inputs: z.array(z.number().min(1).max(100000)).min(2).max(100),
+      })
+      .optional(),
     bonus: z.object({ amount: cents, treatment: z.enum(bonusTreatments) }).optional(),
     notes: z.string().max(10000),
     source: z.enum(['manual', 'ocr', 'import']),
@@ -65,6 +73,24 @@ export const betSchema = z
     updatedAt: z.iso.datetime(),
   })
   .superRefine((b, ctx) => {
+    if (
+      b.oddsSource === 'selection-product' &&
+      (b.kind !== 'Combinada' ||
+        !matchesSelectionProduct(
+          b.odds,
+          b.oddsCalculation,
+          b.oddsCalculation?.inputs.map((odds) => ({ odds })) ?? [],
+        ))
+    )
+      ctx.addIssue({
+        code: 'custom',
+        message: 'La cuota calculada no coincide con su producto y truncamiento registrados.',
+      });
+    if (b.oddsCalculation && b.oddsSource !== 'selection-product')
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Una cuota manual o leída no lleva un cálculo atribuido.',
+      });
     if (
       (b.odds === null || b.potential === null) &&
       (!b.historical ||

@@ -3,16 +3,20 @@ import { money, toCents, fromLocal } from '../domain/model';
 import type { ReviewDraft } from '../ocr/review';
 import { settlementEvidence, validateHistoricalImport } from '../ocr/settlement';
 import { Field } from './ui';
+import { selectionProduct } from '../domain/odds';
 const local = (iso?: string) =>
   iso ? new Date(Date.parse(iso) - 5 * 3600000).toISOString().slice(0, 16) : '';
 const decimal = (cents?: number) => (cents === undefined ? '' : (cents / 100).toFixed(2));
-export function useHistoricalImport(draft?: ReviewDraft) {
+export function useHistoricalImport(draft?: ReviewDraft, rows = draft?.selections ?? []) {
   const evidence = settlementEvidence(draft ?? { text: '' });
   const [kind, setKind] = useState<string>(evidence.kind ?? '');
   const [betDate, setBetDate] = useState(local(evidence.betDate));
   const [settlementDate, setSettlementDate] = useState(local(evidence.settlementDate));
   const [returned, setReturned] = useState(decimal(evidence.returned));
   const [executionConfirmed, setExecutionConfirmed] = useState(false);
+  const [oddsMode, setOddsMode] = useState<'ticket' | 'manual' | 'selection-product'>(
+    draft?.odds !== undefined ? 'ticket' : 'manual',
+  );
   const [header, setHeader] = useState({
     house: draft?.house ?? '',
     kind: draft?.kind ?? '',
@@ -20,6 +24,8 @@ export function useHistoricalImport(draft?: ReviewDraft) {
     odds: draft?.odds?.toString() ?? '',
     potential: decimal(draft?.potential),
   });
+  const calculated =
+    draft?.odds === undefined && header.kind === 'Combinada' ? selectionProduct(rows) : undefined;
   let data,
     error = '';
   if (evidence.candidate)
@@ -34,6 +40,8 @@ export function useHistoricalImport(draft?: ReviewDraft) {
         throw Error(
           'Completa el importe efectivamente recibido. La cifra de Ganancias debe cotejarse antes de usarla como cobro.',
         );
+      if (oddsMode === 'selection-product' && !calculated)
+        throw Error('Completa todas las cuotas de selección para calcular el total.');
       data = validateHistoricalImport(
         {
           kind,
@@ -52,11 +60,25 @@ export function useHistoricalImport(draft?: ReviewDraft) {
           header: {
             ...header,
             stake: toCents(header.stake),
-            odds: header.odds.trim() ? Number(header.odds.replace(',', '.')) : null,
+            odds:
+              oddsMode === 'selection-product'
+                ? calculated!.odds
+                : header.odds.trim()
+                  ? Number(header.odds.replace(',', '.'))
+                  : null,
+            ...(oddsMode === 'selection-product'
+              ? {
+                  oddsSource: oddsMode,
+                  oddsCalculation: { method: calculated!.method, inputs: calculated!.inputs },
+                }
+              : header.odds.trim()
+                ? { oddsSource: oddsMode }
+                : {}),
             potential: header.potential.trim() ? toCents(header.potential) : null,
           },
         },
         draft!,
+        rows,
       );
     } catch (e) {
       error =
@@ -75,12 +97,18 @@ export function useHistoricalImport(draft?: ReviewDraft) {
     setSettlementDate,
     returned,
     setReturned,
-    header,
+    header: {
+      ...header,
+      odds: oddsMode === 'selection-product' ? (calculated?.odds.toFixed(2) ?? '') : header.odds,
+    },
     setHeader,
     data,
     error,
     executionConfirmed,
     setExecutionConfirmed,
+    calculated,
+    oddsMode,
+    setOddsMode,
   };
 }
 export function HistoricalImportFields({
@@ -96,6 +124,13 @@ export function HistoricalImportFields({
     return (
       <section className="notice" aria-label="Resumen de importación histórica">
         <strong>Liquidación definitiva: {d.kind}</strong>
+        {d.header.oddsSource === 'selection-product' && (
+          <p>
+            Cuota calculada: {d.header.odds?.toFixed(2)} · producto de{' '}
+            {d.header.oddsCalculation?.inputs.join(' × ')}; truncado una sola vez a dos decimales.
+            No leída del boleto.
+          </p>
+        )}
         <dl className="capture-review-summary">
           <div>
             <dt>Fecha de apuesta</dt>
@@ -203,10 +238,30 @@ export function HistoricalImportFields({
           <input
             inputMode="decimal"
             value={form.header[key]}
-            onChange={(e) => form.setHeader({ ...form.header, [key]: e.target.value })}
+            onChange={(e) => {
+              if (key === 'odds') form.setOddsMode('manual');
+              form.setHeader({ ...form.header, [key]: e.target.value });
+            }}
           />
         </Field>
       ))}
+      {form.calculated && (
+        <section className="notice" aria-label="Cuota calculada de las selecciones">
+          <strong>Cuota calculada: {form.calculated.odds.toFixed(2)}</strong>
+          <p>
+            {form.calculated.inputs.join(' × ')}. Producto completo truncado a dos decimales, sin
+            redondear hacia arriba. Cada partido/Bet Builder cuenta una sola vez. Las promociones
+            pueden modificar el total de la casa.
+          </p>
+          <button
+            type="button"
+            className="button secondary"
+            onClick={() => form.setOddsMode('selection-product')}
+          >
+            Usar cuota calculada
+          </button>
+        </section>
+      )}
       <Field label="Fecha de apuesta">
         <input
           type="datetime-local"

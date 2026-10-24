@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { betSchema, settlementSchema, toCents } from '../domain/model';
 import { settledTicketHeader, betanoHeader } from './header';
 import type { ParsedTicket } from './parser';
+import { matchesSelectionProduct } from '../domain/odds';
 
 export const historicalImportSchema = z
   .object({
@@ -18,11 +19,13 @@ export const historicalImportSchema = z
       stake: betSchema.shape.stake,
       odds: betSchema.shape.odds,
       potential: betSchema.shape.potential,
+      oddsSource: betSchema.shape.oddsSource,
+      oddsCalculation: betSchema.shape.oddsCalculation,
     }),
   })
   .strict();
 export type HistoricalImport = z.infer<typeof historicalImportSchema>;
-type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake'>;
+type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds'>;
 const money = '(?:S\\s*\\/|PEN)\\s*([0-9]+(?:[.,][0-9]+)*)';
 // Whole affirmative execution receipts only. Buttons, instructions and conditions do not match.
 const execution = new RegExp(
@@ -152,9 +155,22 @@ export function settlementEvidence(draft: Draft) {
     settlementDate: labeledDate(lines, '(?:liquidación|liquidacion|cierre)'),
   };
 }
-export function validateHistoricalImport(raw: unknown, draft: Draft): HistoricalImport {
+export function validateHistoricalImport(
+  raw: unknown,
+  draft: Draft,
+  rows: readonly { odds?: number | null }[] = [],
+): HistoricalImport {
   const data = historicalImportSchema.parse(raw),
     evidence = settlementEvidence(draft);
+  if (
+    data.header.oddsSource === 'selection-product' &&
+    (draft.odds !== undefined ||
+      data.header.kind !== 'Combinada' ||
+      !matchesSelectionProduct(data.header.odds, data.header.oddsCalculation, rows))
+  )
+    throw Error(
+      'Revisa la cuota calculada con todas las selecciones; conserva el total visible si existe.',
+    );
   if (!evidence.kinds.includes(data.kind))
     throw Error(
       'El estado final no tiene evidencia global suficiente. Una oferta cashout no acredita ejecución.',

@@ -24,6 +24,15 @@ y se añaden variantes que reproducen la ausencia real de datos y la cabecera.
 
 ## Corrección preparada
 
+- A petición del usuario, una combinada sin total visible puede usar el producto
+  de todas sus cuotas de selección, **truncado una sola vez a dos decimales**:
+  2.02 × 2.15 × 1.36 = 5.90648 → **5.90**. Aritmética decimal exacta, sin redondeos
+  binarios ni truncamientos intermedios. Se elige en revisión y se marca «calculada».
+  Cada Bet Builder cuenta solo su cuota exterior, sin multiplicar mercados hijos.
+  Si falta una cuota no se calcula. Un total visible se conserva; promociones y
+  cuotas ajustadas por la casa pueden diferir. El cálculo nunca acredita un cobro.
+  Se guardan entradas y método, se recalcula tras corregir selecciones y se valida
+  la procedencia tanto al registrar como al leer copias de seguridad.
 - Cuota total y potencial original pueden conservarse como **null**, únicamente
   en una importación histórica con fecha conocida y liquidación final completa
   dentro de la misma transacción. No se multiplican cuotas ni se sustituye el
@@ -65,16 +74,17 @@ creada con Supabase CLI 2.122.0 y aplicada/probada **solo en QA autorizado**:
   no cambia Auth, Storage, RLS ni el RPC financiero `bt_commit`. Su definición
   tiene el mismo hash antes/después en QA y producción.
 
-La autorización de Hosting ya está concedida. **No se ha aplicado esta migración
-en producción ni se ha desplegado todavía esta corrección**: el permiso anterior
-excluye cambios de Supabase. Publicar solo el frontend seguiría bloqueando estos
-históricos; es necesaria autorización explícita para el ajuste de esquema.
+**El usuario autorizó explícitamente aplicar esta migración en producción y
+completar el despliegue**, además del cálculo de combinadas descrito. Preparación
+terminada; ejecutar el orden de publicación siguiente sin modificar datos reales.
 
 ## Evidencia automática
 
-- **627/627 pruebas**, 27 archivos; base 613 más 14 casos. Incluyen términos
+- **648/648 pruebas**, 28 archivos; base 613 más 35 casos. Incluyen términos
   ausentes en los tres estados, Cashout con pérdida/beneficio/cero, consentimiento,
   reintento exacto/alterado, reapertura bloqueada y correcciones auditadas.
+  También producto/truncamiento, precisión decimal, cuotas ausentes, Bet Builder
+  sin doble conteo y rechazo de cálculos alterados o atribuidos sobre un total visible.
 - TypeScript principal/FASE 1/FASE 3/carga y build aprobados; aviso conocido de
   chunk >500 kB sin error de compilación.
 - **3/3 controles de destino**, **17/17** escenarios previos y **8/8** grupos de
@@ -85,6 +95,8 @@ históricos; es necesaria autorización explícita para el ajuste de esquema.
 - Resultado comprobado: 7 apuestas, 7 liquidaciones, 7 cargos, 7 retornos,
   resultado neto −S/40.00. Incluye concurrencia entre dos sesiones, respuesta
   perdida, duplicado por otra foto, Storage privado, recarga y separación por cuenta.
+  Una combinada persiste cuota **5.90** con entradas/método y potencial desconocido;
+  la media usa esa cuota calculada sin convertir las otras seis ausentes en cero.
 - Se simuló un backend anterior: incluso tras consentimiento, cero apuestas y
   cero movimientos antes de habilitar la capacidad. Intentar borrar la liquidación
   de un histórico sin cuota revierte en PostgreSQL con la versión de cuenta intacta.
@@ -95,6 +107,9 @@ históricos; es necesaria autorización explícita para el ajuste de esquema.
 - FASE 3 real con tres repeticiones: siete divergencias literales conocidas,
   ninguna nueva y paridad 7/7. Reversión compatible construida con
   `npm.cmd run build:historical:rollback`, sin desplegar ni contactar al backend.
+- El build de reversión se verificó a 375/768/1440 con registros null sintéticos:
+  sigue mostrando históricos y estadísticas y rechaza nuevas importaciones de
+  ese tipo con cero llamadas `bt_commit` o capacidades y cero backend real.
 
 Evidencia local ignorada en `test-results/settled-qa/`, `persistence-qa/`,
 `capture-upload/`, `ocr-phase3-ui/` e informes OCR. Solo consultas de lectura en

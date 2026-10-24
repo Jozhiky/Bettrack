@@ -114,7 +114,7 @@ try {
     const event = i === 8 ? 'Equipo QA0 vs. Equipo QB0' : `Equipo QA${i} vs. Equipo QB${i}`;
     const text = [
       'Betano',
-      `Simple S/100.00${i === 20 ? '' : kind === 'Cashout' ? ' Cash Out' : ' ' + kind}`,
+      `${i === 1 ? 'Combinada de 3' : 'Simple'} S/100.00${i === 20 ? '' : kind === 'Cashout' ? ' Cash Out' : ' ' + kind}`,
       event,
       'Goles totales',
       'Más de 2.5',
@@ -160,20 +160,18 @@ try {
     );
     const draft = {
       house: 'Betano',
-      kind: 'Simple',
+      kind: i === 1 ? 'Combinada' : 'Simple',
       stake: 10000,
       ...(i === 20 ? { odds: 2, potential: 20000 } : {}),
       text,
-      selections: [
-        {
-          event,
-          market: 'Goles totales',
-          pick: 'Más de 2.5',
-          odds: 2,
-          sport: 'Fútbol',
-          league: '',
-        },
-      ],
+      selections: Array.from({ length: i === 1 ? 3 : 1 }, (_, leg) => ({
+        event: leg ? event + ' ' + leg : event,
+        market: 'Goles totales',
+        pick: 'Más de 2.5',
+        odds: i === 1 ? [2.02, 2.15, 1.36][leg] : 2,
+        sport: 'Fútbol',
+        league: '',
+      })),
       warnings: [],
       confidence: {},
     };
@@ -237,6 +235,10 @@ try {
     await p.getByLabel('Fecha de liquidación', { exact: true }).fill('2026-10-21T12:00');
     await expect(p.getByLabel('Cuota total histórica', { exact: true })).toHaveValue('');
     await expect(p.getByLabel('Retorno potencial original', { exact: true })).toHaveValue('');
+    if (i === 1) {
+      await p.getByRole('button', { name: 'Usar cuota calculada', exact: true }).click();
+      await expect(p.getByLabel('Cuota total histórica', { exact: true })).toHaveValue('5.90');
+    }
     if (f.kind === 'Cashout')
       await p.getByRole('checkbox', { name: /He verificado que el Cash Out/ }).check();
     const suggestion = p.getByRole('button', {
@@ -376,9 +378,14 @@ try {
   assert.equal(s.records.bets.length, 7);
   assert.equal(s.records.movements.length, 14);
   assert.equal(s.records.settlements.length, 7);
-  assert(
-    s.records.bets.every((b) => b.odds === null && b.potential === null && b.historical === true),
-  );
+  assert(s.records.bets.every((b) => b.potential === null && b.historical === true));
+  assert.equal(s.records.bets.filter((b) => b.odds === null).length, 6);
+  const calculatedBet = s.records.bets.find((b) => b.oddsSource === 'selection-product');
+  assert.equal(calculatedBet?.odds, 5.9);
+  assert.deepEqual(calculatedBet.oddsCalculation, {
+    method: 'product-truncate-2',
+    inputs: [2.02, 2.15, 1.36],
+  });
   assert.equal(s.records.images.length, 21);
   assert.equal((await snapshot(other)).records.bets.length, 0);
   assert.equal(s.records.uploads.find((u) => u.id === fixtures[6].uploadId).status, 'review');
@@ -447,9 +454,7 @@ try {
   await expect(a.p.locator('.kpi').filter({ hasText: 'Resultado neto' })).toContainText('40.00');
   await expect(a.p.locator('.kpi').filter({ hasText: 'Resultado neto' })).toContainText('-');
   await a.p.goto('/estadisticas');
-  await expect(a.p.locator('.kpi').filter({ hasText: 'Cuota promedio' })).toContainText(
-    'No visible',
-  );
+  await expect(a.p.locator('.kpi').filter({ hasText: 'Cuota promedio' })).toContainText('5.90');
   passed.push('responsive legacy inbox, persisted closed history and dashboard net -40.00');
   assert.equal(
     (await snapshot()).records.movements.length,

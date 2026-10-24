@@ -15,7 +15,7 @@ export function BetVisualSummary({ bet, rows, settlements, currency }: {
     <div className="visual-facts">
       <span><b>{rows.length}</b> {rows.length === 1 ? 'partido' : 'partidos'}</span>
       <span><b>{selectionCount(rows)}</b> {selectionCount(rows) === 1 ? 'mercado' : 'mercados'}</span>
-      <span><b>{bet.odds?.toFixed(2) ?? 'No visible'}</b> cuota total</span>
+      <span><b>{bet.odds?.toFixed(2) ?? 'No visible'}</b> cuota total{bet.oddsSource === 'selection-product' ? ' · calculada de las selecciones' : ''}</span>
     </div>
     <figure className="money-comparison" aria-label="Comparación de monto apostado y retorno">
       <div className="money-bar-label"><span>Apostado</span><strong>{money(bet.stake, currency)}</strong></div>

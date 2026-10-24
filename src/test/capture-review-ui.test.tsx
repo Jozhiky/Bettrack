@@ -51,6 +51,63 @@ it('requires corrected odds, exact preview and a deliberate checkbox before regi
   );
 });
 
+it('lets a historical combination use the truncated product, recomputes corrected legs and keeps the payout separate', async () => {
+  const item = upload(),
+    draft = JSON.parse(item.draftJson);
+  draft.text = 'Betano\nCombinada de 3 S/100.00 Perdida';
+  draft.kind = 'Combinada';
+  draft.stake = 10000;
+  draft.expectedSelections = 3;
+  delete draft.odds;
+  delete draft.potential;
+  draft.selections = [2.02, 2.15, 1.36].map((odds, i) => ({
+    ...draft.selections[0],
+    event: `Equipo Q${i} vs. Equipo Z${i}`,
+    odds,
+  }));
+  item.draftJson = JSON.stringify(draft);
+  mocks.confirm.mockClear();
+  render(<CaptureReview upload={item} imageUrl="" onClose={() => {}} />);
+  const region = screen.getByRole('region', { name: 'Cuota calculada de las selecciones' });
+  expect(region).toHaveTextContent('5.90');
+  expect(screen.getByLabelText('Cuota total histórica')).toHaveValue('');
+  fireEvent.click(screen.getByRole('button', { name: 'Usar cuota calculada' }));
+  expect(screen.getByLabelText('Cuota total histórica')).toHaveValue('5.90');
+  fireEvent.change(screen.getByLabelText('Cuota 3'), { target: { value: '1.37' } });
+  expect(screen.getByLabelText('Cuota total histórica')).toHaveValue('5.94');
+  fireEvent.change(screen.getByLabelText('Cuota 3'), { target: { value: '1.36' } });
+  fireEvent.change(screen.getByLabelText('Fecha de apuesta'), {
+    target: { value: '2026-10-20T10:00' },
+  });
+  fireEvent.change(screen.getByLabelText('Fecha de liquidación'), {
+    target: { value: '2026-10-21T12:00' },
+  });
+  expect(screen.getByLabelText('Retorno potencial original')).toHaveValue('');
+  expect(screen.getByLabelText('Importe efectivamente recibido')).toHaveValue('0.00');
+  fireEvent.click(screen.getByRole('button', { name: 'Ver resumen antes de registrar' }));
+  expect(
+    screen.getByRole('region', { name: 'Resumen de importación histórica' }),
+  ).toHaveTextContent('Cuota calculada: 5.90');
+  expect(mocks.confirm).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('checkbox'));
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar e importar liquidada' }));
+  await waitFor(() => expect(mocks.confirm).toHaveBeenCalledOnce());
+  expect(mocks.confirm).toHaveBeenCalledWith(
+    'u',
+    expect.objectContaining({
+      historical: expect.objectContaining({
+        returned: 0,
+        header: expect.objectContaining({
+          odds: 5.9,
+          potential: null,
+          oddsSource: 'selection-product',
+          oddsCalculation: { method: 'product-truncate-2', inputs: [2.02, 2.15, 1.36] },
+        }),
+      }),
+    }),
+  );
+});
+
 it('reviews the real header layout with unknown global terms, an unverified payout suggestion and separate cashout execution consent', async () => {
   const item = upload(),
     draft = JSON.parse(item.draftJson);

@@ -24,7 +24,7 @@ export function CaptureReview({
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const history = useHistoricalImport(original);
+  const history = useHistoricalImport(original, rows);
   const settled = history.kind;
   const header = history.data?.header ?? original;
   const saving = useRef(false);

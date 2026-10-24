@@ -43,7 +43,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## Revalidación histórica — corrección preparada, autorización SQL pendiente
+## Revalidación histórica — SQL autorizado, corrección validada para desplegar
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
   seis con cabecera terminal `Cash Out` no reconocida. Reproducidos ambos bloqueos.
@@ -51,12 +51,15 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Preserva valores desconocidos como null solo en históricos atómicamente
   liquidados; cabecera Cash Out requiere prueba humana de ejecución/cobro total.
   Ganancias es sugerencia por cotejar. Fechas y consentimiento siguen obligatorios.
-- **627/627**, TypeScript/build; 17 QA previos + 8 grupos históricos con datos
+- **648/648**, TypeScript/build; 17 QA previos + 8 grupos históricos con datos
   sintéticos equivalentes; UI 375/768/1440. OCR 1065/1089 y 24 diferencias, sin
   regresiones. Nueva migración aplicada únicamente al QA autorizado.
 - Hosting está autorizado, pero el esquema productivo conserva una restricción
-  que impide guardar esas ausencias. **Pendiente permiso explícito de Supabase**;
-  no desplegar una solución parcial alegando que resuelve los 20 borradores.
+  que impide guardar esas ausencias. **Usuario autorizó explícitamente la migración
+  productiva del PR #8** y pidió calcular la cuota combinada con cuotas de selección:
+  producto completo truncado a dos decimales (2.02×2.15×1.36 → 5.90), con procedencia
+  visible. Añadido validado con procedencia persistida y sin duplicar Bet Builder;
+  reversión compatible construida y verificada en 375/768/1440, sin backend real.
 - [Causas, migración, validación y plan de publicación/reversión compatible](SETTLED_CAPTURE_REVALIDATION.md).
   No volver al frontend #7 después de importar null sin una versión compatible.
 

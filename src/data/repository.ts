@@ -1,5 +1,6 @@
 import type { BettrackDB } from './db';
 import { cloudDatabase, transact } from './cloudStore';
+import { matchesSelectionProduct } from '../domain/odds';
 import { releasableImages } from './storagePolicy';
 import {
   betSchema,
@@ -110,6 +111,8 @@ export class LocalRepository implements BetRepository {
   async saveBet(raw: Bet, rows: Selection[], image?: StoredImage, allowUnfundedCapture = false, initialSettlement?: Settlement) {
     const b = betSchema.parse(raw);
     const selections = rows.map((s, order) => selectionSchema.parse({ ...s, betId: b.id, order }));
+    if (b.oddsSource === 'selection-product' && !matchesSelectionProduct(b.odds,b.oddsCalculation,selections))
+      throw new Error('Las selecciones cambiaron: vuelve a calcular y revisar la cuota total.');
     if (!selections.length) throw new Error('Agrega al menos una selección.');
     if (
       (b.kind === 'Simple' && selections.length !== 1) ||

@@ -1,5 +1,6 @@
 import { transact } from './cloudStore';
 import { canonicalJSON } from './jsonEquality';
+import { matchesSelectionProduct } from '../domain/odds';
 import Papa from 'papaparse';
 import { z } from 'zod';
 import { repo, LocalRepository } from './repository';
@@ -135,6 +136,8 @@ export function validateBackup(raw: unknown): Backup {
     )
       throw new Error('Referencia de apuesta inválida.');
     const sels = d.selections.filter((s) => s.betId === bet.id);
+    if (bet.oddsSource === 'selection-product' && !matchesSelectionProduct(bet.odds,bet.oddsCalculation,sels))
+      throw new Error('Cuota calculada y selecciones inconsistentes en la copia.');
     if (!sels.length) throw new Error('Apuesta sin selecciones.');
     const count = selectionCount(sels);
     if ((bet.kind === 'Simple' && sels.length !== 1) || (bet.kind === 'Combinada' && count < 2))
@@ -307,6 +310,7 @@ export function exportCSV(data: Snapshot) {
           .join(' / '),
         'Monto apostado': (b.stake / 100).toFixed(2),
         Cuota: b.odds,
+        'Origen de cuota': b.oddsSource === 'selection-product' ? 'Calculada de las selecciones' : b.oddsSource || '',
         'Retorno potencial': b.potential === null ? '' : (b.potential / 100).toFixed(2),
         'Bono potencial': b.bonus ? (b.bonus.amount / 100).toFixed(2) : '',
         'Tratamiento del bono': b.bonus?.treatment || '',

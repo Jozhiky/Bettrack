@@ -51,6 +51,69 @@ function ticket(status = 'Ganada') {
   return parsed;
 }
 describe('historical import contract', () => {
+  it.each(['none', 'wrong-total', 'changed-leg', 'visible-total'])(
+    'validates reviewed selection-product provenance: %s',
+    async (fault) =>
+      fixture(async (db, repo) => {
+        const p = ticket('Perdida');
+        p.text = 'Betano\nCombinada de 3 S/10.00 Perdida';
+        p.expectedSelections = 3;
+        delete p.odds;
+        delete p.potential;
+        p.selections = [2.02, 2.15, 1.36].map((odds, i) => ({
+          ...p.selections[0],
+          event: 'Equipo QA' + i + ' vs. Equipo QB' + i,
+          odds,
+        }));
+        if (fault === 'visible-total') p.odds = 6;
+        await registerCapture('upload', p, repo);
+        const u = (await db.uploads.get('upload'))!;
+        const c = {
+          expectedDraft: u.draftJson,
+          imageId: 'image',
+          selections: structuredClone(p.selections),
+          acknowledged: true,
+          historical: {
+            kind: 'Perdida' as const,
+            returned: 0,
+            closedStake: 1000,
+            betDate: '2026-10-20T15:00:00.000Z',
+            settlementDate: '2026-10-21T18:00:00.000Z',
+            fullClosureConfirmed: true as const,
+            header: {
+              house: 'Betano' as const,
+              kind: 'Combinada' as const,
+              stake: 1000,
+              odds: 5.9,
+              potential: null,
+              oddsSource: 'selection-product' as const,
+              oddsCalculation: {
+                method: 'product-truncate-2' as const,
+                inputs: [2.02, 2.15, 1.36],
+              },
+            },
+          },
+        };
+        if (fault === 'wrong-total') c.historical.header.odds = 5.91;
+        if (fault === 'changed-leg') c.selections[0].odds = 2.03;
+        if (fault !== 'none') {
+          await expect(confirmCaptureReview('upload', c, repo)).rejects.toThrow('cuota calculada');
+          expect(await db.bets.count()).toBe(0);
+          expect(await db.movements.count()).toBe(0);
+        } else {
+          await confirmCaptureReview('upload', c, repo);
+          const s = await repo.snapshot();
+          expect(s.bets[0]).toMatchObject({
+            odds: 5.9,
+            potential: null,
+            oddsSource: 'selection-product',
+            oddsCalculation: { method: 'product-truncate-2', inputs: [2.02, 2.15, 1.36] },
+          });
+          expect(s.movements).toHaveLength(2);
+          expect(totals(s).profit).toBe(-1000);
+        }
+      }),
+  );
   it.each([
     ['Ganada', 1400, null, null],
     ['Ganada', 1400, 4, null],
