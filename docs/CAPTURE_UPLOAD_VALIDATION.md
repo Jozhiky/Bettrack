@@ -2,6 +2,7 @@
 
 Validada el 24/10/2026, rama `codex/capture-upload-safe-review`, basada exactamente
 en `cfe60aae9967c380016595768ad560fcabc6acb6` (FASE 4C.2 / PR #4).
+Publicada para revisión en [PR #5](https://github.com/Jozhiky/Bettrack/pull/5).
 PR #2, #3 y #4 comprobadas abiertas, sin fusionar. Workspace inicialmente limpio.
 
 ## Defectos reproducidos y correcciones

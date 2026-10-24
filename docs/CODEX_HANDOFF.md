@@ -92,7 +92,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 
 ## Carga segura verificada — 24/10/2026
 
-- Rama `codex/capture-upload-safe-review`, sobre el commit validado de PR #4
+- [PR #5](https://github.com/Jozhiky/Bettrack/pull/5), rama
+  `codex/capture-upload-safe-review`, sobre el commit validado de PR #4
   `cfe60aa`. Corrige dos defectos reproducidos: registro automático sin consentimiento
   y bypass de duplicados mediante `allowDuplicate`. Toda lectura espera confirmación
   explícita; duplicados no admiten un segundo cargo, y liquidados conservan la retención 4C.1.
