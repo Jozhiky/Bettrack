@@ -92,6 +92,20 @@ describe('FASE 4B scorer: explicit evidence without financial inference', () => 
     expect(extra.extraSelections).toBe(1);
     expect(extra.failures.map((c) => c.path)).toContain('selections.length');
   });
+  it('handles a future bet365 Superaumento oracle without inheriting placement from a cashout label', () => {
+    const { expected, actual } = pair();
+    // Synthetic comparison only: not a new admitted or verified Flamengo PNG.
+    expected.house = 'Bet365';
+    expected.cashoutKind = 'offer';
+    expected.cashoutOffer = 2500;
+    actual.house = 'Bet365';
+    actual.cashoutOffer = 2500;
+    const result = evaluatePhase4B(expected, actual);
+    expect(result.complete).toBe(true);
+    expect(result.safety.unsupportedExecutedCashout).toBe(false);
+    expect(result.safety.unsupportedConfirmation).toBe(false);
+    expect(actual.placement?.status).toBe('unknown');
+  });
   it('keeps absent cashout distinct from a visible offer; neither means collected money', () => {
     const { expected, actual } = pair();
     expected.cashoutKind = 'offer';
