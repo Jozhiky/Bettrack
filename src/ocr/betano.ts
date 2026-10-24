@@ -96,6 +96,48 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       row.odds = null;
     }
   }
+  // OCR often separates a player's parenthesized club onto the following
+  // line and places the odds badge between both text lines. Recover only
+  // visible, coordinate-adjacent text: never guess a missing club or odds.
+  for (let i = 0; i < candidates.length; i++) {
+    const title = candidates[i];
+    if (
+      !title.text ||
+      marketLine(title.text) ||
+      (title.text.match(/\(/g)?.length ?? 0) <= (title.text.match(/\)/g)?.length ?? 0)
+    ) continue;
+    const glyph = Math.max(...title.content.map((w) => w.bbox.y1 - w.bbox.y0), 1);
+    let last = i + 1;
+    while (
+      last < candidates.length &&
+      !candidates[last].text &&
+      candidates[last].y - title.y <= glyph * 2.9
+    ) last++;
+    const ending = candidates[last];
+    if (
+      !ending ||
+      ending.y - title.y > glyph * 2.9 ||
+      !/^[^()]{1,70}\)$/.test(ending.text) ||
+      marketLine(ending.text) ||
+      !ending.content.length ||
+      Math.abs(ending.content[0].bbox.x0 - title.content[0].bbox.x0) > glyph * 1.5
+    ) continue;
+    const floating = candidates.slice(i + 1, last + 1).filter((r) => r.odds !== null);
+    if (title.odds === null && floating.length === 1) {
+      title.odds = floating[0].odds;
+      floating[0].odds = null;
+    } else if (floating.length) {
+      review(
+        'selections[' + selections.length + '].odds',
+        'Hay más de una cuota junto a un nombre de jugador dividido: verifica su asignación.',
+      );
+    }
+    // Preserve a visible hyphen at the wrap; adding a space changes the name.
+    title.text += (title.text.endsWith('-') ? '' : ' ') + ending.text;
+    title.content.push(...ending.content);
+    ending.text = '';
+    ending.content = [];
+  }
   const body = candidates.filter(
     (r) =>
       (r.text.length > 2 || isSelectionValue(r.text)) &&
@@ -206,6 +248,26 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       )
         warnings.push(`Selección ${n + 1}: revisa los mercados internos y sus líneas.`);
     } else {
+      // A second unclassified player-name row can precede the actual market
+      // (e.g. a replacement with a crossed-out former name). Preserve it in
+      // mandatory human review, but do not misclassify it as a team/market.
+      // Do not assert why it appears: OCR cannot prove strikethrough.
+      const ambiguousExtra =
+        title.odds !== null &&
+        rest.length >= 4 &&
+        !marketLine(rest[0].text) &&
+        !isSelectionValue(rest[0].text) &&
+        rest[0].odds === null &&
+        marketLine(rest[1].text) &&
+        /^[\p{L}][\p{L}\s.'’−-]+$/u.test(rest[0].text);
+      if (ambiguousExtra) {
+        review(
+          basePath + '.pick',
+          'Selección ' + (n + 1) + ': aparece «' + rest[0].text +
+          '» entre el nombre principal y el mercado. Confirma a quién corresponde antes de guardar.',
+        );
+        rest.shift();
+      }
       const firstTeam = rest.findIndex(
         (r, i) => !marketLine(r.text) && !(i > 0 && isMarketContinuation(r.text)),
       );

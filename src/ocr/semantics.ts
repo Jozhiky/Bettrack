@@ -51,6 +51,8 @@ export function interpretMarket(
                   : 'unspecified';
   const statistic = !family
     ? null
+    : /^jugador que anota o da una asistencia$/.test(label)
+      ? 'scorer-or-assist'
     : /\bhandicap\b/.test(label)
       ? 'handicap'
       : /puntos\s*\+\s*rebotes\s*\+\s*asistencias/.test(label)
@@ -89,13 +91,36 @@ export function interpretMarket(
       name &&
       ((identity(originalLabel).startsWith(`${identity(name)} `) &&
         /^(?:[-–]\s*)?(?:goles|corners|tiros|remates|puntos|atajadas|asistencias)\b/.test(
-          normalized(originalLabel.slice(name.normalize('NFC').length).trim()),
+          normalized(identity(originalLabel).slice(identity(name).length).trim()),
         )) ||
         identity(originalLabel).endsWith(` de ${identity(name)}`)),
   );
+  // A player explicitly named in the selection with their parenthesized
+  // club can be identified only if that club EXACTLY matches an event team.
+  // Read the player from the image text; never resolve via a roster/name guess.
+  const scorerPick = pick.match(/^(.+?) \(([^()]+)\)$/u);
+  const scorerClubCount = scorerPick
+    ? participants.filter((team) => identity(team) === identity(scorerPick[2])).length
+    : 0;
+  const explicitPlayerPick =
+    family === 'scorer' && scorerPick && participants.length === 2 && scorerClubCount === 1 &&
+    /^(?:anotar en cualquier momento|jugador que anota o da una asistencia)$/.test(label)
+      ? scorerPick[1]
+      : null;
+  // "Jugador que..." explicitly qualifies the selection as a player. A
+  // plain unparenthesized participant survives only as reviewable OCR text.
+  const namedScorer =
+    /^jugador que anota o da una asistencia$/.test(label) &&
+    /^[\p{L}][\p{L}.'’\s−-]+$/u.test(pick) &&
+    pick.trim().split(/\s+/).length >= 2
+      ? pick.trim()
+      : null;
   let scope: MarketInterpretation['scope'] = 'unknown';
   let participant: string | null = null;
-  if (family && matches.length === 1 && participants.length === 2) {
+  if (explicitPlayerPick || namedScorer) {
+    scope = 'player';
+    participant = explicitPlayerPick || namedScorer;
+  } else if (family && matches.length === 1 && participants.length === 2) {
     scope = /^(?:tenis|tennis|badminton|boxeo)$/.test(normalized(sport)) ? 'player' : 'team';
     participant = matches[0];
   } else if (family && /\bjugador\b/.test(label)) {
@@ -146,7 +171,7 @@ export function interpretMarket(
       market: family ? 'recognized' : market ? 'review' : 'missing',
       sport: sport ? 'recognized' : 'missing',
       participant:
-        participant && matches.length === 1 ? 'recognized' : participant ? 'review' : 'missing',
+        participant && (matches.length === 1 || !!explicitPlayerPick) ? 'recognized' : participant ? 'review' : 'missing',
       scope: scope === 'unknown' ? 'review' : 'recognized',
       period: period === 'unspecified' ? 'missing' : 'recognized',
       selection: operator ? 'recognized' : pick ? 'review' : 'missing',
