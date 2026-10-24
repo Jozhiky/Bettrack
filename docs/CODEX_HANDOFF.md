@@ -111,6 +111,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 
 ## Persistencia real verificada — 24/10/2026
 
+- Publicada en [PR #6](https://github.com/Jozhiky/Bettrack/pull/6), sobre PR #5;
+  rama `codex/persistence-readiness`. Pendiente de revisión e integración autorizada.
 - El usuario autorizó QA en «Jozhiky 2» condicionado a coste cero. Proyecto
   `bettrack-qa-isolated` creado tras cotización 0 USD/mes; organización Free.
   Producción solo se consultó por metadatos/definiciones/configuración pública.

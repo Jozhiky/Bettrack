@@ -1,7 +1,7 @@
 # Persistencia y preparación de producción
 
 Validación ejecutada el 24/10/2026 sobre `b3b9ffd` (PR #5).
-Rama de entrega: `codex/persistence-readiness`, apilada sobre PR #5.
+Rama de entrega: `codex/persistence-readiness`, [PR #6](https://github.com/Jozhiky/Bettrack/pull/6), apilada sobre PR #5.
 **Persistencia y sincronización verificadas en Supabase aislado; sin escrituras
 en producción, merge ni despliegue.**
 
@@ -115,7 +115,7 @@ ejecutor normal lo inicia y cierra automáticamente. La demo 5188 sigue siendo R
 
 ## Plan de integración y publicación — pendiente de autorización
 
-1. Revisar y aprobar la cadena **#2 → #3 → #4 → #5 → PR de esta rama**. #2/#3/#4
+1. Revisar y aprobar la cadena **#2 → #3 → #4 → #5 → #6**. #2/#3/#4
    siguen como borrador. GitHub indica ausencia de conflictos y se comprobó que
    cada padre es ancestro del siguiente. `merge-tree main → PR #5` también termina
    sin conflictos; no altera ninguna rama ni ejecuta una fusión.
