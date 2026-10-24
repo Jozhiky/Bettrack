@@ -91,7 +91,7 @@ export function interpretMarket(
       name &&
       ((identity(originalLabel).startsWith(`${identity(name)} `) &&
         /^(?:[-–]\s*)?(?:goles|corners|tiros|remates|puntos|atajadas|asistencias)\b/.test(
-          normalized(originalLabel.slice(name.normalize('NFC').length).trim()),
+          normalized(identity(originalLabel).slice(identity(name).length).trim()),
         )) ||
         identity(originalLabel).endsWith(` de ${identity(name)}`)),
   );
@@ -103,7 +103,7 @@ export function interpretMarket(
     ? participants.filter((team) => identity(team) === identity(scorerPick[2])).length
     : 0;
   const explicitPlayerPick =
-    family === 'scorer' && scorerPick && scorerClubCount === 1 &&
+    family === 'scorer' && scorerPick && participants.length === 2 && scorerClubCount === 1 &&
     /^(?:anotar en cualquier momento|jugador que anota o da una asistencia)$/.test(label)
       ? scorerPick[1]
       : null;
@@ -115,18 +115,11 @@ export function interpretMarket(
     pick.trim().split(/\s+/).length >= 2
       ? pick.trim()
       : null;
-  const marketPlayer = market.match(/^(.+?)\s+(?:Tiros al Arco|Remates a Puerta)$/i);
-  const explicitShotPlayer =
-    marketPlayer &&
-    marketPlayer[1].trim().split(/\s+/).length >= 2 &&
-    !participants.some((team) => identity(team) === identity(marketPlayer[1]))
-      ? marketPlayer[1].trim()
-      : null;
   let scope: MarketInterpretation['scope'] = 'unknown';
   let participant: string | null = null;
-  if (explicitPlayerPick || namedScorer || explicitShotPlayer) {
+  if (explicitPlayerPick || namedScorer) {
     scope = 'player';
-    participant = explicitPlayerPick || namedScorer || explicitShotPlayer;
+    participant = explicitPlayerPick || namedScorer;
   } else if (family && matches.length === 1 && participants.length === 2) {
     scope = /^(?:tenis|tennis|badminton|boxeo)$/.test(normalized(sport)) ? 'player' : 'team';
     participant = matches[0];
@@ -178,7 +171,7 @@ export function interpretMarket(
       market: family ? 'recognized' : market ? 'review' : 'missing',
       sport: sport ? 'recognized' : 'missing',
       participant:
-        participant && (matches.length === 1 || !!explicitPlayerPick || !!namedScorer) ? 'recognized' : participant ? 'review' : 'missing',
+        participant && (matches.length === 1 || !!explicitPlayerPick) ? 'recognized' : participant ? 'review' : 'missing',
       scope: scope === 'unknown' ? 'review' : 'recognized',
       period: period === 'unspecified' ? 'missing' : 'recognized',
       selection: operator ? 'recognized' : pick ? 'review' : 'missing',

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { line } from '../../tests/ocr-phase1/controlled';
 import { parseTicket } from '../ocr/parser';
-import { readCapture } from '../ocr/readCapture';
+import { completeness, readCapture } from '../ocr/readCapture';
 import { interpretMarket } from '../ocr/semantics';
 import type { OcrLine } from '../ocr/layout';
 
@@ -53,6 +53,10 @@ function run(lines: OcrLine[]) {
   return parseTicket('', lines);
 }
 
+const raw = (lines: OcrLine[]) => ({
+  text: lines.map((x) => x.text).join('\n'), lines, symbols: [], confidence: 90,
+});
+
 describe('FASE 4C.2 — read coordinates, retain players, never invent odds', () => {
   it('rebuilds all four real-layout player legs with separate events/markets/odds', () => {
     const parsed = run(fourPlayers());
@@ -99,13 +103,12 @@ describe('FASE 4C.2 — read coordinates, retain players, never invent odds', ()
     expect(parsed.interpretations?.[3].value).toMatchObject({
       statistic: 'scorer-or-assist',
       scope: 'player', participant: 'Nelson Deossa',
+      confidence: { participant: 'review' },
     });
   });
 
   it('can prefer second OCR pass with a recovered badge without inventing its value', async () => {
-    const raw = (lines: OcrLine[]) => ({
-      text: lines.map((x) => x.text).join('\n'), lines, symbols: [], confidence: 90,
-    });
+    expect(completeness(run(fourPlayers({ harryOdds: false })))).toBe(160);
     const recognize = vi.fn()
       .mockResolvedValueOnce(raw(fourPlayers({ harryOdds: false })))
       .mockResolvedValueOnce(raw(fourPlayers({ harryOdds: true })));
@@ -117,6 +120,59 @@ describe('FASE 4C.2 — read coordinates, retain players, never invent odds', ()
     expect(recognize).toHaveBeenCalledTimes(2);
     expect(parsed.selections).toHaveLength(4);
     expect(parsed.selections.map((s) => s.odds)).toEqual([1.36, 2.3, 1.4, 1.55]);
+    expect(recognize.mock.calls[1][3]).toBe(true);
+  });
+
+  it.each(['still-missing', 'changed-name', 'changed-known-odds', 'changed-stake', 'lost-leg', 'lost-conflict', 'lost-cashout'])(
+    'keeps the first pass when recovery is unsafe: %s', async (change) => {
+      const ambiguous = change === 'lost-conflict';
+      const first = fourPlayers({ harryOdds: false, alternativeName: ambiguous });
+      let second = fourPlayers({ harryOdds: change !== 'still-missing', alternativeName: ambiguous });
+      if (change === 'changed-name') second = second.map(row => row.text.startsWith('Kylian')
+        ? glyph('Otro Nombre (Real Madrid)', 176, 380) : row);
+      if (change === 'changed-known-odds') second = second.map(row => row.text === '1.36'
+        ? glyph('1.37', 1012, 380) : row);
+      if (change === 'changed-stake') second = second.map(row => row.text === 'S/5.00'
+        ? glyph('S/6.00', 1000, 1970) : row);
+      if (change === 'lost-leg') second = second.filter(row => row.bbox.y0 < 1170 || row.bbox.y0 > 1450);
+      if (change === 'lost-conflict') second = second.filter(row => row.text !== 'Troy Parrett');
+      if (change === 'lost-cashout') second = second.filter(row => !row.text.startsWith('CASH OUT'));
+      const recognize = vi.fn().mockResolvedValueOnce(raw(first)).mockResolvedValueOnce(raw(second));
+      const parsed = await readCapture({ recognize, terminate: vi.fn() }, new Blob(), () => {});
+      expect(recognize).toHaveBeenCalledTimes(2);
+      expect(parsed).toEqual(run(first));
+      expect(parsed.selections[1].odds).toBeNull();
+    },
+  );
+
+  it('does not reread a complete spatial ticket and reports monotonic progress on recovery', async () => {
+    const complete = vi.fn().mockResolvedValue(raw(fourPlayers()));
+    await readCapture({ recognize: complete, terminate: vi.fn() }, new Blob(), () => {});
+    expect(complete).toHaveBeenCalledTimes(1);
+    const progress: number[] = [];
+    let pass = 0;
+    const recognize = vi.fn(async (_file: Blob, report: (p: number) => void) => {
+      [0, 50, 40, 100].forEach(report);
+      return raw(fourPlayers({ harryOdds: pass++ > 0 }));
+    });
+    await readCapture({ recognize, terminate: vi.fn() }, new Blob(), p => progress.push(p));
+    expect(recognize).toHaveBeenCalledTimes(2);
+    expect(progress.at(-1)).toBe(100);
+    expect(progress.every((p, i) => p >= (progress[i - 1] ?? 0) && p <= 100)).toBe(true);
+  });
+
+  it.each([
+    'Betano\nSimple S/10.00 Perdida',
+    'Betano\nSimple S/10.00 Ganada',
+    'Betano\nSimple S/10.00 Perdida\nCrear apuesta',
+    'Betano\nCrear apuesta',
+  ])('a higher completeness score cannot erase safety evidence: %s', async text => {
+    const first = { text, lines: [], symbols: [], confidence: 90 };
+    expect(completeness(run(fourPlayers()))).toBeGreaterThan(completeness(parseTicket(text)));
+    const recognize = vi.fn().mockResolvedValueOnce(first).mockResolvedValueOnce(raw(fourPlayers()));
+    const parsed = await readCapture({ recognize, terminate: vi.fn() }, new Blob(), () => {});
+    expect(recognize).toHaveBeenCalledTimes(2);
+    expect(parsed).toEqual(parseTicket(text));
   });
 
   it('recognizes a second player in a two-leg ticket without treating his market as an event', () => {
@@ -146,7 +202,10 @@ describe('FASE 4C.2 — read coordinates, retain players, never invent odds', ()
       event: 'Real Madrid vs. RB Leipzig', odds: 1.21,
     });
     expect(parsed.interpretations?.[1].value).toMatchObject({
-      statistic: 'shots-on-target', scope: 'player', participant: 'Kylian Mbappe',
+      // A prefix that differs from both teams is not proof of a player identity.
+      // Same contract as Nico Paz and differently accented team names in FASE 2/4A.
+      statistic: 'shots-on-target', scope: 'unknown', participant: 'Kylian Mbappe',
+      confidence: { scope: 'review', participant: 'review' },
     });
   });
 
@@ -157,5 +216,29 @@ describe('FASE 4C.2 — read coordinates, retain players, never invent odds', ()
     );
     expect(ambiguous.participant).toBeNull();
     expect(ambiguous.scope).toBe('unknown');
+  });
+
+  it.each([
+    ['FC BAYERN MU\u0308NCHEN', 'player'],
+    ['FC   Bayern München', 'player'],
+    ['FC Bayern Munchen', 'unknown'],
+    ['Bayern München', 'unknown'],
+    ['FC Bayern München II', 'unknown'],
+  ])('requires exact club identity after NFC/case/space normalization: %s', (club, scope) => {
+    const result = interpretMarket('Anotar en cualquier momento', `Harry Kane (${club})`,
+      'FC Bayern München vs. Arsenal FC');
+    expect(result.scope).toBe(scope);
+    expect(result.participant).toBe(scope === 'player' ? 'Harry Kane' : null);
+  });
+
+  it('normalizes spaces for a complete team match, never for a partial or accentless identity', () => {
+    for (const team of ['FC   Bayern München', 'FC BAYERN MU\u0308NCHEN']) {
+      const result = interpretMarket(`${team} Tiros al Arco`, '2+', 'FC Bayern München vs. Arsenal FC');
+      expect(result).toMatchObject({ scope: 'team', participant: 'FC Bayern München' });
+    }
+    for (const team of ['FC Bayern Munchen', 'Bayern München', 'FC Bayern München II']) {
+      expect(interpretMarket(`${team} Tiros al Arco`, '2+', 'FC Bayern München vs. Arsenal FC'))
+        .toMatchObject({ scope: 'unknown', participant: team, confidence: { participant: 'review' } });
+    }
   });
 });

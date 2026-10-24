@@ -132,7 +132,8 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
         'Hay más de una cuota junto a un nombre de jugador dividido: verifica su asignación.',
       );
     }
-    title.text += ' ' + ending.text;
+    // Preserve a visible hyphen at the wrap; adding a space changes the name.
+    title.text += (title.text.endsWith('-') ? '' : ' ') + ending.text;
     title.content.push(...ending.content);
     ending.text = '';
     ending.content = [];

@@ -6,7 +6,9 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 
 ## Estado de referencia
 
-- Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama al preparar este handoff: `main`.
+- Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de esta revisión:
+  `fix/ocr-phase4c2-player-layout` (PR #4, sobre #3; #2/#3/#4 siguen independientes).
+  `main` permanece en `31e73126b1223a8b41ddc5a04e35d117a61fd7fa`, sin fusionar.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Último commit **funcional auditado**: `915da4bab07c0b9fa11914683d92f9d678fc2c89`
   (FASE 3). `main` incorpora después documentación y preparación de FASE 4A;
@@ -39,7 +41,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## FASE 4C.1 — corrección P0 preparada, no validada aún
+## FASE 4C.1 — corrección P0 heredada y verificada en FASE 4C.2
 
 - Rama `fix/ocr-phase4c-settled-header`, **basada en PR #2 de FASE 4B**.
 - Corrige `Ganada/Perdida` global dentro de cabecera de boleto Betano y su
@@ -51,12 +53,11 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   exactamente 4 campos: `placement` y `settlement` en las 2 pérdidas globales.
   0 regresiones detectadas, 0 falsos cashouts/victorias/confirmaciones, corpus y
   modelos OCR sin cambios. La línea base previa era 1002/1089, 87 errores.
-- **No se adjuntó evidencia de ejecución de las pruebas específicas de frontera
-  de escritura, suite completa, TypeScript ni build**; quedan pendientes de
-  comprobación antes de fusionar.
+- La validación local de FASE 4C.2 ejecutó la suite completa, incluidas las pruebas
+  de frontera de escritura de 4C.1, TypeScript y build. Ambas pérdidas globales
+  mantienen colocación/liquidación correctas y la retención de registro.
 - Detalles y comandos: [informe FASE 4C.1](OCR_PHASE4C_SETTLED_HEADER.md).
-- Siguiente fallo independiente: combinadas de cuatro jugadores y cuotas
-  desplazadas, FASE 4C.2. No mezclar correcciones sin medición intermedia.
+- La corrección de jugadores se mide por separado abajo contra esta línea base.
 
 ## FASE 4C.2 — jugadores y cuotas desplazadas
 
@@ -64,18 +65,29 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - **3 trazas OCR reales examinadas** (sin publicar): cuatro jugadores en dos
   instantáneas y doble Kane/Mbappé. Causa: títulos de jugador divididos por
   salto de línea, cuotas flotantes y nombre alternativo no clasificado.
-- Corrección propuesta: unir solo continuaciones con paréntesis visible y
+- Corrección validada: unir solo continuaciones con paréntesis visible y
   coordenadas compatibles, asociar cuota leída (sin inferir valores), conservar
   nombres conflictivos para revisión y definir semántica explícita de jugador.
-- Seis pruebas sintéticas nuevas, incluyendo `readCapture` de dos pasadas.
-- Validación pendiente: ejecutar **un solo comando**
-  `npm.cmd run test:ocr:phase4c2` en Windows. Incluye suite completa, TypeScript,
-  build y banco real aislado de las 28 capturas.
-- Baseline anterior: 1006/1089 checks, 83 diferencias, 3 selecciones omitidas,
-  0 adicionales; sin valores nuevos medidos todavía.
+- Cuatro fallos reproducidos y reparados: guion en `Saint-Germain`, identidad
+  exacta de equipos, prefijo Nico Paz sin ámbito inventado y reintento por cuota
+  espacial ausente. `completeness` conserva fórmula/umbral; máximo dos pasadas.
+  El desempate admite solo cuotas recuperadas sin alterar el resto de la lectura.
+- Validación local: `npm.cmd run test:ocr:phase4c2`, **577/577 pruebas** (24 de
+  layout/reintento), TypeScript y build aprobados. Banco real: **28/28**, **1065/1089**
+  checks correctos; **24** diferencias (1 ausente, 23 incorrectas), **16/28** exactas,
+  **0** selecciones omitidas/adicionales y **0** falsos estados financieros.
+- Comparación contra 4C.1 (1006/1089, 83 diferencias, 3 omitidas): **59 aciertos
+  recuperados, 0 regresiones**, mismos ids/rutas/expected y hashes de corpus,
+  admisiones, PNG y activos. FASE 3 también pasa con sus 7 divergencias literales
+  conocidas, sin nuevas diferencias y paridad 7/7; tsconfig FASE 1/3 aprobados.
+- Pendiente deliberado: Harry Kane en `player-four-early` conserva cuota `null`:
+  la segunda pasada recupera 2.30 pero altera un nombre y pierde la oferta cashout.
+  Mbappé conserva participante con ámbito desconocido/revisión. Nelson Deossa /
+  Troy Parrett siguen como conflicto explícito, sin asumir tachadura.
 - Protocolo y diagnóstico: [FASE 4C.2](OCR_PHASE4C2_PLAYER_LAYOUT.md).
-- Mantener las PR de fases anteriores en revisión hasta validar el banco y
-  las barreras contables; los datos históricos/Supabase/Firebase no se tocan.
+- PR #4 lista para revisión del cambio, no para registro automático de todo el
+  corpus: quedan 24 diferencias visibles. No fusionar automáticamente las PR;
+  datos históricos/Supabase/Firebase, motor, corpus y oráculos intactos.
 
 ## Arquitectura esencial
 
@@ -135,20 +147,15 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
-- Prioridad actual: ejecutar el banco FASE 4B en D:\Apuestas, revisar
-  test-results/ocr-phase4b/report.json y establecer línea base ANTES de corregir
-  motor o anotar supuestos aciertos. Ejecutar comandos 4B de abajo, sin cloud.
-  Ya existe línea base medida en docs/OCR_PHASE4B_REPORT.md: priorizar
-  detección de «Perdida» en cabecera y reconstrucción de combinadas de
-  jugadores antes de plantear merge o despliegue. No considerar la suite completa
-  aprobada: solo se observaron 6/6 tests unitarios y la ejecución OCR 28/28.
-- Siguiente prioridad: conectar los 28 casos admitidos al ejecutor OCR aislado en
-  una tarea autorizada, conservando las agrupaciones temporales y sin transferir
-  aceptación/importes entre imágenes. La suite de admisión no mide precisión OCR.
-  Pedir una copia más completa de `preparation-flamengo` con marca/contexto explícito,
-  además de NBA/períodos, aceptación, Ganada global y cashout ejecutado.
-  Mejorar identidad/ámbito y medir lotes solo en una tarea posterior autorizada.
-  No cambiar motor ni prometer aceleración general: mejoró un caso, no todas las medianas.
+- Prioridad actual: revisar PR #4 y sus diferencias por imagen en el informe 4C.2.
+  El banco aislado de 28 PNG ya está ejecutado; no repetir la auditoría de admisión.
+  Las 24 discrepancias remanentes son 19 lecturas literales, 4 ámbitos y 1 cuota
+  ausente; preservar revisión humana y no resolver identidades con pérdida de tildes.
+- Siguiente tarea, solo si se autoriza: evidencia adicional para cuotas/ámbitos
+  ambiguos y ampliación real NBA/períodos, aceptación, Ganada global y cashout
+  ejecutado. bet365 `preparation-flamengo` continúa fuera de las 28 imágenes.
+  Mantener grupos temporales sin transferir aceptación/importes entre instantáneas.
+  No cambiar motor ni prometer aceleración general a partir de una sola medición.
 - Sincronización cloud no se validó en FASE 3. Requiere QA separado, datos sintéticos
   y limpieza controlada antes de ejecutar pruebas de escritura. No iniciar una fase
   nueva ni desplegar por el solo hecho de leer estos pendientes.
