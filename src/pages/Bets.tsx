@@ -161,7 +161,7 @@ export function Bets() {
         <div className="capture-drop-overlay">
           <Upload size={40} />
           <strong>Suelta tus capturas aquí</strong>
-          <span>Las convertiremos en apuestas automáticamente.</span>
+          <span>Leeremos cada boleto para que lo revises antes de registrarlo.</span>
         </div>
       )}
       <div className="page-heading workspace-heading">

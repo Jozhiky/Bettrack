@@ -312,6 +312,10 @@ async function processCapture(
           ? 'No pudimos separar los partidos del boleto. Conservamos la captura para volver a leerla.'
           : `Selección ${invalidRow + 1}: ${!rows[invalidRow].event ? 'no pudimos separar los equipos' : !rows[invalidRow].market ? 'mercado no reconocido' : 'no pudimos separar todos los mercados internos'}. Conservamos la captura; puedes usar Mejorar lectura.`,
       );
+    // OCR only prepares a draft. Even a complete read needs a deliberate,
+    // current preview confirmation before master data or financial writes.
+    if (!confirmation)
+      return needsReview('Lectura lista. Coteja la captura y confirma el registro de esta apuesta.');
     const houses = await d.houses.toArray();
     let house = houses.find((h) => h.name.toLowerCase() === parsed.house!.toLowerCase());
     if (house && house.currency !== 'PEN')
@@ -385,7 +389,7 @@ async function processCapture(
         });
     };
     bet.fingerprint = fingerprint(bet, rows);
-    if (!upload.allowDuplicate) {
+    {
       const allSelections = await d.selections.toArray();
       const semantic = fingerprint({ ...bet, date: '2000-01-01T12:00:00.000Z' }, rows);
       const imageIds = (await d.images.where('hash').equals(image.hash).toArray()).map((i) => i.id);
@@ -404,7 +408,7 @@ async function processCapture(
           status: 'duplicate',
           draftJson,
           reason:
-            'Coincide con una apuesta registrada. Vincula la captura si es el mismo boleto, o regístrala como otra operación.',
+            'Coincide con una apuesta registrada. Compara las capturas y vincula el mismo boleto sin duplicar el importe.',
           betId: existing.id,
           progress: 100,
         });

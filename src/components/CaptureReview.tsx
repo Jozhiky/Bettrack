@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { CaptureUpload } from '../domain/model';
 import { money, displayDate } from '../domain/model';
 import { confirmCaptureReview } from '../data/captures';
-import { readDraft, needsNewProof, reviewSelectionSchema } from '../ocr/review';
+import { readDraft, needsNewProof, reviewSelectionSchema, draftSettlement } from '../ocr/review';
 import { useApp } from '../app/context';
 import { Button, Field, Modal } from './ui';
 
@@ -23,6 +23,7 @@ export function CaptureReview({
   const [accepted, setAccepted] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const settled = original && draftSettlement(original);
   const stale =
     upload.draftJson !== snapshot.draftJson ||
     upload.imageId !== snapshot.imageId ||
@@ -30,6 +31,7 @@ export function CaptureReview({
   const valid =
     !stale &&
     original &&
+    !settled &&
     !needsNewProof(original) &&
     original.house &&
     original.kind &&
@@ -114,6 +116,20 @@ export function CaptureReview({
               <dd>{original?.kind ?? 'No reconocido'}</dd>
             </div>
             <div>
+              <dt>Estado</dt>
+              <dd>
+                {settled
+                  ? `${settled} · liquidado, registro retenido`
+                  : 'En revisión · registro inicial Pendiente'}
+              </dd>
+            </div>
+            {original?.cashoutOffer !== undefined && (
+              <div>
+                <dt>Oferta cashout</dt>
+                <dd>{money(original.cashoutOffer)} · no cobrada</dd>
+              </div>
+            )}
+            <div>
               <dt>Fecha de registro</dt>
               <dd>{displayDate(snapshot.createdAt)} · fecha de carga</dd>
             </div>
@@ -129,9 +145,15 @@ export function CaptureReview({
             )}
           </dl>
           <p className="capture-reason">
-            Se registrará Pendiente y se reservará{' '}
-            {original?.stake !== undefined ? money(original.stake) : 'el stake'}. El retorno es
-            potencial; ningún cashout se cobrará automáticamente.
+            {settled ? (
+              'Boleto ya liquidado. El registro como pendiente está bloqueado; revisa su liquidación por separado.'
+            ) : (
+              <>
+                Se registrará Pendiente y se reservará{' '}
+                {original?.stake !== undefined ? money(original.stake) : 'el stake'}. El retorno es
+                potencial; ningún cashout se cobrará automáticamente.
+              </>
+            )}
           </p>
           {rows.map((s, i) => (
             <section className="capture-review-leg" key={i}>
@@ -273,6 +295,7 @@ export function CaptureReview({
             </>
           ) : (
             <Button
+              disabled={!!settled}
               onClick={() => {
                 if (!valid) {
                   setError(

@@ -212,6 +212,30 @@ it('manual review preserves duplicate protection and all historical rows', async
     expect(await db.movements.toArray()).toEqual(movements);
   }));
 
+it('complete OCR waits for explicit review before any financial write', async () =>
+  fixture(async (db, repo) => {
+    const houses = await db.houses.toArray();
+    await registerCapture('upload', ticket(), repo);
+    expect((await db.uploads.get('upload'))?.status).toBe('review');
+    expect(await db.bets.count()).toBe(0);
+    expect(await db.movements.count()).toBe(0);
+    expect(await db.houses.toArray()).toEqual(houses);
+  }));
+
+it('legacy duplicate permission cannot debit the same ticket twice', async () =>
+  fixture(async (db, repo) => {
+    const c = await reviewable(db, repo);
+    await confirmCaptureReview('upload', c, repo);
+    await db.uploads.add({
+      ...(await db.uploads.get('upload'))!, id: 'second', status: 'review',
+      draftJson: c.expectedDraft, betId: undefined, allowDuplicate: true,
+    });
+    await confirmCaptureReview('second', c, repo);
+    expect((await db.uploads.get('second'))?.status).toBe('duplicate');
+    expect(await db.bets.count()).toBe(1);
+    expect(await db.movements.count()).toBe(1);
+  }));
+
 it('new proof is independent and audited; a preparation image is retained without finances', async () =>
   fixture(async (db, repo) => {
     await registerCapture('upload', ticket('Crear apuesta'), repo);

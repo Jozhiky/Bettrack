@@ -5,7 +5,7 @@ import { interpretMarket } from '../ocr/semantics';
 import { isMarketLine } from '../ocr/markets';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
-import { registerCapture } from '../data/captures';
+import { registerCapture } from './confirm-ready-capture';
 import { position } from '../domain/model';
 
 vi.mock('../integrations/supabase', () => ({

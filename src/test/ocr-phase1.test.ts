@@ -10,7 +10,7 @@ import { createTiming } from '../../tests/ocr-phase1/timing';
 import { parseTicket, type ParsedTicket } from '../ocr/parser';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
-import { registerCapture } from '../data/captures';
+import { registerCapture } from './confirm-ready-capture';
 
 vi.mock('../integrations/supabase', () => ({
   supabase: new Proxy(

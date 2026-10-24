@@ -288,11 +288,13 @@ try {
     const extraCase = phase3 ? corpus.cases.find((c) => c.id === result.id) : undefined;
     const extraStatus =
       extraCase && (reference ? extraCase.referenceRegistration : extraCase.registration);
-    const expectedStatus =
-      extraStatus ??
+    // Current intake requires explicit consent even for a complete OCR read.
+    // Historical reference checkouts retain their old registration contract.
+    // Text/market/odds oracles and known differences remain untouched.
+    const expectedStatus = reference ? (extraStatus ??
       (result.id.startsWith('injected-') || result.knownFailure || semanticHold || placementHold
         ? 'review'
-        : 'saved');
+        : 'saved')) : 'review';
     assert.equal(
       result.registered.status,
       expectedStatus,
