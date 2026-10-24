@@ -18,8 +18,13 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - FASE 4B (rama feat/ocr-phase4b-isolated-measurement): banco **aislado y de solo lectura**
   preparado para ejecutar Tesseract real sobre las 28 capturas 4A. Compara OCR
   contra oráculos humanos sin alterar corpus, motor, histórico ni Supabase.
-  **No se ha ejecutado aún la medición en el workspace Windows** y no hay cifras
-  de exactitud publicables. Ver [protocolo 4B](../tests/ocr-phase4b/README.md).
+  **Medición real ejecutada por el usuario en Windows** (28/28 PNG, 6/6 pruebas
+  sintéticas, 0 fallos de ejecución): 1002/1089 checks exactos (92.01%),
+  87 discrepancias (42 ausentes, 45 incorrectas), 13/28 imágenes sin
+  discrepancias; 3 selecciones omitidas, 0 adicionales. El porcentaje por
+  campo no equivale a exactitud de boletos; faltan suite completa, TypeScript,
+  build y revisión de correcciones. Ver [informe 4B](OCR_PHASE4B_REPORT.md)
+  y [protocolo](../tests/ocr-phase4b/README.md).
   El usuario identificó preparation-flamengo como **bet365 / Superaumento**;
   sigue fuera del corpus mientras falten marca visible y evidencia de colocación.
   «Cerrar apuesta» no acredita un cashout ejecutado; «Crear apuesta» en ese
@@ -95,7 +100,10 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Prioridad actual: ejecutar el banco FASE 4B en D:\Apuestas, revisar
   test-results/ocr-phase4b/report.json y establecer línea base ANTES de corregir
   motor o anotar supuestos aciertos. Ejecutar comandos 4B de abajo, sin cloud.
-  El banco preparado, por sí solo, no demuestra precisión ni pruebas aprobadas.
+  Ya existe línea base medida en docs/OCR_PHASE4B_REPORT.md: priorizar
+  detección de «Perdida» en cabecera y reconstrucción de combinadas de
+  jugadores antes de plantear merge o despliegue. No considerar la suite completa
+  aprobada: solo se observaron 6/6 tests unitarios y la ejecución OCR 28/28.
 - Siguiente prioridad: conectar los 28 casos admitidos al ejecutor OCR aislado en
   una tarea autorizada, conservando las agrupaciones temporales y sin transferir
   aceptación/importes entre imágenes. La suite de admisión no mide precisión OCR.
