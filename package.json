@@ -7,6 +7,7 @@
     "start": "vite preview --host 127.0.0.1 --port 5187 --strictPort",
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
+    "build:historical:rollback": "node scripts/build-historical-rollback.mjs",
     "prebuild": "node scripts/check-ocr.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",

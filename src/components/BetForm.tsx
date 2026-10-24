@@ -81,7 +81,9 @@ export function BetForm({
   const [busy, setBusy] = useState(false);
   const [includeSettlements, setIncludeSettlements] = useState(true);
   const form = useForm<Values>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(
+      initial?.historical ? formSchema.extend({ odds: z.string() }) : formSchema,
+    ),
     defaultValues: {
       date: needsDate ? '' : localInput(initial?.date || timestamp()),
       houseId:
@@ -92,8 +94,8 @@ export function BetForm({
       kind: initial?.kind || 'Simple',
       live: initial?.live || false,
       stake: initial?.stake !== undefined ? String(initial.stake / 100) : '',
-      odds: initial?.odds !== undefined ? String(initial.odds) : '',
-      potential: initial?.potential !== undefined ? String(initial.potential / 100) : '',
+      odds: initial?.odds != null ? String(initial.odds) : '',
+      potential: initial?.potential != null ? String(initial.potential / 100) : '',
       bonusAmount: initial?.bonus ? String(initial.bonus.amount / 100) : '',
       bonusTreatment: initial?.bonus?.treatment || 'Sin confirmar',
       notes: initial?.notes || '',
@@ -135,10 +137,14 @@ export function BetForm({
         kind: v.kind,
         live: v.live,
         stake: toCents(v.stake),
-        odds: decimal(v.odds),
-        potential: v.potential
-          ? toCents(v.potential)
-          : Math.round(toCents(v.stake) * decimal(v.odds)),
+        ...(initial?.historical ? { historical: true } : {}),
+        odds: initial?.historical && !v.odds.trim() ? null : decimal(v.odds),
+        potential:
+          initial?.historical && !v.potential.trim()
+            ? null
+            : v.potential
+              ? toCents(v.potential)
+              : Math.round(toCents(v.stake) * decimal(v.odds)),
         notes: v.notes,
         bonus: v.bonusAmount
           ? { amount: toCents(v.bonusAmount), treatment: v.bonusTreatment }
@@ -394,9 +400,17 @@ export function BetForm({
         </Field>
         <Field
           label="Retorno potencial"
-          hint={`Calculado: ${estimate}. Conserva el mostrado si difiere.`}
+          hint={
+            initial?.historical
+              ? 'Opcional: conserva vacío si no consta en el boleto original. No se calcula.'
+              : `Calculado: ${estimate}. Conserva el mostrado si difiere.`
+          }
         >
-          <input inputMode="decimal" placeholder={estimate} {...form.register('potential')} />
+          <input
+            inputMode="decimal"
+            placeholder={initial?.historical ? 'No visible' : estimate}
+            {...form.register('potential')}
+          />
         </Field>
       </div>
       <div className="form-grid">

@@ -50,6 +50,56 @@ it('requires corrected odds, exact preview and a deliberate checkbox before regi
     expect.objectContaining({ expectedDraft: item.draftJson, imageId: 'i', acknowledged: true }),
   );
 });
+
+it('reviews the real header layout with unknown global terms, an unverified payout suggestion and separate cashout execution consent', async () => {
+  const item = upload(),
+    draft = JSON.parse(item.draftJson);
+  draft.text =
+    draft.text
+      .replace(/^Combinada de 2 S\/10\.00.*$/m, 'Combinada de 2 S/100.00 Cash Out')
+      .replace(/^CASH OUT.*$/gm, '') + '\nGanancias S/70.00';
+  draft.stake = 10000;
+  delete draft.odds;
+  delete draft.potential;
+  draft.selections[0].odds = 1.33;
+  item.draftJson = JSON.stringify(draft);
+  mocks.confirm.mockClear();
+  render(<CaptureReview upload={item} imageUrl="" onClose={() => {}} />);
+  expect(screen.getByLabelText('Estado final')).toHaveValue('Cashout');
+  expect(screen.getByLabelText('Importe efectivamente recibido')).toHaveValue('');
+  expect(screen.getByLabelText('Cuota total histórica')).toHaveValue('');
+  fireEvent.change(screen.getByLabelText('Fecha de apuesta'), {
+    target: { value: '2026-10-20T10:00' },
+  });
+  fireEvent.change(screen.getByLabelText('Fecha de liquidación'), {
+    target: { value: '2026-10-21T12:00' },
+  });
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Usar importe mostrado como retorno total recibido' }),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Ver resumen antes de registrar' }));
+  expect(screen.getByRole('alert')).toHaveTextContent('Confirma que el Cash Out');
+  expect(mocks.confirm).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('checkbox', { name: /He verificado que el Cash Out/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'Ver resumen antes de registrar' }));
+  expect(screen.getByRole('button', { name: 'Confirmar e importar liquidada' })).toBeDisabled();
+  expect(
+    screen.getByRole('region', { name: 'Resumen de importación histórica' }),
+  ).toHaveTextContent(/Resultado neto.*-.*30\.00/s);
+  fireEvent.click(screen.getByRole('checkbox'));
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar e importar liquidada' }));
+  await waitFor(() => expect(mocks.confirm).toHaveBeenCalledOnce());
+  expect(mocks.confirm).toHaveBeenCalledWith(
+    'u',
+    expect.objectContaining({
+      historical: expect.objectContaining({
+        executionConfirmed: true,
+        returned: 7000,
+        header: expect.objectContaining({ odds: null, potential: null }),
+      }),
+    }),
+  );
+});
 it('invalidates a preview when the cloud draft changes instead of signing stale edits', () => {
   const item = upload();
   const { rerender } = render(<CaptureReview upload={item} imageUrl="" onClose={() => {}} />);

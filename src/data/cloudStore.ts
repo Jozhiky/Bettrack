@@ -173,6 +173,11 @@ export class CloudStore {
         }
         if (generation !== this.generation) throw new Error('La sesión cambió durante el guardado.');
         if (changes.length) {
+          if (changes.some(c => c.collection === 'bets' && c.payload && (c.payload.odds === null || c.payload.potential === null))) {
+            const capability = await supabase.rpc('bt_capabilities');
+            if (capability.error || capability.data?.historicalUnknownQuote !== true)
+              throw new Error('El backend todavía no admite históricos con cuota o potencial desconocidos. Se requiere la actualización autorizada de la base de datos; tu captura sigue en revisión.');
+          }
           const { data, error } = await supabase.rpc('bt_commit', { expected_version: this.version, changes });
           if (error) throw new Error(error.message.includes('BT_CONFLICT') ? 'Hubo un cambio desde otro dispositivo. Actualizamos los datos; vuelve a intentar.' : error.message);
           if (generation !== this.generation) throw new Error('La sesión cambió durante el guardado.');

@@ -124,7 +124,7 @@ export function CaptureReview({
             </div>
             <div>
               <dt>Retorno potencial</dt>
-              <dd>{header?.potential !== undefined ? money(header.potential) : 'No reconocido'}</dd>
+              <dd>{header?.potential != null ? money(header.potential) : 'No visible'}</dd>
             </div>
             <div>
               <dt>Tipo</dt>

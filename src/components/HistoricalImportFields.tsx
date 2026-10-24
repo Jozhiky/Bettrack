@@ -12,6 +12,7 @@ export function useHistoricalImport(draft?: ReviewDraft) {
   const [betDate, setBetDate] = useState(local(evidence.betDate));
   const [settlementDate, setSettlementDate] = useState(local(evidence.settlementDate));
   const [returned, setReturned] = useState(decimal(evidence.returned));
+  const [executionConfirmed, setExecutionConfirmed] = useState(false);
   const [header, setHeader] = useState({
     house: draft?.house ?? '',
     kind: draft?.kind ?? '',
@@ -23,9 +24,15 @@ export function useHistoricalImport(draft?: ReviewDraft) {
     error = '';
   if (evidence.candidate)
     try {
-      if (!betDate || !settlementDate || !returned || Object.values(header).some((v) => !v.trim()))
+      if (!betDate || !settlementDate)
         throw Error(
-          'Completa fechas históricas, datos del boleto e importe realmente recibido. No se usa la fecha de subida.',
+          'Completa fechas históricas: fecha de apuesta y fecha de liquidación. No se usa la fecha de subida.',
+        );
+      if (!header.house || !header.kind || !header.stake.trim())
+        throw Error('Completa casa, tipo y stake histórico.');
+      if (!returned.trim())
+        throw Error(
+          'Completa el importe efectivamente recibido. La cifra de Ganancias debe cotejarse antes de usarla como cobro.',
         );
       data = validateHistoricalImport(
         {
@@ -41,11 +48,12 @@ export function useHistoricalImport(draft?: ReviewDraft) {
           returned: toCents(returned),
           closedStake: toCents(header.stake),
           fullClosureConfirmed: true,
+          ...(executionConfirmed ? { executionConfirmed: true } : {}),
           header: {
             ...header,
             stake: toCents(header.stake),
-            odds: Number(header.odds.replace(',', '.')),
-            potential: toCents(header.potential),
+            odds: header.odds.trim() ? Number(header.odds.replace(',', '.')) : null,
+            potential: header.potential.trim() ? toCents(header.potential) : null,
           },
         },
         draft!,
@@ -71,6 +79,8 @@ export function useHistoricalImport(draft?: ReviewDraft) {
     setHeader,
     data,
     error,
+    executionConfirmed,
+    setExecutionConfirmed,
   };
 }
 export function HistoricalImportFields({
@@ -135,6 +145,17 @@ export function HistoricalImportFields({
           únicamente cierres totales.
         </p>
       )}
+      {form.evidence.executionNeedsConfirmation && (
+        <label className="capture-review-consent">
+          <input
+            type="checkbox"
+            checked={form.executionConfirmed}
+            onChange={(e) => form.setExecutionConfirmed(e.target.checked)}
+          />
+          He verificado que el Cash Out de la cabecera ya se ejecutó y que el importe recibido
+          corresponde al cierre total, no a una oferta disponible.
+        </label>
+      )}
       <Field label="Estado final">
         <select
           value={form.kind}
@@ -173,6 +194,11 @@ export function HistoricalImportFields({
         <Field
           key={key}
           label={['Stake histórico', 'Cuota total histórica', 'Retorno potencial original'][i]}
+          hint={
+            key === 'stake'
+              ? 'Obligatorio. Importe completo apostado.'
+              : 'Opcional en históricos liquidados. Déjalo vacío si no aparece; se conserva como desconocido y no se calcula.'
+          }
         >
           <input
             inputMode="decimal"
@@ -206,6 +232,19 @@ export function HistoricalImportFields({
           onChange={(e) => form.setReturned(e.target.value)}
         />
       </Field>
+      {form.kind !== 'Perdida' && form.evidence.suggestedReturn !== undefined && (
+        <p>
+          Ganancias mostradas: {money(form.evidence.suggestedReturn)} · no se consideran cobro hasta
+          cotejarlas.
+          <button
+            type="button"
+            className="button secondary"
+            onClick={() => form.setReturned(decimal(form.evidence.suggestedReturn))}
+          >
+            Usar importe mostrado como retorno total recibido
+          </button>
+        </p>
+      )}
     </section>
   );
 }

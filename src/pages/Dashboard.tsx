@@ -108,7 +108,14 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
   const grouped = (key: 'house' | 'streamer' | 'kind' | 'live') => {
     const groups = new Map<
       string,
-      { name: string; profit: number; count: number; closed: number; odds: number }
+      {
+        name: string;
+        profit: number;
+        count: number;
+        closed: number;
+        odds: number;
+        knownOdds: number;
+      }
     >();
     for (const b of bets) {
       const name =
@@ -123,12 +130,22 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
                 : b.live
                   ? 'En vivo'
                   : 'Prepartido';
-      const g = groups.get(name!) || { name: name!, profit: 0, count: 0, closed: 0, odds: 0 };
+      const g = groups.get(name!) || {
+        name: name!,
+        profit: 0,
+        count: 0,
+        closed: 0,
+        odds: 0,
+        knownOdds: 0,
+      };
       const p = position(b, data.settlements);
       g.profit += p.profit;
       g.closed += p.closed;
       g.count++;
-      g.odds += b.odds;
+      if (b.odds !== null) {
+        g.odds += b.odds;
+        g.knownOdds++;
+      }
       groups.set(name!, g);
     }
     return [...groups.values()];
@@ -366,9 +383,12 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
                   key={s}
                   style={{
                     flex: count,
-                    background: ['var(--pending)', 'var(--positive)', 'var(--negative)', 'var(--info)'][
-                      i
-                    ],
+                    background: [
+                      'var(--pending)',
+                      'var(--positive)',
+                      'var(--negative)',
+                      'var(--info)',
+                    ][i],
                   }}
                 />
               ) : null;
@@ -389,7 +409,7 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
           </div>
           <div className="mini-metrics">
             <span>
-              Cuota promedio <strong>{metrics.average.toFixed(2)}</strong>
+              Cuota promedio <strong>{metrics.average?.toFixed(2) ?? 'No visible'}</strong>
             </span>
             <span>
               Rentabilidad*{' '}
@@ -421,7 +441,11 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
               value={money(metrics.closed, settings.currency)}
               hint="Base del yield"
             />
-            <Kpi label="Cuota promedio" value={metrics.average.toFixed(2)} hint="Promedio simple" />
+            <Kpi
+              label="Cuota promedio"
+              value={metrics.average?.toFixed(2) ?? 'No visible'}
+              hint="Solo cuotas conocidas"
+            />
           </div>
           <div className="dashboard-grid stats-grid">
             {(['house', 'streamer', 'kind', 'live'] as const).map((key) => (
@@ -454,7 +478,10 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
                           />
                           <Bar dataKey="profit" name="Resultado" radius={[4, 4, 0, 0]}>
                             {grouped(key).map((g) => (
-                              <Cell key={g.name} fill={g.profit < 0 ? 'var(--negative)' : 'var(--positive)'} />
+                              <Cell
+                                key={g.name}
+                                fill={g.profit < 0 ? 'var(--negative)' : 'var(--positive)'}
+                              />
                             ))}
                           </Bar>
                         </BarChart>
@@ -465,7 +492,8 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
                         <div>
                           <strong>{g.name}</strong>
                           <small>
-                            {g.count} apuestas · cuota {(g.odds / g.count).toFixed(2)} · yield{' '}
+                            {g.count} apuestas · cuota{' '}
+                            {g.knownOdds ? (g.odds / g.knownOdds).toFixed(2) : 'No visible'} · yield{' '}
                             {g.closed ? ((g.profit / g.closed) * 100).toFixed(2) : '0.00'}%
                           </small>
                         </div>
@@ -504,7 +532,8 @@ export function Dashboard({ statistics = false }: { statistics?: boolean }) {
             />
           </section>
           <div className="privacy-note">
-            <ShieldCheck size={14} /> Tu registro privado en Supabase, disponible en tus dispositivos.
+            <ShieldCheck size={14} /> Tu registro privado en Supabase, disponible en tus
+            dispositivos.
           </div>
         </>
       )}

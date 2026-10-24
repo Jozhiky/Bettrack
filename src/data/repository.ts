@@ -107,7 +107,7 @@ export class LocalRepository implements BetRepository {
       await this.audit(d,'Eliminar ' + type, key, before, null);
     });
   }
-  async saveBet(raw: Bet, rows: Selection[], image?: StoredImage, allowUnfundedCapture = false) {
+  async saveBet(raw: Bet, rows: Selection[], image?: StoredImage, allowUnfundedCapture = false, initialSettlement?: Settlement) {
     const b = betSchema.parse(raw);
     const selections = rows.map((s, order) => selectionSchema.parse({ ...s, betId: b.id, order }));
     if (!selections.length) throw new Error('Agrega al menos una selección.');
@@ -129,6 +129,11 @@ export class LocalRepository implements BetRepository {
         const before = await d.bets.get(b.id);
         const oldSelections = await d.selections.where('betId').equals(b.id).toArray();
         const settlements = await d.settlements.where('betId').equals(b.id).toArray();
+        if (b.odds === null || b.potential === null) {
+          const closed = initialSettlement ?? settlements[0];
+          if (!closed || closed.betId !== b.id || closed.closedStake !== b.stake)
+            throw new Error('Una importación con cuota o potencial desconocidos debe quedar liquidada en la misma operación.');
+        }
         if (
           settlements.length &&
           before &&
@@ -172,6 +177,7 @@ export class LocalRepository implements BetRepository {
           { bet: before, selections: oldSelections },
           { bet: b, selections },
         );
+        if (initialSettlement) await new LocalRepository(d).settle(initialSettlement);
       },
     );
   }
@@ -204,9 +210,12 @@ export class LocalRepository implements BetRepository {
   }
   async undoSettlement(key: string) {
     const d = this.database;
-    await transact(d,'rw', [d.settlements, d.movements, d.audit], async (d) => {
+    await transact(d,'rw', [d.bets, d.settlements, d.movements, d.audit], async (d) => {
       const before = await d.settlements.get(key);
       if (!before) throw new Error('Liquidación no encontrada.');
+      const bet = await d.bets.get(before.betId);
+      if (bet && (bet.odds === null || bet.potential === null))
+        throw new Error('Completa la cuota y el potencial originales antes de reabrir este histórico.');
       await d.settlements.delete(key);
       await d.movements.where('settlementId').equals(key).delete();
       await this.audit(d,'Revertir liquidación', before.betId, before, null);

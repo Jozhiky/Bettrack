@@ -255,7 +255,18 @@ async function processCapture(
         );
       if (await d.bets.get(uploadId))
         throw new Error('La apuesta ya existe. No se puede sobrescribir mediante una captura.');
-      parsed = { ...previous, ...(historical?.header ?? {}), selections, humanReviewed: true };
+      parsed = {
+        ...previous,
+        ...(historical
+          ? {
+              ...historical.header,
+              odds: historical.header.odds ?? undefined,
+              potential: historical.header.potential ?? undefined,
+            }
+          : {}),
+        selections,
+        humanReviewed: true,
+      };
     } else parsed = input!;
     // The original is already stored. Registration needs its metadata, not a
     // second Storage download of the pixels we have just recognized.
@@ -334,8 +345,8 @@ async function processCapture(
     if (
       !parsed.house ||
       parsed.stake === undefined ||
-      parsed.odds === undefined ||
-      parsed.potential === undefined ||
+      (!historical && parsed.odds === undefined) ||
+      (!historical && parsed.potential === undefined) ||
       !parsed.kind
     )
       return needsReview(
@@ -413,8 +424,9 @@ async function processCapture(
       kind: parsed.kind,
       live: false,
       stake: parsed.stake,
-      odds: parsed.odds,
-      potential: parsed.potential,
+      odds: historical ? historical.header.odds : parsed.odds,
+      potential: historical ? historical.header.potential : parsed.potential,
+      ...(historical ? { historical: true } : {}),
       bonus:
         parsed.bonusAmount !== undefined
           ? { amount: parsed.bonusAmount, treatment: 'Sin confirmar' }
@@ -469,9 +481,16 @@ async function processCapture(
           ((b.imageId && imageIds.includes(b.imageId)) ||
             b.fingerprint === bet.fingerprint ||
             fingerprint(
-              { ...b, date: '2000-01-01T12:00:00.000Z' },
+              {
+                ...b,
+                odds: b.odds === null || bet.odds === null ? null : b.odds,
+                date: '2000-01-01T12:00:00.000Z',
+              },
               allSelections.filter((s) => s.betId === b.id),
-            ) === semantic),
+            ) ===
+              (b.odds === null || bet.odds === null
+                ? fingerprint({ ...bet, odds: null, date: '2000-01-01T12:00:00.000Z' }, rows)
+                : semantic)),
       );
       if (existing) {
         await d.uploads.update(uploadId, {
@@ -486,17 +505,23 @@ async function processCapture(
         return;
       }
     }
-    await scopedRepository.saveBet(bet, rows, undefined, true);
-    if (historical)
-      await scopedRepository.settle({
-        id: `settlement-${betId}`,
-        betId,
-        date: historical.settlementDate,
-        closedStake: historical.closedStake,
-        returned: historical.returned,
-        kind: historical.kind,
-        note: 'Importación histórica revisada desde captura; importe realizado confirmado.',
-      });
+    await scopedRepository.saveBet(
+      bet,
+      rows,
+      undefined,
+      true,
+      historical
+        ? {
+            id: `settlement-${betId}`,
+            betId,
+            date: historical.settlementDate,
+            closedStake: historical.closedStake,
+            returned: historical.returned,
+            kind: historical.kind,
+            note: 'Importación histórica revisada desde captura; importe realizado confirmado.',
+          }
+        : undefined,
+    );
     if (confirmation) await auditReview('saved');
     await d.uploads.update(uploadId, {
       status: 'saved',

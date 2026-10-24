@@ -67,7 +67,7 @@ export function BetTable({
                   <span className="house-dot">{h?.name.slice(0, 1)}</span>
                   {h?.name}
                 </td>
-                <td>{b.odds.toFixed(2)}</td>
+                <td>{b.odds?.toFixed(2) ?? 'No visible'}</td>
                 <td>{money(b.stake, h?.currency)}</td>
                 <td>
                   <Badge status={p.status} />

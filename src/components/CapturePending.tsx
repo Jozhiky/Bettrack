@@ -205,7 +205,7 @@ export function CapturePending({
           </strong>
           <small>
             {displayDate(bet.date)} · Apostado {money(bet.stake, house?.currency)} · Cuota{' '}
-            {bet.odds.toFixed(2)}
+            {bet.odds?.toFixed(2) ?? 'No visible'}
           </small>
           {typeof draft?.cashoutOffer === 'number' && Number.isSafeInteger(draft.cashoutOffer) && (
             <small>
