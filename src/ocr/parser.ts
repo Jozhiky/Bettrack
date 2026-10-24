@@ -2,7 +2,7 @@ import { decimal, toCents } from '../domain/model';
 import { selectAdapter } from './adapters';
 import { visualRows, type OcrLine } from './layout';
 import { parseBetanoLayout } from './betano';
-import { betanoHeader } from './header';
+import { betanoHeader, settledTicketHeader } from './header';
 import type { SymbolCandidate, TicketPromotion } from './symbols';
 import { normalized } from './markets';
 import type { MarketInterpretation } from './semantics';
@@ -214,11 +214,12 @@ export function parseTicket(
         : /simple|single/i.test(text)
           ? 'Simple'
           : undefined);
-  const visibleStatus = lines.find((l) =>
-    /^(ganada|perdida|anulada|pendiente|won|lost|cash\s*out (?:ejecutado|realizado|cobrado))$/i.test(
-      l,
-    ),
-  );
+  const visibleStatus =
+    lines.find((l) =>
+      /^(ganada|perdida|anulada|pendiente|won|lost|cash\s*out (?:ejecutado|realizado|cobrado))$/i.test(
+        l,
+      ),
+    ) ?? (house === 'Betano' && header ? settledTicketHeader(header) : undefined);
   if (visibleStatus)
     warnings.push(`Estado visible: ${visibleStatus}. Confirma la liquidación después de guardar.`);
   const expectedSelections =

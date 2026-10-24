@@ -6,6 +6,7 @@ import { createOcrSession, ocrConcurrency } from '../ocr/session';
 import { optimizeImage } from '../ocr/optimize';
 import { captureActivity } from './captureActivity';
 import { placementFromText, type ParsedTicket } from '../ocr/parser';
+import { settledTicketHeader } from '../ocr/header';
 import { placementReviewReason } from '../ocr/placement';
 import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
 import { readCapture } from '../ocr/readCapture';
@@ -257,6 +258,18 @@ async function processCapture(
       if (confirmation) throw new Error(reason);
       return d.uploads.update(uploadId, { status: 'review', draftJson, reason, progress: 100 });
     };
+    // A visible GLOBAL settled ticket is not an unsettled wager. Route it
+    // to review even if OCR identified an already placed ticket: the normal
+    // registration path would otherwise create a pending stake movement.
+    // Never trust cached visibleStatus alone; inspect the raw ticket header.
+    const settledHeader = parsed.house === 'Betano'
+      ? parsed.text.split(/\r?\n/).map((line) => settledTicketHeader(line)).find(Boolean)
+      : undefined;
+    if (settledHeader)
+      return needsReview(
+        `El boleto ya muestra estado global ${settledHeader}. No lo registramos como apuesta pendiente ni generamos movimientos automáticos: revisa su liquidación por separado.`,
+      );
+
     if (
       !parsed.house ||
       parsed.stake === undefined ||

@@ -20,3 +20,17 @@ export function betanoHeader(text: string) {
               : undefined,
   };
 }
+
+
+// A settled ticket can print its GLOBAL state in the same header row:
+// "Simple S/10.00 Perdida". Never interpret a lost selection, free text, or
+// bookmaker action ("Cerrar apuesta") as a ticket-level settlement.
+// Require the exact Betano ticket header + stake + terminal status.
+export function settledTicketHeader(line: string): 'Ganada' | 'Perdida' | undefined {
+  if (!betanoHeader(line)) return undefined;
+  const match = line.trim().match(
+    /^(?:simple|doble|triple|combinada(?:\s+de\s+\d+)?|bet builder)\s+[S$5]\s*\/\s*\d+[.,]\d{2}\s+(ganada|perdida)$/i,
+  );
+  if (!match) return undefined;
+  return match[1].toLowerCase() === 'ganada' ? 'Ganada' : 'Perdida';
+}
