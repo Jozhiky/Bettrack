@@ -39,6 +39,19 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
+## FASE 4C.1 — corrección P0 preparada, no validada aún
+
+- Rama `fix/ocr-phase4c-settled-header`, **basada en PR #2 de FASE 4B**.
+- Corrige `Ganada/Perdida` global dentro de cabecera de boleto Betano y su
+  prueba de colocación, sin extrapolarlo a un mercado perdido.
+- Antes de registrar, la frontera de escritura retiene boletos ya liquidados:
+  no crea apuesta `Pendiente`, movimientos ni pagos automáticamente.
+- Pruebas sintéticas y de persistencia incorporadas; **faltan ejecución local
+  completa, TypeScript, build y nueva medición OCR de 28 PNG**.
+- Detalles y comandos: [informe FASE 4C.1](OCR_PHASE4C_SETTLED_HEADER.md).
+- Siguiente fallo independiente: combinadas de cuatro jugadores y cuotas
+  desplazadas, FASE 4C.2. No mezclar correcciones sin medición intermedia.
+
 ## Arquitectura esencial
 
 | Área | Punto de entrada / responsabilidad |
