@@ -8,6 +8,7 @@ import { normalized } from './markets';
 import type { MarketInterpretation } from './semantics';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { classifyPlacement, type PlacementEvidence } from './placement';
+import { visualModeSchema, type VisualMode } from './visualMode';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -18,6 +19,7 @@ export interface ParsedTicket {
   visibleStatus?: string;
   expectedSelections?: number;
   bonusAmount?: number;
+  visualMode?: VisualMode;
   // Draft-only metadata; does not change historical selection schemas.
   placement?: PlacementEvidence;
   reviewReasons?: string[];
@@ -115,6 +117,7 @@ export function parseTicket(
   rawText: string,
   geometry: OcrLine[] = [],
   symbols: SymbolCandidate[] = [],
+  visualMode?: VisualMode,
 ): ParsedTicket {
   const rows = visualRows(geometry);
   const text = rows.length ? rows.map((r) => r.text).join('\n') : rawText;
@@ -238,6 +241,7 @@ export function parseTicket(
   const interpretations = interpretSelections(selections);
   return {
     house,
+    ...(house === 'Betano' && visualModeSchema.safeParse(visualMode).success ? { visualMode } : {}),
     kind,
     stake,
     odds,

@@ -5,6 +5,7 @@ import { selectionProduct } from '../domain/odds';
 import { readDraft, canReviewCapture, reviewSelectionSchema, type ReviewDraft } from './review';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { settlementEvidence, validateHistoricalImport, type HistoricalImport } from './settlement';
+import { captureMode } from './visualMode';
 
 // Match minutes (66:14, 70:00) and scoreboard clocks are never calendar evidence.
 export function captureTiming(draft: ReviewDraft, upload: CaptureUpload, recordedAt: string) {
@@ -53,14 +54,12 @@ export function captureTiming(draft: ReviewDraft, upload: CaptureUpload, recorde
         });
     }
   }
-  const live = /\bapuesta\s+en\s+vivo\b/i.test(draft.text);
-  const pre = /\bapuesta\s+(?:prematch|prepartido|pre-match)\b/i.test(draft.text);
   return historicalTimingSchema.parse({
     recordedAt,
     uploadedAt: upload.createdAt,
     betAt: evidence.betDate ?? null,
     settledAt: evidence.settlementDate ?? null,
-    mode: live !== pre ? (live ? 'live' : 'prematch') : 'unknown',
+    mode: captureMode(draft),
     events,
   });
 }

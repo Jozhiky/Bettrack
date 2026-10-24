@@ -3,6 +3,7 @@ import { selectionSchema, promotions, type CaptureUpload } from '../domain/model
 import { placementFromText, type ParsedTicket } from './parser';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { settlementEvidence } from './settlement';
+import { visualModeSchema } from './visualMode';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -46,6 +47,7 @@ const draftSchema = z
     cashoutOffer: z.number().optional(),
     expectedSelections: z.number().optional(),
     bonusAmount: z.number().optional(),
+    visualMode: visualModeSchema.optional().catch(undefined),
     selections: z.array(draftSelection).max(100),
     warnings: z.array(z.string()).default([]),
     confidence: z.record(z.string(), z.enum(['high', 'review', 'missing'])).default({}),

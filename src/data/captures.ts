@@ -14,6 +14,7 @@ import { runBatch } from './batch';
 import { prepareAutomaticImport } from '../ocr/automaticImport';
 import type { BettrackDB } from './db';
 import { sameCaptureTerms } from '../domain/captureDuplicates';
+import { captureMode } from '../ocr/visualMode';
 import {
   readDraft,
   readPlacementHistory,
@@ -321,6 +322,8 @@ async function processCapture(
     // second Storage download of the pixels we have just recognized.
     const image = await d.images.where('id').equals(upload.imageId).first();
     if (!image) throw new Error('No se encuentra la captura original.');
+    if (parsed.visualMode && parsed.visualMode.imageHash !== image.hash)
+      throw Error('La evidencia visual no corresponde a esta imagen. Actualiza la lectura.');
     const placement = placementFromText(parsed.text);
     const previousHistory = readPlacementHistory(upload.draftJson);
     const priorPlacement = previousHistory && placementFromText(previousHistory.text);
@@ -469,11 +472,11 @@ async function processCapture(
           : 'manual'
         : 'upload',
       historicalTiming: historical?.timing,
-      timingUnknown: historical?.timing ? historical.timing.mode === 'unknown' : !historical,
+      timingUnknown: historical?.timing ? historical.timing.mode === 'unknown' : captureMode(parsed) === 'unknown' && !historical,
       houseId: house!.id,
       streamerId: '',
       kind: parsed.kind,
-      live: historical?.timing?.mode === 'live',
+      live: historical?.timing ? historical.timing.mode === 'live' : captureMode(parsed) === 'live',
       stake: parsed.stake,
       odds: historical ? historical.header.odds : parsed.odds,
       potential: historical ? historical.header.potential : parsed.potential,
