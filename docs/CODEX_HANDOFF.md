@@ -7,16 +7,16 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `codex/fix-settled-ticket-evidence`, basada en `main` `a3a4c1f`.
-  La cadena #2 → #3 → #4 → #5 → #6 y después #7 fue integrada con autorización.
-  **SHA desplegado:** `9e303dfbf21b7d4caf6f90db1a3db03110747610`, versión Hosting
-  `5d98aa40a5a60592`. Los commits documentales posteriores no cambian esa versión.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 fue integrada con autorización.
+  **SHA desplegado:** `97dc8beae5c22e48314c178483e92635e59e5017`, versión Hosting
+  `5de3256218949269`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
-  El despliegue actual incluye las correcciones y barreras de PR #2–#7;
+  El despliegue actual incluye las correcciones y barreras de PR #2–#8;
   consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
 - Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
-  el 24/10/2026**, únicamente de Hosting, sin cambios en Supabase de producción.
+  el 24/10/2026**, Hosting y después únicamente el ajuste de esquema Supabase
+  autorizado de #8. Sin modificaciones a datos reales, Auth, Storage ni RLS.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
 - FASE 4B (rama feat/ocr-phase4b-isolated-measurement): banco **aislado y de solo lectura**
@@ -43,7 +43,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## Revalidación histórica — SQL autorizado, corrección validada para desplegar
+## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
   seis con cabecera terminal `Cash Out` no reconocida. Reproducidos ambos bloqueos.
@@ -54,12 +54,18 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - **648/648**, TypeScript/build; 17 QA previos + 8 grupos históricos con datos
   sintéticos equivalentes; UI 375/768/1440. OCR 1065/1089 y 24 diferencias, sin
   regresiones. Nueva migración aplicada únicamente al QA autorizado.
-- Hosting está autorizado, pero el esquema productivo conserva una restricción
-  que impide guardar esas ausencias. **Usuario autorizó explícitamente la migración
-  productiva del PR #8** y pidió calcular la cuota combinada con cuotas de selección:
+- El esquema anterior impedía guardar esas ausencias. **Usuario autorizó la migración
+  productiva del PR #8**, ya aplicada, y pidió calcular combinadas con cuotas de selección:
   producto completo truncado a dos decimales (2.02×2.15×1.36 → 5.90), con procedencia
   visible. Añadido validado con procedencia persistida y sin duplicar Bet Builder;
   reversión compatible construida y verificada en 375/768/1440, sin backend real.
+- Fuente SQL `20261024193847_historical_unknown_quote_guard.sql`; registro remoto
+  `20261024202542_historical_unknown_quote_guard` asignado por la API. No ejecutar
+  db push global ni reaplicarla por diferencias de timestamp. bt_commit y RLS intactos.
+- Publicación verificada: 45 hashes, 15 activos OCR, 5 rutas, SW activo y revisión
+  histórica/calculada en tres tamaños con fixtures interceptados. Ninguna apuesta
+  real creada. Reversión **compatible** `c7e1a76f925d7bc0`, canal `rollback-pr8-compatible`.
+- [Recibo, esquema, autorización y reversión](HISTORICAL_IMPORT_DEPLOYMENT_2026_10_24.md).
 - [Causas, migración, validación y plan de publicación/reversión compatible](SETTLED_CAPTURE_REVALIDATION.md).
   No volver al frontend #7 después de importar null sin una versión compatible.
 

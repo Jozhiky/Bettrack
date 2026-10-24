@@ -75,8 +75,9 @@ creada con Supabase CLI 2.122.0 y aplicada/probada **solo en QA autorizado**:
   tiene el mismo hash antes/después en QA y producción.
 
 **El usuario autorizó explícitamente aplicar esta migración en producción y
-completar el despliegue**, además del cálculo de combinadas descrito. Preparación
-terminada; ejecutar el orden de publicación siguiente sin modificar datos reales.
+completar el despliegue**, además del cálculo de combinadas descrito. **Publicación
+y ajuste de esquema ejecutados** según el [recibo](HISTORICAL_IMPORT_DEPLOYMENT_2026_10_24.md),
+sin modificar registros existentes. El orden siguiente queda como referencia.
 
 ## Evidencia automática
 
