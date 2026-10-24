@@ -6,8 +6,9 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 
 ## Estado de referencia
 
-- Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de esta revisión:
-  `fix/ocr-phase4c2-player-layout` (PR #4, sobre #3; #2/#3/#4 siguen independientes).
+- Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
+  `codex/capture-upload-safe-review`, basada en `cfe60aa` de FASE 4C.2
+  (PR #4, sobre #3; #2/#3/#4 siguen sin fusionar).
   `main` permanece en `31e73126b1223a8b41ddc5a04e35d117a61fd7fa`, sin fusionar.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Último commit **funcional auditado**: `915da4bab07c0b9fa11914683d92f9d678fc2c89`
@@ -89,6 +90,25 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   corpus: quedan 24 diferencias visibles. No fusionar automáticamente las PR;
   datos históricos/Supabase/Firebase, motor, corpus y oráculos intactos.
 
+## Carga segura verificada — 24/10/2026
+
+- [PR #5](https://github.com/Jozhiky/Bettrack/pull/5), rama
+  `codex/capture-upload-safe-review`, sobre el commit validado de PR #4
+  `cfe60aa`. Corrige dos defectos reproducidos: registro automático sin consentimiento
+  y bypass de duplicados mediante `allowDuplicate`. Toda lectura espera confirmación
+  explícita; duplicados no admiten un segundo cargo, y liquidados conservan la retención 4C.1.
+- UI individual/múltiple PNG/JPEG/WebP, cola/progreso, datos por boleto, corrección,
+  errores y reintentos verificados con Tesseract real en QA en RAM a 375/768/1440 px.
+- Suite 581/581, TypeScript/build y FASE 3 aprobados. Banco real 28/28:
+  1065/1089, mismas 24 diferencias y calidad idéntica campo por campo a 4C.2.
+  0 selecciones omitidas/adicionales, 0 falsos estados financieros. bet365 solo
+  tiene smoke sintético en este trabajo; no afirmar precisión con capturas reales.
+- App local iniciada en 5186 (requiere cuenta; usa Supabase real). Demo aislada
+  iniciada en 5188, sin Supabase ni persistencia; `npm.cmd run demo:captures`.
+  Supabase revisado solo por metadatos, sin escrituras, cloud E2E ni despliegue.
+- Evidencia, comandos y limitaciones: [validación de carga](CAPTURE_UPLOAD_VALIDATION.md).
+  Las PR #2/#3/#4 siguen sin fusionar; esta rama se revisa sobre #4.
+
 ## Arquitectura esencial
 
 | Área | Punto de entrada / responsabilidad |
@@ -147,7 +167,8 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
-- Prioridad actual: revisar PR #4 y sus diferencias por imagen en el informe 4C.2.
+- Prioridad actual: revisar la rama de carga segura sobre PR #4 y las diferencias
+  OCR por imagen del informe 4C.2; no reabrir la admisión ni rehacer el motor.
   El banco aislado de 28 PNG ya está ejecutado; no repetir la auditoría de admisión.
   Las 24 discrepancias remanentes son 19 lecturas literales, 4 ámbitos y 1 cuota
   ausente; preservar revisión humana y no resolver identidades con pérdida de tildes.

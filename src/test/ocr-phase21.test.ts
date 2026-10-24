@@ -4,7 +4,7 @@ import { parseTicket, type ParsedTicket } from '../ocr/parser';
 import { interpretMarket } from '../ocr/semantics';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
-import { registerCapture } from '../data/captures';
+import { registerCapture } from './confirm-ready-capture';
 
 vi.mock('../integrations/supabase', () => ({
   supabase: new Proxy(

@@ -11,6 +11,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:captures:ui": "node scripts/capture-upload/run.mjs",
+    "demo:captures": "node scripts/capture-upload/server.mjs --serve",
     "test:ocr:baseline": "node scripts/ocr-phase1/run.mjs",
     "test:ocr:strict": "node scripts/ocr-phase1/run.mjs --strict",
     "test:ocr:phase2": "node scripts/ocr-phase1/run.mjs --phase2",

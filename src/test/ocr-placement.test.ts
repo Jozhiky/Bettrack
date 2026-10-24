@@ -4,7 +4,7 @@ import { parseTicket, placementFromText, type ParsedTicket } from '../ocr/parser
 import { readCapture } from '../ocr/readCapture';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
-import { registerCapture } from '../data/captures';
+import { registerCapture } from './confirm-ready-capture';
 import { position } from '../domain/model';
 
 vi.mock('../integrations/supabase', () => ({

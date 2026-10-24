@@ -3222,7 +3222,7 @@ td small {
 .capture-review-consent input { flex: 0 0 auto; width: 20px; height: 20px; margin-top: 2px; }
 .capture-review-issues { padding-left: 18px; font-size: .85rem; }
 .capture-review-issues li { margin: 10px 0; }
-.capture-review-issues p { margin: 4px 0; color: var(--muted); }
+.capture-review-issues small { display: block; margin: 4px 0; color: var(--muted); }
 @media (max-width: 640px) {
   .capture-review-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .capture-review-image { max-height: 260px; object-fit: contain; background: var(--soft); }

@@ -1,7 +1,8 @@
+import { registerCapture } from './confirm-ready-capture';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
-import { registerCapture, linkCapture, retryFailedCaptures } from '../data/captures';
+import { linkCapture, retryFailedCaptures } from '../data/captures';
 import { capturePage } from '../data/capturePages';
 import { id, position } from '../domain/model';
 import type { ParsedTicket } from '../ocr/parser';
@@ -50,7 +51,11 @@ async function sharedBets() {
   const first = await upload(), second = id();
   await registerCapture(first, parsed, r);
   await db.uploads.add({id:second,imageId:first,createdAt:now,status:'queued',progress:0,draftJson:'',reason:'',allowDuplicate:true});
-  await registerCapture(second, parsed, r);
+  // Seed a legacy shared-image record directly; new intake forbids this duplicate.
+  const firstBet = (await db.bets.get(first))!;
+  const rows = (await db.selections.toArray()).filter(s => s.betId === first);
+  await r.saveBet({...firstBet, id: second, fingerprint: ''}, rows.map(s => ({...s, id: id(), betId: second})), undefined, true);
+  await db.uploads.update(second, {status: 'saved', betId: second});
   return {first,second};
 }
 it('deletes independent bets sharing one image without breaking the surviving reference', async () => {
@@ -248,7 +253,7 @@ async function upload(hash = 'a'.repeat(64)) {
   });
   return key;
 }
-it('saves a complete capture without manual input or fabricated capital; repeated callbacks are idempotent', async () => {
+it('saves a complete capture after explicit confirmation without fabricated capital; repeated callbacks are idempotent', async () => {
   const key = await upload();
   await registerCapture(key, parsed, r);
   await registerCapture(key, parsed, r);
@@ -314,7 +319,7 @@ it('reviewing an ambiguous new capture cannot change historical bets or financia
   expect((await db.uploads.get(existing))?.status).toBe('saved');
   expect((await r.snapshot()).bets).toEqual(before.bets);
 });
-it('warns on identical images and requires an explicit override for a second operation', async () => {
+it('blocks identical images even with legacy duplicate permission', async () => {
   const a = await upload(),
     b = await upload();
   await registerCapture(a, parsed, r);
@@ -323,8 +328,9 @@ it('warns on identical images and requires an explicit override for a second ope
   expect(await db.bets.count()).toBe(1);
   await db.uploads.update(b, { allowDuplicate: true });
   await registerCapture(b, parsed, r);
-  expect(await db.bets.count()).toBe(2);
-  expect(await db.movements.count()).toBe(2);
+  expect(await db.bets.count()).toBe(1);
+  expect(await db.movements.count()).toBe(1);
+  expect((await db.uploads.get(b))?.status).toBe('duplicate');
 });
 it('detects semantic duplicates across different image files', async () => {
   const a = await upload(),

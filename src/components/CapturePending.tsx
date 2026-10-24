@@ -60,14 +60,14 @@ export function CapturePending({
   };
   const sels = data.selections.filter((s) => s.betId === bet?.id),
     house = data.houses.find((h) => h.id === bet?.houseId);
-  const retry = (allowDuplicate = false) =>
+  const retry = () =>
     void run(
       () =>
         repo.database.uploads.update(upload.id, {
           status: 'queued',
           progress: 0,
           reason: '',
-          allowDuplicate,
+          allowDuplicate: false,
           enhanced: true,
           betId: undefined,
         }),
@@ -88,7 +88,7 @@ export function CapturePending({
               {
                 queued: 'En cola',
                 processing:
-                  activity?.phase === 'saving' ? 'Guardando apuesta…' : 'Leyendo captura…',
+                  activity?.phase === 'saving' ? 'Guardando lectura…' : 'Leyendo captura…',
                 review: issues[0]?.title ?? 'Revisión necesaria',
                 duplicate: 'Posible duplicado',
                 error: 'No se pudo leer',
@@ -108,7 +108,7 @@ export function CapturePending({
           <div className="capture-stage" role="status">
             <span>
               {activity?.phase === 'saving'
-                ? 'Confirmando en Supabase'
+                ? 'Guardando lectura para revisión'
                 : upload.status === 'queued'
                   ? 'Lista para leer'
                   : 'Reconociendo el boleto'}
@@ -123,6 +123,53 @@ export function CapturePending({
         </>
       )}
       {upload.reason && <p className="capture-reason">{upload.reason}</p>}
+      {upload.status === 'review' && draft && (
+        <details className="ocr-text">
+          <summary>Ver datos del boleto · {draft.house || 'Casa no reconocida'}</summary>
+          <dl className="capture-review-summary">
+            <div>
+              <dt>Casa / tipo</dt>
+              <dd>
+                {draft.house || 'No reconocida'} · {draft.kind || 'No reconocido'}
+              </dd>
+            </div>
+            <div>
+              <dt>Importe</dt>
+              <dd>{draft.stake !== undefined ? money(draft.stake) : 'No reconocido'}</dd>
+            </div>
+            <div>
+              <dt>Cuota total</dt>
+              <dd>{draft.odds ?? 'No reconocida'}</dd>
+            </div>
+            <div>
+              <dt>Retorno potencial</dt>
+              <dd>{draft.potential !== undefined ? money(draft.potential) : 'No reconocido'}</dd>
+            </div>
+            {draft.cashoutOffer !== undefined && (
+              <div>
+                <dt>Oferta cashout</dt>
+                <dd>{money(draft.cashoutOffer)} · no cobrada</dd>
+              </div>
+            )}
+          </dl>
+          {draft.selections.map((s, i) => (
+            <section className="capture-review-leg" key={i}>
+              <strong>
+                {i + 1}. {s.event || 'Partido no reconocido'}
+              </strong>
+              <p>
+                {s.market || 'Mercado no reconocido'} · {s.pick || 'Selección no reconocida'} ·
+                Cuota {s.odds ?? 'ausente'}
+              </p>
+              {s.builderMarkets?.map((m, j) => (
+                <p key={j}>
+                  {m.market || 'Mercado no reconocido'} · {m.pick || 'Selección no reconocida'}
+                </p>
+              ))}
+            </section>
+          ))}
+        </details>
+      )}
       {upload.status === 'review' && (
         <ul className="capture-review-issues">
           {issues.map((issue) => (
@@ -199,9 +246,6 @@ export function CapturePending({
         )}
         {upload.status === 'duplicate' && (
           <>
-            <Button variant="secondary" disabled={removing} onClick={() => retry(true)}>
-              Registrar como otra apuesta
-            </Button>
             {bet && (
               <>
                 <Button

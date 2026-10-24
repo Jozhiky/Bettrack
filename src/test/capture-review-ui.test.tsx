@@ -74,3 +74,16 @@ it('returning to edit revokes consent for the previous preview', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Ver resumen antes de registrar' }));
   expect(screen.getByRole('checkbox')).not.toBeChecked();
 });
+
+it.each(['Ganada', 'Perdida'])('shows a globally %s ticket without offering a pending registration', (status) => {
+  const item = upload();
+  const draft = JSON.parse(item.draftJson);
+  draft.text += `\nSimple S/10.00 ${status}`;
+  item.draftJson = JSON.stringify(draft);
+  mocks.confirm.mockClear();
+  render(<CaptureReview upload={item} imageUrl="" onClose={() => {}} />);
+  expect(screen.getByText(`${status} · liquidado, registro retenido`)).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Ver resumen antes de registrar' })).toBeDisabled();
+  expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  expect(mocks.confirm).not.toHaveBeenCalled();
+});

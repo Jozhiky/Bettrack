@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { selectionSchema, promotions, type CaptureUpload } from '../domain/model';
 import { placementFromText, type ParsedTicket } from './parser';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
+import { settledTicketHeader } from './header';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -80,13 +81,18 @@ export function needsNewProof(draft: ReviewDraft) {
     !!(hold && (hold.status === 'preparation' || hold.basis === 'conflicting'))
   );
 }
+export function draftSettlement(draft: ReviewDraft) {
+  return draft.house === 'Betano'
+    ? draft.text.split(/\r?\n/).map(settledTicketHeader).find(Boolean)
+    : undefined;
+}
 export function reviewIssues(upload: CaptureUpload, draft = readDraft(upload.draftJson)) {
   if (upload.status === 'duplicate')
     return [
       {
         kind: 'duplicate',
         title: 'Posible duplicado',
-        detail: 'Compara las capturas antes de vincularlas o registrar otra operación.',
+        detail: 'Compara las capturas y vincula el mismo boleto sin duplicar el importe.',
       },
     ];
   if (!draft)
@@ -98,6 +104,14 @@ export function reviewIssues(upload: CaptureUpload, draft = readDraft(upload.dra
       },
     ];
   const issues: { kind: string; title: string; detail: string }[] = [];
+  const settled = draftSettlement(draft);
+  if (settled)
+    issues.push({
+      kind: 'settled',
+      title: `Boleto liquidado: ${settled}`,
+      detail:
+        'Se conserva para revisión. No se registra como pendiente ni genera movimientos automáticos.',
+    });
   if (needsNewProof(draft))
     issues.push({
       kind: 'placement',
