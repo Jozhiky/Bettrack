@@ -1,6 +1,8 @@
 # Importación histórica automática por lote
 
 24/10/2026 · rama `codex/automated-ticket-batch` · base `731e918` (PR #8 desplegado).
+Publicado para revisión en [PR #9](https://github.com/Jozhiky/Bettrack/pull/9),
+implementación `34b36125551aceee20bafb85125090a8f1db80d7`.
 
 ## Problema y comportamiento
 
@@ -80,7 +82,8 @@ reintentar tras una respuesta perdida sin otro cargo ni otra auditoría de lote.
   nueva; paridad 7/7. Oráculos intactos, Tesseract gratuito y sin dependencias nuevas.
 - `npm audit --omit=dev --audit-level=high`: sin alta/crítica; permanece un aviso
   moderado transitivo de fast-uri. Advisor QA: aviso previo de protección de
-  contraseñas filtradas desactivada; no se modificó Auth ni se contrató un plan.
+  [contraseñas filtradas](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)
+  desactivada; no se modificó Auth ni se contrató un plan.
 
 Evidencia local ignorada: `test-results/automatic-qa/report.json`,
 `automatic-ocr-comparison.json`, `persistence-qa/`, `settled-qa/`,

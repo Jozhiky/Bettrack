@@ -44,7 +44,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## Lote histórico automático — validado en QA, pendiente de permiso de esquema
+## Lote histórico automático — PR #9 validado en QA, pendiente de permiso de esquema
 
 - Resumen único y consentimiento del lote, sin fechas ni revisión individual
   obligatoria. Recupera borradores existentes; separa fecha contable, fechas
@@ -61,6 +61,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Reversión nueva debe leer `dateSource: accounting`: no usar #8 ni su rollback
   antiguo después de crear registros así. Producción todavía conserva #8.
 - [Comportamiento, evidencia, límites y procedimiento mínimo](AUTOMATIC_HISTORICAL_IMPORT.md).
+  [PR #9 abierto](https://github.com/Jozhiky/Bettrack/pull/9), implementación `34b3612`;
+  comprobado sin conflictos con main. GitHub no equivale a despliegue.
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
