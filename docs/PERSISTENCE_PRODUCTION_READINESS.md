@@ -2,8 +2,9 @@
 
 Validación ejecutada el 24/10/2026 sobre `b3b9ffd` (PR #5).
 Rama de entrega: `codex/persistence-readiness`, [PR #6](https://github.com/Jozhiky/Bettrack/pull/6), apilada sobre PR #5.
-**Persistencia y sincronización verificadas en Supabase aislado; sin escrituras
-en producción, merge ni despliegue.**
+**Persistencia y sincronización verificadas en Supabase aislado.** La posterior
+integración y publicación de Hosting fueron autorizadas y completadas el 24/10/2026:
+ver [recibo de despliegue](PRODUCTION_DEPLOYMENT_2026_10_24.md). Supabase productivo intacto.
 
 ## Entorno y alcance
 
@@ -113,7 +114,7 @@ antes de repetir. Un futuro cambio de esquema requiere análisis y autorización
 aparte. `npm.cmd run demo:persistence:qa` sirve el build aislado en 5190; el
 ejecutor normal lo inicia y cierra automáticamente. La demo 5188 sigue siendo RAM.
 
-## Plan de integración y publicación — pendiente de autorización
+## Plan de integración y publicación — ejecutado con autorización
 
 1. Revisar y aprobar la cadena **#2 → #3 → #4 → #5 → #6**. #2/#3/#4
    siguen como borrador. GitHub indica ausencia de conflictos y se comprobó que
@@ -137,7 +138,7 @@ ejecutor normal lo inicia y cierra automáticamente. La demo 5188 sigue siendo R
    no borra ni modifica apuestas; ante incidencias, detener nuevas confirmaciones
    y volver a la versión anterior, sin restaurar snapshots históricos de la base.
 
-**Decisión:** el flujo de carga y guardado para cuentas existentes está preparado
-para un despliegue controlado con revisión humana. Persisten los límites OCR y de
-cobertura real de bet365. Ninguna PR se fusionó y Firebase no se desplegó. La única
-autorización pendiente es integrar la versión revisada y publicarla según este plan.
+**Decisión inicial:** preparado para despliegue controlado de cuentas existentes
+con revisión humana. **Ejecución posterior:** PR #2–#6 fusionadas y Hosting publicado
+con autorización expresa, según el recibo. Persisten los límites OCR y de cobertura
+real de bet365. No se modificó Supabase de producción.

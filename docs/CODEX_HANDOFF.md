@@ -7,15 +7,15 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `codex/persistence-readiness`, basada en `b3b9ffd` de PR #5.
-  La cadena #2 → #3 → #4 → #5 sigue sin fusionar.
-  `main` permanece en `31e73126b1223a8b41ddc5a04e35d117a61fd7fa`, sin fusionar.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 fue integrada en ese orden con autorización.
+  **SHA desplegado:** `cc4d4ade62693887ef421164be9f6ca1dabb70a2`, versión Hosting
+  `4885a8046b5928a0`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
-- Último commit **funcional auditado**: `915da4bab07c0b9fa11914683d92f9d678fc2c89`
-  (FASE 3). `main` incorpora después documentación y preparación de FASE 4A;
-  consultar `git log -1 --oneline` para el HEAD actual, sin volver al commit anterior.
-- FASE 3 publicada en GitHub, **sin despliegue**. No asumir que Firebase ejecuta ese
-  código. Hosting existente: `https://bettrack-wostcloud1.web.app`.
+- Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
+  El despliegue actual incluye las correcciones y barreras de PR #2–#6;
+  consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
+- Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
+  el 24/10/2026**, únicamente de Hosting, sin cambios en Supabase de producción.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
 - FASE 4B (rama feat/ocr-phase4b-isolated-measurement): banco **aislado y de solo lectura**
@@ -41,6 +41,19 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   SHA/CRC/PNG/RGBA, privacidad visual, texto y regiones cotejados. No se ejecutó OCR
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
+
+## Despliegue controlado — 24/10/2026
+
+- Usuario autorizó integrar #2 → #3 → #4 → #5 → #6 y publicar solo Hosting.
+  Cinco fusiones verificadas por SHA, padres y árbol; no se borraron ramas.
+- Producción en `cc4d4ad`, Hosting `4885a8046b5928a0`. Gates finales: 581/581,
+  3/3 controles de destino, TypeScript/build y UI RAM a 375/768/1440 px.
+- Verificación pública: 45 hashes, cinco rutas, 15 activos OCR y service worker
+  activo/precacheados. Acceso y carga visual con fixtures solo en el navegador;
+  ningún login, subida, apuesta o movimiento real generado por la comprobación.
+- Supabase productivo intacto. Versión anterior `0f19ae2214920da4` conservada en
+  historial y canal `rollback-20261024`; no se ejecutó rollback.
+- [Recibo, SHAs, verificación y reversión](PRODUCTION_DEPLOYMENT_2026_10_24.md).
 
 ## FASE 4C.1 — corrección P0 heredada y verificada en FASE 4C.2
 
@@ -107,12 +120,13 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   iniciada en 5188, sin Supabase ni persistencia; `npm.cmd run demo:captures`.
   Supabase revisado solo por metadatos, sin escrituras, cloud E2E ni despliegue.
 - Evidencia, comandos y limitaciones: [validación de carga](CAPTURE_UPLOAD_VALIDATION.md).
-  Las PR #2/#3/#4 siguen sin fusionar; esta rama se revisa sobre #4.
+  Esta revisión se publicó originalmente sobre #4; la integración posterior
+  de toda la cadena está documentada en el recibo de despliegue.
 
 ## Persistencia real verificada — 24/10/2026
 
 - Publicada en [PR #6](https://github.com/Jozhiky/Bettrack/pull/6), sobre PR #5;
-  rama `codex/persistence-readiness`. Pendiente de revisión e integración autorizada.
+  rama `codex/persistence-readiness`; integrada posteriormente con autorización.
 - El usuario autorizó QA en «Jozhiky 2» condicionado a coste cero. Proyecto
   `bettrack-qa-isolated` creado tras cotización 0 USD/mes; organización Free.
   Producción solo se consultó por metadatos/definiciones/configuración pública.
@@ -129,8 +143,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - Fixtures/credenciales solo en `.env.qa-isolated.json` ignorado. No usar `test:e2e`
   histórico contra producción. Nuevo ejecutor seguro: `npm.cmd run test:persistence:qa`.
 - [Informe, límites y plan de integración/Hosting](PERSISTENCE_PRODUCTION_READINESS.md).
-  Listo para despliegue controlado de cuentas existentes, pendiente de autorización
-  de integración/publicación. Ningún merge ni despliegue realizado.
+  La integración/publicación fue autorizada y ejecutada después de esta validación;
+  ver el recibo de despliegue para el estado productivo actual.
 
 ## Arquitectura esencial
 
@@ -190,8 +204,8 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
-- Prioridad actual: revisar la rama de carga segura sobre PR #4 y las diferencias
-  OCR por imagen del informe 4C.2; no reabrir la admisión ni rehacer el motor.
+- Prioridad actual: uso seguro de la versión publicada y revisión humana de las
+  diferencias OCR del informe 4C.2; no reabrir la admisión ni rehacer el motor.
   El banco aislado de 28 PNG ya está ejecutado; no repetir la auditoría de admisión.
   Las 24 discrepancias remanentes son 19 lecturas literales, 4 ámbitos y 1 cuota
   ausente; preservar revisión humana y no resolver identidades con pérdida de tildes.
@@ -201,8 +215,9 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
   Mantener grupos temporales sin transferir aceptación/importes entre instantáneas.
   No cambiar motor ni prometer aceleración general a partir de una sola medición.
 - La sincronización ya se validó en el QA aislado autorizado, según el informe de
-  persistencia. La autorización no incluye escrituras de prueba en producción,
-  merge de la cadena ni despliegue. Solicitar aprobación final de integración/Hosting.
+  persistencia. La integración y Hosting se autorizaron y ejecutaron por separado.
+  Siguen prohibidas las escrituras de prueba y cambios de Supabase productivo sin
+  autorización específica nueva.
 
 ## Comandos mínimos
 
