@@ -5,7 +5,8 @@
 Rama `codex/settled-capture-import`, basada en `main` `5e0e62e` después de la
 integración #2–#6. Permite revisar e importar un boleto directamente como
 **Ganada, Perdida o Cashout**, con una sola confirmación y una sola transacción.
-Esta entrega se publica para revisión en GitHub; **no está desplegada**.
+Esta entrega fue integrada y **desplegada con autorización final**;
+ver [recibo de publicación](SETTLED_CAPTURE_DEPLOYMENT_2026_10_24.md).
 Supabase de producción y los borradores reales del usuario no se consultaron ni
 modificaron para probarla. No hay nuevas migraciones, SQL, dependencias ni costes OCR.
 
@@ -123,7 +124,7 @@ Evidencia local ignorada: `test-results/settled-qa/report.json`, capturas
 `test-results/capture-upload/`, `test-results/ocr-phase3-ui/` e informes OCR.
 No se publican imágenes, credenciales ni registros privados.
 
-## Reproducción y publicación pendiente
+## Reproducción y publicación
 
 `npm.cmd run test:settled:qa` prepara el build QA y prueba UI/API reales. Requiere
 el registro local ignorado `.env.qa-isolated.json`; rechaza cualquier otro destino.
@@ -132,11 +133,11 @@ privados de prueba, preservando auditoría. Ejecutarlo **secuencialmente** respe
 de `test:persistence:qa`, porque comparten fixtures y puerto 5190. Nunca sustituirlo
 por `test:e2e`, que puede escribir en producción.
 
-Pendiente: revisión/integración del PR y autorización final de Hosting. Este
-cambio reutiliza el backend vigente y **no requiere aplicar SQL en producción**.
-Antes del despliegue repetir los gates pertinentes si cambia el árbol, construir
-el `dist` normal, comprobar el destino y conservar la versión anterior de Hosting.
-No ejecutar la importación de las capturas reales durante esa comprobación.
+PR #7 integrado y Hosting publicado con autorización final, según el recibo.
+Este cambio reutiliza el backend vigente y **no requiere aplicar SQL en producción**.
+Para futuros despliegues, repetir los gates pertinentes si cambia el árbol,
+construir el `dist` normal, comprobar el destino y conservar la versión anterior
+de Hosting. No ejecutar importaciones reales durante esa comprobación.
 
 Límites: no se probaron los ~20 borradores privados reales ni recibos reales de
 Cashout/Ganada, que no están en el corpus autorizado. La recuperación de 20 se

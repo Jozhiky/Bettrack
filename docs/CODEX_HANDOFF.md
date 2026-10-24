@@ -7,13 +7,12 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `codex/settled-capture-import`, basada en `main` `5e0e62e`. La cadena #2 → #3 →
-  #4 → #5 → #6 fue integrada en ese orden con autorización.
-  **SHA desplegado:** `cc4d4ade62693887ef421164be9f6ca1dabb70a2`, versión Hosting
-  `4885a8046b5928a0`. Los commits documentales posteriores no cambian esa versión.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 y después #7 fue integrada con autorización.
+  **SHA desplegado:** `9e303dfbf21b7d4caf6f90db1a3db03110747610`, versión Hosting
+  `5d98aa40a5a60592`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
-  El despliegue actual incluye las correcciones y barreras de PR #2–#6;
+  El despliegue actual incluye las correcciones y barreras de PR #2–#7;
   consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
 - Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
   el 24/10/2026**, únicamente de Hosting, sin cambios en Supabase de producción.
@@ -43,7 +42,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
-## Importación histórica — desarrollo 24/10/2026, sin despliegue
+## Importación histórica — validada y desplegada 24/10/2026
 
 - Ganada/Perdida/Cashout ejecutado pueden confirmarse con su liquidación final en
   una operación atómica del RPC existente. Revisión, fechas históricas, retorno
@@ -61,10 +60,15 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   FASE 3 conserva siete divergencias conocidas y paridad 7/7.
 - [Contrato, recuperación, pruebas y límites](SETTLED_CAPTURE_IMPORT.md).
   Nuevo comando `npm.cmd run test:settled:qa`; no ejecutarlo simultáneamente con
-  `test:persistence:qa`. Publicar PR no despliega; requiere autorización final nueva
-  para integrar y publicar Hosting. Supabase productivo intacto.
+  `test:persistence:qa`. PR #7 integrado y Hosting publicado después de autorización
+  final. Gates repetidos: 613/613, TypeScript, build y 3/3 controles de destino.
+- Publicación verificada: 45 hashes, 15 activos OCR, 5 rutas, service worker activo
+  y carga/revisión histórica del bundle público en 375/768/1440 px con fixtures
+  únicamente del navegador. Cero peticiones reales al backend y Supabase intacto.
+  Versión anterior `4885a8046b5928a0` conservada en `rollback-settled-20261024`.
+  [Recibo de despliegue #7 y reversión](SETTLED_CAPTURE_DEPLOYMENT_2026_10_24.md).
 
-## Despliegue controlado — 24/10/2026
+## Despliegue anterior #2–#6 — 24/10/2026
 
 - Usuario autorizó integrar #2 → #3 → #4 → #5 → #6 y publicar solo Hosting.
   Cinco fusiones verificadas por SHA, padres y árbol; no se borraron ramas.
