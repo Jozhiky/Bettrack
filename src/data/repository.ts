@@ -132,7 +132,7 @@ export class LocalRepository implements BetRepository {
         const before = await d.bets.get(b.id);
         const oldSelections = await d.selections.where('betId').equals(b.id).toArray();
         const settlements = await d.settlements.where('betId').equals(b.id).toArray();
-        if (b.odds === null || b.potential === null) {
+        if (b.odds === null || b.potential === null || b.dateSource === 'accounting') {
           const closed = initialSettlement ?? settlements[0];
           if (!closed || closed.betId !== b.id || closed.closedStake !== b.stake)
             throw new Error('Una importación con cuota o potencial desconocidos debe quedar liquidada en la misma operación.');
@@ -217,6 +217,8 @@ export class LocalRepository implements BetRepository {
       const before = await d.settlements.get(key);
       if (!before) throw new Error('Liquidación no encontrada.');
       const bet = await d.bets.get(before.betId);
+      if (bet?.dateSource === 'accounting')
+        throw new Error('Este histórico conserva fechas desconocidas: corrige su liquidación conservando el registro, sin convertirlo en pendiente.');
       if (bet && (bet.odds === null || bet.potential === null))
         throw new Error('Completa la cuota y el potencial originales antes de reabrir este histórico.');
       await d.settlements.delete(key);

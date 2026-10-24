@@ -50,7 +50,7 @@ export function BetCard({ bet, onSelect }: { bet: Bet; onSelect: (id: string) =>
       )}
       <TicketSummary rows={rows} />
       <small className="ticket-date">
-        {bet.dateSource === 'upload' ? 'Cargada' : 'Apostada'} {displayDate(bet.date)}
+        {bet.dateSource === 'accounting' ? 'Registro contable' : bet.dateSource === 'upload' ? 'Cargada' : 'Apostada'} {displayDate(bet.date)}
       </small>
       <div className="ticket-actions">
         {pending && <QuickResult bet={bet} onDetail={() => onSelect(bet.id)} />}

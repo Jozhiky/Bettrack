@@ -17,9 +17,16 @@ await build({
       transform(code, id) {
         if (!id.replaceAll('\\', '/').endsWith('/src/data/cloudStore.ts')) return;
         const anchor = "const capability = await supabase.rpc('bt_capabilities');";
+        const accountingAnchor = "const supported = await supabase.rpc('bt_capabilities');";
         assert.equal(code.split(anchor).length, 2, 'Fallback gate anchor drift');
+        assert.equal(code.split(accountingAnchor).length, 2, 'Accounting fallback gate anchor drift');
         transformed = true;
         return code
+          .replace(accountingAnchor, 'const supported = {error:true,data:null};')
+          .replace(
+            'La importación automática necesita la actualización autorizada del esquema. El lote y sus imágenes siguen conservados.',
+            'Las nuevas importaciones automáticas están temporalmente detenidas. Tus registros y capturas siguen disponibles.',
+          )
           .replace(anchor, 'const capability = {error:true,data:null};')
           .replace(
             'El backend todavía no admite históricos con cuota o potencial desconocidos. Se requiere la actualización autorizada de la base de datos; tu captura sigue en revisión.',

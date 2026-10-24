@@ -143,7 +143,7 @@ export function validateBackup(raw: unknown): Backup {
     if ((bet.kind === 'Simple' && sels.length !== 1) || (bet.kind === 'Combinada' && count < 2))
       throw new Error('Tipo y número de selecciones inconsistentes.');
     const p = position(bet, d.settlements);
-    if ((bet.odds === null || bet.potential === null) && (p.remaining !== 0 || !d.settlements.some(s => s.betId === bet.id && settlementSchema.safeParse(s).success)))
+    if ((bet.odds === null || bet.potential === null || bet.dateSource === 'accounting') && (p.remaining !== 0 || !d.settlements.some(s => s.betId === bet.id && settlementSchema.safeParse(s).success)))
       throw new Error('Histórico con cuota o potencial desconocidos sin liquidación final completa.');
     if (p.remaining < 0) throw new Error('Stake liquidado más de una vez.');
     const moves = d.movements.filter((m) => m.betId === bet.id && m.kind === 'Apuesta colocada');
@@ -302,6 +302,9 @@ export function exportCSV(data: Snapshot) {
       return {
         Fecha: b.date,
         'Origen de fecha': b.dateSource || '',
+        'Fecha de apuesta histórica': b.historicalTiming?.betAt ?? '',
+        'Fecha de liquidación histórica': b.historicalTiming?.settledAt ?? '',
+        'Cronología histórica JSON': b.historicalTiming ? JSON.stringify(b.historicalTiming) : '',
         Casa: data.houses.find((h) => h.id === b.houseId)?.name,
         Moneda: data.houses.find((h) => h.id === b.houseId)?.currency,
         Apuesta: data.selections

@@ -5,6 +5,7 @@ import { repo } from '../data/repository';
 import { enqueueCaptures, linkCapture, reopenHistoricalCapture } from '../data/captures';
 import { readDraft, reviewIssues, canReviewCapture } from '../ocr/review';
 import { settlementEvidence } from '../ocr/settlement';
+import { prepareAutomaticImport } from '../ocr/automaticImport';
 import { CaptureReview } from './CaptureReview';
 import { money, displayDate, type CaptureUpload } from '../domain/model';
 import { Button } from './ui';
@@ -47,6 +48,13 @@ export function CapturePending({
   const bet = data.bets.find((b) => b.id === upload.betId);
   const draft = useMemo(() => readDraft(upload.draftJson), [upload.draftJson]);
   const historical = draft && settlementEvidence(draft);
+  const automatic = useMemo(
+    () =>
+      ['review', 'error'].includes(upload.status)
+        ? prepareAutomaticImport(upload, new Date().toISOString()).historical
+        : undefined,
+    [upload.draftJson, upload.status, upload.createdAt],
+  );
   const issues = reviewIssues(upload, draft);
   const proof = async (file?: File) => {
     if (!file || addingProof) return;
@@ -124,14 +132,21 @@ export function CapturePending({
           />
         </>
       )}
-      {upload.reason && (
+      {automatic && (
+        <p className="capture-reason">
+          Lista en el resumen de lote · {automatic.kind} · Cobrado {money(automatic.returned)} ·
+          Neto {money(automatic.returned - automatic.closedStake)}. Confirma el lote de arriba para
+          registrarla sin completar fechas.
+        </p>
+      )}
+      {upload.reason && !automatic && (
         <p className="capture-reason">
           {historical?.candidate && upload.reason.startsWith('El boleto ya muestra estado global')
             ? 'Liquidación detectada. Abre Revisar datos para importar el boleto y su liquidación en una sola operación.'
             : upload.reason}
         </p>
       )}
-      {historical?.candidate && (
+      {historical?.candidate && !automatic && (
         <p className="capture-reason">
           Importación histórica · {historical.kind ?? 'Estado por revisar'} · Retorno realizado:{' '}
           {historical.returned === undefined ? 'por confirmar' : money(historical.returned)}
@@ -187,7 +202,7 @@ export function CapturePending({
           ))}
         </details>
       )}
-      {upload.status === 'review' && (
+      {upload.status === 'review' && !automatic && (
         <ul className="capture-review-issues">
           {issues.map((issue) => (
             <li key={issue.kind}>

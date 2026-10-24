@@ -59,7 +59,7 @@ export function BetTable({
                     {ticketTitle(b, sels)}
                   </button>
                   <small>
-                    {ticketReference(b)} · {b.dateSource === 'upload' ? 'Carga: ' : ''}
+                    {ticketReference(b)} · {b.dateSource === 'accounting' ? 'Registro: ' : b.dateSource === 'upload' ? 'Carga: ' : ''}
                     {displayDate(b.date)}
                   </small>
                 </td>

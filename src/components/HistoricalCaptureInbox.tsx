@@ -9,6 +9,7 @@ import { CaptureReview } from './CaptureReview';
 import { reopenHistoricalCapture } from '../data/captures';
 import { useApp } from '../app/context';
 import { Button } from './ui';
+import { AutomaticCaptureBatch } from './AutomaticCaptureBatch';
 
 function ReviewExisting({ upload, onClose }: { upload: CaptureUpload; onClose: () => void }) {
   const image = useLiveQuery(() => repo.database.images.get(upload.imageId), [upload.imageId]);
@@ -44,76 +45,79 @@ export function HistoricalCaptureInbox({ uploads }: { uploads: CaptureUpload[] }
   const current = rows.find((row) => row.upload.id === selected);
   if (!rows.length) return null;
   return (
-    <section className="notice" aria-label="Importación de históricas">
-      <details>
-        <summary>Históricas en revisión ({rows.length}) · recuperar sin volver a subir</summary>
-        <p>
-          Abre cada boleto y coteja su resumen. Cada importación requiere su propio consentimiento;
-          los ambiguos pueden quedarse en revisión.
-        </p>
-        <div style={{ overflowX: 'auto' }}>
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>Estado detectado</th>
-                <th>Partido</th>
-                <th>Stake</th>
-                <th>Retorno realizado</th>
-                <th>Resultado neto</th>
-                <th>Revisión</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(({ upload, draft, evidence }) => (
-                <tr key={upload.id} data-upload-id={upload.id}>
-                  <td>
-                    {evidence.kind ?? 'Ambiguo'}
-                    {evidence.partial ? ' · parcial' : ''}
-                  </td>
-                  <td>
-                    {draft.selections[0]?.event || 'Sin reconocer'}
-                    {draft.selections.length > 1 ? ` +${draft.selections.length - 1}` : ''}
-                  </td>
-                  <td>{draft.stake === undefined ? 'Por confirmar' : money(draft.stake)}</td>
-                  <td>
-                    {evidence.returned === undefined ? 'Por confirmar' : money(evidence.returned)}
-                  </td>
-                  <td>
-                    {evidence.partial ||
-                    evidence.returned === undefined ||
-                    draft.stake === undefined
-                      ? 'Por confirmar'
-                      : money(evidence.returned - draft.stake)}
-                  </td>
-                  <td>
-                    <Button
-                      variant="secondary"
-                      aria-label={`Revisar histórica ${draft.selections[0]?.event || upload.id}`}
-                      onClick={async () => {
-                        if (
-                          upload.status === 'error' &&
-                          !(await run(() => reopenHistoricalCapture(upload.id)))
-                        )
-                          return;
-                        setSelected(upload.id);
-                      }}
-                    >
-                      Revisar e importar
-                    </Button>
-                  </td>
+    <>
+      <AutomaticCaptureBatch uploads={uploads} />
+      <section className="notice" aria-label="Importación de históricas">
+        <details>
+          <summary>Históricas en revisión ({rows.length}) · recuperar sin volver a subir</summary>
+          <p>
+            Abre cada boleto y coteja su resumen. Cada importación requiere su propio
+            consentimiento; los ambiguos pueden quedarse en revisión.
+          </p>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="history-table">
+              <thead>
+                <tr>
+                  <th>Estado detectado</th>
+                  <th>Partido</th>
+                  <th>Stake</th>
+                  <th>Retorno realizado</th>
+                  <th>Resultado neto</th>
+                  <th>Revisión</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </details>
-      {current && (
-        <ReviewExisting
-          key={current.upload.id}
-          upload={current.upload}
-          onClose={() => setSelected(undefined)}
-        />
-      )}
-    </section>
+              </thead>
+              <tbody>
+                {rows.map(({ upload, draft, evidence }) => (
+                  <tr key={upload.id} data-upload-id={upload.id}>
+                    <td>
+                      {evidence.kind ?? 'Ambiguo'}
+                      {evidence.partial ? ' · parcial' : ''}
+                    </td>
+                    <td>
+                      {draft.selections[0]?.event || 'Sin reconocer'}
+                      {draft.selections.length > 1 ? ` +${draft.selections.length - 1}` : ''}
+                    </td>
+                    <td>{draft.stake === undefined ? 'Por confirmar' : money(draft.stake)}</td>
+                    <td>
+                      {evidence.returned === undefined ? 'Por confirmar' : money(evidence.returned)}
+                    </td>
+                    <td>
+                      {evidence.partial ||
+                      evidence.returned === undefined ||
+                      draft.stake === undefined
+                        ? 'Por confirmar'
+                        : money(evidence.returned - draft.stake)}
+                    </td>
+                    <td>
+                      <Button
+                        variant="secondary"
+                        aria-label={`Revisar histórica ${draft.selections[0]?.event || upload.id}`}
+                        onClick={async () => {
+                          if (
+                            upload.status === 'error' &&
+                            !(await run(() => reopenHistoricalCapture(upload.id)))
+                          )
+                            return;
+                          setSelected(upload.id);
+                        }}
+                      >
+                        Revisar e importar
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </details>
+        {current && (
+          <ReviewExisting
+            key={current.upload.id}
+            upload={current.upload}
+            onClose={() => setSelected(undefined)}
+          />
+        )}
+      </section>
+    </>
   );
 }

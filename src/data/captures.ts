@@ -11,6 +11,9 @@ import { placementReviewReason } from '../ocr/placement';
 import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
 import { readCapture } from '../ocr/readCapture';
 import { runBatch } from './batch';
+import { prepareAutomaticImport } from '../ocr/automaticImport';
+import type { BettrackDB } from './db';
+import { sameCaptureTerms } from '../domain/captureDuplicates';
 import {
   readDraft,
   readPlacementHistory,
@@ -159,6 +162,42 @@ export async function confirmCaptureReview(
 ) {
   return processCapture(uploadId, undefined, repository, confirmation);
 }
+export interface AutomaticBatchItem {
+  uploadId: string;
+  confirmation: CaptureReviewConfirmation;
+  expectedOutcome: 'saved' | 'duplicate';
+}
+// One account transaction, one exact summary and one explicit consent. No per-ticket form.
+export async function confirmAutomaticBatch(items: AutomaticBatchItem[], consent: boolean, repository = repo) {
+  if (!consent) throw Error('Confirma el resumen del lote antes de registrar.');
+  if (!items.length || items.length > 25 || new Set(items.map((i) => i.uploadId)).size !== items.length)
+    throw Error('El lote debe contener entre 1 y 25 capturas distintas.');
+  return transact(repository.database, 'rw', repository.database.tables, async (d) => {
+    const scoped = new LocalRepository(d);
+    let fresh = false;
+    for (const item of items) {
+      if (!item.confirmation.historical?.automatic) throw Error('El lote no coincide con su preparación automática.');
+      const u = await d.uploads.get(item.uploadId);
+      fresh ||= !!u && ['review', 'error'].includes(u.status);
+      if (u?.status === 'error' && u.draftJson === item.confirmation.expectedDraft)
+        await d.uploads.update(u.id, { status: 'review' });
+      await processCapture(item.uploadId, undefined, scoped, item.confirmation, true);
+      if ((await d.uploads.get(item.uploadId))?.status !== item.expectedOutcome)
+        throw Error('Los duplicados del lote cambiaron. Actualiza el resumen antes de confirmar.');
+    }
+    const uploads = await Promise.all(items.map((i) => d.uploads.get(i.uploadId)));
+    if (fresh) await d.audit.add({
+      id: id(), date: timestamp(), action: 'Confirmar lote histórico', entityId: items[0].uploadId,
+      before: JSON.stringify({ financialConsent: false }),
+      after: JSON.stringify({ financialConsent: true, scope: 'exact-batch-summary', items: items.map((item, i) => ({
+        uploadId: item.uploadId, imageId: item.confirmation.imageId,
+        historical: item.confirmation.historical, outcome: uploads[i]?.status,
+      })) }),
+    });
+    return { saved: uploads.filter((u) => u?.status === 'saved').length,
+      duplicates: uploads.filter((u) => u?.status === 'duplicate').length };
+  });
+}
 export async function reopenHistoricalCapture(uploadId: string, repository = repo) {
   const d = repository.database;
   await transact(d, 'rw', [d.uploads, d.audit], async (d) => {
@@ -189,12 +228,13 @@ async function processCapture(
   input: ParsedTicket | undefined,
   repository: LocalRepository,
   confirmation?: CaptureReviewConfirmation,
+  inTransaction = false,
 ) {
   const d = repository.database;
-  await transact(d, 'rw', d.tables, async (d) => {
+  const apply = async (d: BettrackDB) => {
     const scopedRepository = new LocalRepository(d);
     const upload = await d.uploads.get(uploadId);
-    if (confirmation?.historical && upload?.status === 'saved') {
+    if (confirmation?.historical && upload && ['saved', 'duplicate'].includes(upload.status)) {
       const reviewed = await d.audit
         .filter((a) => a.entityId === uploadId && a.action === 'Revisión humana de captura')
         .toArray();
@@ -226,6 +266,14 @@ async function processCapture(
           confirmation.selections,
         )
       : undefined;
+    if (historical?.automatic) {
+      const prepared = prepareAutomaticImport(upload, historical.betDate);
+      if (JSON.stringify(prepared.historical) !== JSON.stringify(historical) ||
+          JSON.stringify(previous?.selections) !== JSON.stringify(confirmation!.selections))
+        throw Error('La evidencia del lote cambió. Actualiza el resumen.');
+      if (Date.now() - Date.parse(historical.betDate) > 10 * 60 * 1000)
+        throw Error('El resumen venció. Actualiza el lote antes de confirmar.');
+    }
     let parsed: ReviewDraft;
     if (confirmation) {
       if (!confirmation.acknowledged)
@@ -266,7 +314,7 @@ async function processCapture(
             }
           : {}),
         selections,
-        humanReviewed: true,
+        humanReviewed: !historical?.automatic,
       };
     } else parsed = input!;
     // The original is already stored. Registration needs its metadata, not a
@@ -317,7 +365,8 @@ async function processCapture(
       ...parsed,
       placement,
       placementHold,
-      humanReviewed: !!confirmation,
+      humanReviewed: !!confirmation && !historical?.automatic,
+      automaticallyPrepared: historical?.automatic,
     });
     const needsReview = async (reason: string) => {
       if (confirmation) throw new Error(reason);
@@ -414,16 +463,17 @@ async function processCapture(
     const raw = {
       id: betId,
       date: historical?.betDate ?? upload.createdAt,
-      dateSource: historical
+      dateSource: historical?.timing ? 'accounting' : historical
         ? settlementEvidence(previous!).betDate === historical.betDate
           ? 'ticket'
           : 'manual'
         : 'upload',
-      timingUnknown: !historical,
+      historicalTiming: historical?.timing,
+      timingUnknown: historical?.timing ? historical.timing.mode === 'unknown' : !historical,
       houseId: house!.id,
       streamerId: '',
       kind: parsed.kind,
-      live: false,
+      live: historical?.timing?.mode === 'live',
       stake: parsed.stake,
       odds: historical ? historical.header.odds : parsed.odds,
       potential: historical ? historical.header.potential : parsed.potential,
@@ -468,7 +518,9 @@ async function processCapture(
             confirmationJson: historical ? JSON.stringify(confirmation) : undefined,
             acknowledged: true,
             interpretation:
-              'Texto cotejado por el usuario; atributos no reconocidos no se infieren',
+              historical?.automatic
+                ? 'Preparación automática desde evidencia del boleto; consentimiento explícito al resumen del lote. Fechas contables separadas de las históricas.'
+                : 'Texto cotejado por el usuario; atributos no reconocidos no se infieren',
             originalText: parsed.text,
           }),
         });
@@ -476,24 +528,13 @@ async function processCapture(
     bet.fingerprint = fingerprint(bet, rows);
     {
       const allSelections = await d.selections.toArray();
-      const semantic = fingerprint({ ...bet, date: '2000-01-01T12:00:00.000Z' }, rows);
       const imageIds = (await d.images.where('hash').equals(image.hash).toArray()).map((i) => i.id);
       const existing = (await d.bets.toArray()).find(
         (b) =>
           b.id !== betId &&
           ((b.imageId && imageIds.includes(b.imageId)) ||
             b.fingerprint === bet.fingerprint ||
-            fingerprint(
-              {
-                ...b,
-                odds: b.odds === null || bet.odds === null ? null : b.odds,
-                date: '2000-01-01T12:00:00.000Z',
-              },
-              allSelections.filter((s) => s.betId === b.id),
-            ) ===
-              (b.odds === null || bet.odds === null
-                ? fingerprint({ ...bet, odds: null, date: '2000-01-01T12:00:00.000Z' }, rows)
-                : semantic)),
+            sameCaptureTerms(b, allSelections.filter((s) => s.betId === b.id), bet, rows)),
       );
       if (existing) {
         await d.uploads.update(uploadId, {
@@ -533,7 +574,9 @@ async function processCapture(
       betId,
       progress: 100,
     });
-  });
+  };
+  if (inTransaction) await apply(d);
+  else await transact(d, 'rw', d.tables, apply);
 }
 
 export async function linkCapture(uploadId: string, repository = repo) {

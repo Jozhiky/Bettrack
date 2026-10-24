@@ -7,7 +7,8 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 fue integrada con autorización.
+  `main` como referencia desplegada; nuevo trabajo en `codex/automated-ticket-batch`.
+  La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 fue integrada con autorización.
   **SHA desplegado:** `97dc8beae5c22e48314c178483e92635e59e5017`, versión Hosting
   `5de3256218949269`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
@@ -43,6 +44,24 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
+## Lote histórico automático — validado en QA, pendiente de permiso de esquema
+
+- Resumen único y consentimiento del lote, sin fechas ni revisión individual
+  obligatoria. Recupera borradores existentes; separa fecha contable, fechas
+  históricas desconocidas y horarios del partido. No inventa cobros ni fechas.
+- Diagnóstico local: 18/20 lecturas preparables; cobro ilegible y oferta abierta
+  excluidos. No son registros productivos. Duplicados fuera de totales, misma
+  comparación en preview/registro y rollback si cambia el resultado esperado.
+- **680/680**, TypeScript/build; QA 17 previos + 8 históricos + 5 grupos de lote;
+  OCR **1067/1089**, 22 diferencias, dos mejoras y cero regresiones por check.
+  UI/carga y reversión compatible verificadas a 375/768/1440.
+- Nueva migración `20261024210047_automatic_historical_booking.sql` **solo QA**,
+  registrada como `20261024210641_automatic_historical_booking`. Requiere permiso
+  específico para producción; no modificar datos reales durante la publicación.
+- Reversión nueva debe leer `dateSource: accounting`: no usar #8 ni su rollback
+  antiguo después de crear registros así. Producción todavía conserva #8.
+- [Comportamiento, evidencia, límites y procedimiento mínimo](AUTOMATIC_HISTORICAL_IMPORT.md).
+
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
@@ -53,7 +72,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   Ganancias es sugerencia por cotejar. Fechas y consentimiento siguen obligatorios.
 - **648/648**, TypeScript/build; 17 QA previos + 8 grupos históricos con datos
   sintéticos equivalentes; UI 375/768/1440. OCR 1065/1089 y 24 diferencias, sin
-  regresiones. Nueva migración aplicada únicamente al QA autorizado.
+  regresiones. Inicialmente aplicada al QA; después autorizada y aplicada en producción.
 - El esquema anterior impedía guardar esas ausencias. **Usuario autorizó la migración
   productiva del PR #8**, ya aplicada, y pidió calcular combinadas con cuotas de selección:
   producto completo truncado a dos decimales (2.02×2.15×1.36 → 5.90), con procedencia

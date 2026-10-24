@@ -774,6 +774,21 @@ main {
   overflow-x: auto;
   width: 100%;
 }
+.automatic-capture-batch { min-width: 0; margin-block: 16px; }
+.automatic-capture-batch td { vertical-align: top; }
+.automatic-capture-batch td:nth-child(2) { min-width: 240px; max-width: 420px; white-space: normal; }
+.automatic-capture-batch td strong, .automatic-capture-batch td small { display: block; }
+.automatic-capture-batch pre { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 360px; }
+.automatic-capture-batch > p { max-width: 90ch; }
+@media (max-width: 767px) {
+  .automatic-capture-batch :is(table, tbody) { display: block; white-space: normal; }
+  .automatic-capture-batch thead { display: none; }
+  .automatic-capture-batch tr { display: grid; grid-template-columns: 24px minmax(0, 1fr); padding-block: 14px; border-bottom: 1px solid var(--border, #d9e0e5); }
+  .automatic-capture-batch td { grid-column: 2; padding: 4px 8px; border: 0; min-width: 0 !important; max-width: 100% !important; white-space: normal; }
+  .automatic-capture-batch td:first-child { grid-column: 1; grid-row: 1; padding-inline: 0; }
+  .automatic-capture-batch td[data-label]::before { content: attr(data-label) ': '; font-weight: 600; }
+  .automatic-capture-batch pre { max-width: 100%; }
+}
 table {
   width: 100%;
   border-collapse: collapse;

@@ -173,6 +173,11 @@ export class CloudStore {
         }
         if (generation !== this.generation) throw new Error('La sesión cambió durante el guardado.');
         if (changes.length) {
+          if (changes.some(c => c.collection === 'bets' && c.payload?.dateSource === 'accounting')) {
+            const supported = await supabase.rpc('bt_capabilities');
+            if (supported.error || supported.data?.automaticHistoricalBooking !== true)
+              throw new Error('La importación automática necesita la actualización autorizada del esquema. El lote y sus imágenes siguen conservados.');
+          }
           if (changes.some(c => c.collection === 'bets' && c.payload && (c.payload.odds === null || c.payload.potential === null))) {
             const capability = await supabase.rpc('bt_capabilities');
             if (capability.error || capability.data?.historicalUnknownQuote !== true)
@@ -212,5 +217,5 @@ export const cloudDatabase = cloudStore as unknown as BettrackDB;
 export function transact<T>(database: BettrackDB, mode: 'r' | 'rw', tables: unknown, fn: (scope: BettrackDB) => Promise<T>): Promise<T> {
   if (database instanceof CloudStore) return database.transaction(mode, tables, fn);
   // Legacy IndexedDB adapters exist only for isolated domain regression tests.
-  return database.transaction(mode, tables as BettrackDB['tables'], () => fn(database));
+  return database.transaction(mode, tables as BettrackDB['tables'], async () => fn(database));
 }
