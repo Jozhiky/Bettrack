@@ -1,0 +1,305 @@
+{
+  "issue": "https://github.com/Jozhiky/Bettrack/issues/1",
+  "reviewedOn": "2026-10-24",
+  "counts": {
+    "received": 29,
+    "deduplicatedImages": 29,
+    "exactDuplicatesRemoved": 0,
+    "legacyPixelMatches": 0,
+    "admitted": 28,
+    "pending": 1,
+    "rejected": 0,
+    "admittedTicketGroupsConservative": 26,
+    "candidateTicketGroupsConservative": 27,
+    "verifiedUniqueTickets": null,
+    "events": 71,
+    "semanticLeaves": 75,
+    "builderContainers": 2,
+    "category": {
+      "settled": 2,
+      "football": 24,
+      "bet-builder": 2
+    },
+    "placement": {
+      "confirmed": 21,
+      "unknown": 7
+    },
+    "settlement": {
+      "Perdida": 2,
+      "unknown": 26
+    },
+    "cashout": {
+      "none": 9,
+      "offer": 19
+    },
+    "scope": {
+      "match": 54,
+      "team": 9,
+      "player": 12
+    },
+    "period": {
+      "unspecified": 59,
+      "first-half": 16
+    }
+  },
+  "verification": {
+    "package": "SHA matches the user-authorized archive; ZIP entry CRC and safe extraction checked outside checkout.",
+    "png": "29 PNG signatures, dimensions, chunk CRCs, decoded RGBA and metadata checked. No disallowed chunks. All opaque.",
+    "pixelIntegrity": "Decoded RGBA matched candidate inventory for 29/29. The 28 published files are byte-identical to their reviewed package copies. Private pre-anonymization originals were not supplied and cannot be independently certified.",
+    "privacy": "Each of the 29 PNGs was visually inspected: no holder/account/email/ticket identifier/QR/barcode/notification or unrelated balance visible. Pending image remains private.",
+    "annotation": "Two visual passes by the same assistant, independent of Tesseract and the supplied draft seeds. Second pass compared PNG, manual transcript, values and field regions. This does not claim a second human reviewer or pixel-OCR accuracy."
+  },
+  "temporalGroups": [
+    {
+      "group": "brugge-builder",
+      "members": [
+        "brugge-builder-early",
+        "brugge-builder-later"
+      ],
+      "relation": "probable-same-ticket",
+      "basis": "Same event, three submarkets, joint odds 1.72 and stake S/15.00. Clock/score/check change. No public ticket ID: grouping is conservative, not identity proof."
+    },
+    {
+      "group": "player-four",
+      "members": [
+        "player-four-early",
+        "player-four-updated"
+      ],
+      "relation": "probable-same-ticket",
+      "basis": "Same four-event structure, total 6.78 and stake S/5.00. Later view shows Nelson Deossa and crossed-out Troy Parrott; no new independent ticket counted."
+    }
+  ],
+  "records": [
+    {
+      "id": "lost-single-jablonec",
+      "status": "admitted",
+      "publicImage": "images/settled/lost-single-jablonec.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "lost-single-jablonec"
+    },
+    {
+      "id": "lost-double-goals",
+      "status": "admitted",
+      "publicImage": "images/settled/lost-double-goals.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "lost-double-goals"
+    },
+    {
+      "id": "team-shots-bournemouth",
+      "status": "admitted",
+      "publicImage": "images/football/team-shots-bournemouth.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "team-shots-bournemouth"
+    },
+    {
+      "id": "first-half-lech",
+      "status": "admitted",
+      "publicImage": "images/football/first-half-lech.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "first-half-lech"
+    },
+    {
+      "id": "first-half-juventus",
+      "status": "admitted",
+      "publicImage": "images/football/first-half-juventus.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "first-half-juventus"
+    },
+    {
+      "id": "first-half-bournemouth",
+      "status": "admitted",
+      "publicImage": "images/football/first-half-bournemouth.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "first-half-bournemouth"
+    },
+    {
+      "id": "total-goals-hoffenheim",
+      "status": "admitted",
+      "publicImage": "images/football/total-goals-hoffenheim.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "total-goals-hoffenheim"
+    },
+    {
+      "id": "team-goals-real-madrid",
+      "status": "admitted",
+      "publicImage": "images/football/team-goals-real-madrid.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "team-goals-real-madrid"
+    },
+    {
+      "id": "scorer-oyarzabal",
+      "status": "admitted",
+      "publicImage": "images/football/scorer-oyarzabal.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "scorer-oyarzabal"
+    },
+    {
+      "id": "failed-leg-juventus",
+      "status": "admitted",
+      "publicImage": "images/football/failed-leg-juventus.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "failed-leg-juventus"
+    },
+    {
+      "id": "goal-before-60-first",
+      "status": "admitted",
+      "publicImage": "images/football/goal-before-60-first.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "goal-before-60-first"
+    },
+    {
+      "id": "goal-before-60-second",
+      "status": "admitted",
+      "publicImage": "images/football/goal-before-60-second.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "goal-before-60-second"
+    },
+    {
+      "id": "team-goals-juventus-brighton",
+      "status": "admitted",
+      "publicImage": "images/football/team-goals-juventus-brighton.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "team-goals-juventus-brighton"
+    },
+    {
+      "id": "high-goal-lines",
+      "status": "admitted",
+      "publicImage": "images/football/high-goal-lines.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "high-goal-lines"
+    },
+    {
+      "id": "double-winners",
+      "status": "admitted",
+      "publicImage": "images/football/double-winners.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "double-winners"
+    },
+    {
+      "id": "player-kane-mbappe",
+      "status": "admitted",
+      "publicImage": "images/football/player-kane-mbappe.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "player-kane-mbappe"
+    },
+    {
+      "id": "three-first-half-goals",
+      "status": "admitted",
+      "publicImage": "images/football/three-first-half-goals.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "three-first-half-goals"
+    },
+    {
+      "id": "three-first-half-second",
+      "status": "admitted",
+      "publicImage": "images/football/three-first-half-second.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "three-first-half-second"
+    },
+    {
+      "id": "failed-leg-three-goals",
+      "status": "admitted",
+      "publicImage": "images/football/failed-leg-three-goals.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "failed-leg-three-goals"
+    },
+    {
+      "id": "three-team-goals",
+      "status": "admitted",
+      "publicImage": "images/football/three-team-goals.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "three-team-goals"
+    },
+    {
+      "id": "mixed-five-selections",
+      "status": "admitted",
+      "publicImage": "images/football/mixed-five-selections.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "mixed-five-selections"
+    },
+    {
+      "id": "mixed-team-match-scorer",
+      "status": "admitted",
+      "publicImage": "images/football/mixed-team-match-scorer.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "mixed-team-match-scorer"
+    },
+    {
+      "id": "seven-first-half-goals",
+      "status": "admitted",
+      "publicImage": "images/football/seven-first-half-goals.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "seven-first-half-goals"
+    },
+    {
+      "id": "player-four-early",
+      "status": "admitted",
+      "publicImage": "images/football/player-four-early.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "player-four"
+    },
+    {
+      "id": "player-four-updated",
+      "status": "admitted",
+      "publicImage": "images/football/player-four-updated.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "player-four"
+    },
+    {
+      "id": "eleven-double-chance",
+      "status": "admitted",
+      "publicImage": "images/football/eleven-double-chance.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "eleven-double-chance"
+    },
+    {
+      "id": "brugge-builder-early",
+      "status": "admitted",
+      "publicImage": "images/bet-builder/brugge-builder-early.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "brugge-builder"
+    },
+    {
+      "id": "brugge-builder-later",
+      "status": "admitted",
+      "publicImage": "images/bet-builder/brugge-builder-later.png",
+      "privacy": "Visually checked twice: no private identifiers visible; no pixel redaction needed.",
+      "reviewPasses": 2,
+      "ticketGroup": "brugge-builder"
+    },
+    {
+      "id": "preparation-flamengo",
+      "status": "pending",
+      "reason": "No visible Betano brand to support required house field/region. Crear apuesta coexists with Cerrar apuesta; do not infer preparation or confirmed placement from staging name/draft. Requires a fuller authorized capture with bookmaker and unambiguous placement context. Technical/privacy first pass passed, but no admission signature and no public PNG/hash.",
+      "reviewPasses": 1,
+      "ticketGroup": "preparation-flamengo"
+    }
+  ]
+}

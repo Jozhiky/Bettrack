@@ -10,3 +10,4 @@ public/ocr/
 artifacts/
 supabase/.temp/
 .firebase/
+/_entrada_ocr/

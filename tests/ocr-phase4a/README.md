@@ -1,6 +1,8 @@
 # FASE 4A — incorporación de evidencia real
 
-Estado: **0 capturas nuevas**. Se conservan las siete anteriores en sus rutas;
+Estado: **28 capturas admitidas de 29 candidatas; 1 pendiente** (24/10/2026).
+[Decisiones y verificación del lote](../../docs/OCR_PHASE4A_ADMISSION.md).
+Se conservan las siete anteriores en sus rutas;
 `legacy.lock.json` fija PNG, anotaciones, controles, huellas OCR y discrepancias
 anteriores (16 archivos). No regenerar ese archivo para hacer pasar una prueba.
 Texto permite LF/CRLF; imágenes se comparan byte a byte.
@@ -11,7 +13,8 @@ Texto permite LF/CRLF; imágenes se comparan byte a byte.
 
 ```text
 tests/ocr-phase4a/
-  cases.json               # solo casos admitidos; vacío inicialmente
+  cases.json               # solo casos admitidos, texto, cajas y revisión
+  admission.json           # candidatos, decisiones y grupos temporales
   contract.ts              # contrato ejecutable de anotación/validación
   legacy.lock.json         # protección del corpus anterior
   images/
@@ -26,7 +29,8 @@ Un PNG por caso y una categoría primaria; `tags` relaciona los demás escenario
 sin duplicar imágenes. Nombre neutro `images/<category>/<id>.png`, sin fecha privada,
 titular ni ID de boleto. Originales y borradores quedan **fuera del checkout** en
 una ubicación privada; no publicar rutas ni huellas de los originales privados.
-Las carpetas contienen solo `.gitkeep` hasta admitir evidencia.
+Las carpetas NBA y cashout siguen sin PNG admitidos. Las ofertas visibles se
+conservan en las capturas de fútbol; no equivalen a cashout ejecutado.
 
 ## Procedimiento de admisión
 
@@ -96,7 +100,8 @@ npx.cmd tsc --noEmit
 git diff --check
 ```
 
-La suite incluye `ocr-phase4a.test.ts` y los controles previos de FASE 2/2.1. Estos
+La suite incluye `ocr-phase4a.test.ts`, `ocr-phase4a-admission.test.ts` y los controles
+previos de FASE 2/2.1. Estos
 últimos usan dobles de Supabase y una base efímera, no la aplicación configurada.
 Las nuevas pruebas solo leen archivos e importan parser/semántica; no abren red.
 No ejecutar `test:e2e`. No arrancar la aplicación como paso de admisión.
@@ -104,5 +109,12 @@ No ejecutar `test:e2e`. No arrancar la aplicación como paso de admisión.
 Las mutaciones del oráculo y los controles heredados de primer período son pruebas
 del evaluador/intérprete, **no capturas ni resultados deportivos reales**. Se conserva
 la anotación humana `player` para Nico Paz y se expone la abstención `unknown` actual
-del motor; no se adapta el oráculo para aparentar reconocimiento. La suite vacía de
-casos nuevos valida preparación, no precisión sobre NBA o liquidaciones.
+del motor; no se adapta el oráculo para aparentar reconocimiento. Las pruebas de
+admisión no miden precisión OCR ni convierten esta colección en cobertura NBA.
+`png.ts` decodifica sin pérdida RGB/RGBA8 no entrelazado, comprueba CRC y opacidad;
+otros formatos requieren revisión específica, no conversión silenciosa.
+
+El segundo cotejo del lote del issue 1 fue otra pasada visual del mismo asistente,
+independiente de OCR y de las semillas, no una segunda persona. En el texto literal,
+corchetes describen iconos/tachado y tabuladores separan columnas. Los pares temporales
+de `admission.json` se agrupan conservadoramente sin transferir estados ni importes.

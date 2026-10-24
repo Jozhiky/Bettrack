@@ -1,8 +1,13 @@
 # FASE 4A — cobertura real y capturas pendientes
 
+**Actualización 24/10/2026:** este inventario describe las siete imágenes históricas.
+El lote posterior tiene 28 admitidas y 1 pendiente; ver
+[admisión del issue 1](OCR_PHASE4A_ADMISSION.md). Los huecos aquí listados son los
+identificados antes de ese lote, no la cobertura actual.
+
 Revisión visual de los siete PNG y contraste con `cases.json` de FASE 1/3 y
 `semantics.json` de FASE 3, sobre `ef709b8`. Sin nueva ejecución de OCR ni cambio de
-expectativas. **No se han recibido capturas nuevas.** Preparación y comandos:
+expectativas. **En esa revisión inicial no se habían recibido capturas nuevas.** Preparación y comandos:
 [README 4A](../tests/ocr-phase4a/README.md).
 
 ## Inventario contrastado
@@ -65,7 +70,7 @@ No se solicita realizar apuestas nuevas: sirven capturas históricas autorizadas
 
 ## Alcance de la entrega
 
-El manifiesto nuevo permanece vacío. La suite comprueba inventario, integridad de
+La entrega inicial dejó el manifiesto nuevo vacío. Su suite comprueba inventario, integridad de
 16 archivos históricos, contrato de admisión y distinciones semánticas con texto
 real existente y controles sintéticos previos separados. No elimina las siete
 diferencias literales estrictas ni los problemas de identidad/ámbito de FASE 3.

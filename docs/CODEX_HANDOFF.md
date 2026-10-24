@@ -1,6 +1,6 @@
 # BETTRACK — continuidad de Codex
 
-Actualizado: 23/10/2026. Leer junto con [AGENTS.md](../AGENTS.md).
+Actualizado: 24/10/2026. Leer junto con [AGENTS.md](../AGENTS.md).
 Este archivo es el índice de continuidad, no una nueva auditoría ni autorización
 para implementar los pendientes. No hace falta recuperar conversaciones antiguas.
 
@@ -15,11 +15,14 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   código. Hosting existente: `https://bettrack-wostcloud1.web.app`.
 - Estado verificado en FASE 3: 464 pruebas, TypeScript y build aprobados; UI aislada
   en 375/768/1440 px. Son resultados de esa revisión, no una garantía para cambios futuros.
-- FASE 4A: preparación del corpus y pruebas, sin cambios productivos. Se revisaron
-  visualmente las 7 imágenes; **0 capturas nuevas recibidas**, manifiesto nuevo vacío.
-  Suite completa: 502 pruebas aprobadas; suite 4A + controles 2/2.1: 120 aprobadas;
+- FASE 4A, issue 1: **29 PNG recibidos, 29 distintos, 28 admitidos, 1 pendiente,
+  0 rechazados**, sin cambios productivos. Dos pares temporales forman grupos
+  probables del mismo boleto: 26 grupos conservadores admitidos, no 26 boletos
+  únicos certificados. Originales/ZIP/borradores fuera de publicación.
+  Suite completa: 534 pruebas aprobadas; suite 4A + controles 2/2.1: 152 aprobadas;
   TypeScript, build y diff verificados (build avisa de chunks mayores de 500 kB).
-  No se repitió OCR ni UI: siguen vigentes sus límites
+  SHA/CRC/PNG/RGBA, privacidad visual, texto y regiones cotejados. No se ejecutó OCR
+  ni UI: siguen vigentes sus límites
   documentados. Publicación en GitHub no implica despliegue ni validación cloud.
 
 ## Arquitectura esencial
@@ -59,13 +62,20 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
   [admisión, anonimización y comandos](../tests/ocr-phase4a/README.md).
   Contrato con evidencia por campo, carpetas por escenario y protección de 16 archivos
   históricos; oráculos anteriores intactos. Primer período sigue siendo solo sintético.
+- FASE 4A (admisión): [decisiones del issue 1](OCR_PHASE4A_ADMISSION.md),
+  [registro verificable de 29 candidatos](../tests/ocr-phase4a/admission.json).
+  28 copias firmadas después de dos pasadas visuales del mismo asistente, independientes
+  de OCR/semillas; 71 apariciones de eventos y 75 hojas. `preparation-flamengo` pendiente
+  por casa no visible y colocación ambigua; PNG/borrador fuera de Git. Los nueve borradores
+  de entrada no son oráculos. No se alteraron FASE 1/3 ni `legacy.lock.json`.
 
 ## Límites y próximos pasos posibles
 
-- Corpus: 7 imágenes reales de fútbol, 33 eventos y 57 selecciones semánticas.
-  NBA, preparación, aceptación explícita, liquidaciones y cashout ejecutado **sin
-  cobertura real**. Las pruebas sintéticas no sustituyen esas capturas.
-- Persisten 12 ámbitos desconocidos; 8/11 participantes extraídos, solo uno con
+- Corpus total: **35 PNG de fútbol, 104 apariciones de eventos y 132 hojas**;
+  no son boletos/eventos únicos. El lote nuevo contiene 2 pérdidas globales explícitas,
+  19 ofertas cashout y 0 cobros. NBA, preparación inequívoca, aceptación textual,
+  Ganada global y cashout ejecutado siguen sin cobertura admitida.
+- En la medición OCR de FASE 3 persistían 12 ámbitos desconocidos; 8/11 participantes extraídos, solo uno con
   identidad reconocida. Jugadores, goleador y tarjetas pueden requerir revisión.
 - Modo estricto: **7 diferencias literales conocidas**. Históricas:
   `München→Munchen`, `Más/Menos→Mas/Menos`, `Más de 4.5→Mas de 4.5`, `Sí→Si`.
@@ -73,10 +83,11 @@ no tocar credenciales ni probar registros de usuarios reales para tareas OCR.
 - Cabeceras incompletas/eventos omitidos requieren otra captura; no hay fusión de
   comprobantes. Una relectura no confirma colocación; el resultado inicial del
   registro revisado es Pendiente, sin cobrar automáticamente cashout visible.
-- Siguiente prioridad tras FASE 4A: recibir capturas autorizadas de NBA/períodos,
-  preparación/aceptación y liquidaciones/cashout ejecutado según el inventario.
-  Admitirlas con el contrato 4A y después conectar casos nuevos al ejecutor OCR aislado;
-  esta preparación no ejecuta automáticamente OCR sobre el manifiesto nuevo.
+- Siguiente prioridad: conectar los 28 casos admitidos al ejecutor OCR aislado en
+  una tarea autorizada, conservando las agrupaciones temporales y sin transferir
+  aceptación/importes entre imágenes. La suite de admisión no mide precisión OCR.
+  Pedir una copia más completa de `preparation-flamengo` con marca/contexto explícito,
+  además de NBA/períodos, aceptación, Ganada global y cashout ejecutado.
   Mejorar identidad/ámbito y medir lotes solo en una tarea posterior autorizada.
   No cambiar motor ni prometer aceleración general: mejoró un caso, no todas las medianas.
 - Sincronización cloud no se validó en FASE 3. Requiere QA separado, datos sintéticos
