@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { line, layoutProbe } from '../../tests/ocr-phase1/controlled';
-import { parseTicket, type ParsedTicket } from '../ocr/parser';
+import { parseTicket, placementFromText, type ParsedTicket } from '../ocr/parser';
 import { readCapture } from '../ocr/readCapture';
 import { BettrackDB } from '../data/db';
 import { LocalRepository } from '../data/repository';
@@ -196,4 +196,31 @@ describe('Placement evidence, independent of settlement status', () => {
       expect(await db.movements.count()).toBe(1);
     });
   });
+  it('never automatically creates pending financial movements from a globally lost ticket', async () => {
+    // Start from a well-formed fixture that would otherwise be saved. The
+    // header is the sole controlled change; no production OCR is invoked.
+    const parsed = parseTicket('', evidence('Apuesta confirmada\nPendiente'));
+    expect(parsed).toMatchObject({ stake: 1000, odds: 4, potential: 4000 });
+    expect(parsed.selections).toHaveLength(2);
+    const previous = parsed.text;
+    parsed.text = previous.replace(
+      /^Combinada de 2 S\/10\.00.*$/m,
+      'Combinada de 2 S/10.00 Perdida',
+    );
+    expect(parsed.text).not.toBe(previous);
+    expect(placementFromText(parsed.text)).toMatchObject({ status: 'confirmed' });
+
+    await withCapture(async (db, repository) => {
+      const before = await repository.snapshot();
+      await registerCapture('capture', parsed, repository);
+      expect((await db.uploads.get('capture'))?.status).toBe('review');
+      expect((await db.uploads.get('capture'))?.reason).toContain('Perdida');
+      expect(await db.bets.count()).toBe(0);
+      expect(await db.movements.count()).toBe(0);
+      expect(await db.settlements.count()).toBe(0);
+      for (const key of ['bets', 'selections', 'movements', 'settlements', 'houses', 'audit'] as const)
+        expect((await repository.snapshot())[key]).toEqual(before[key]);
+    });
+  });
+
 });
