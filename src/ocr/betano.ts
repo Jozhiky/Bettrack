@@ -3,6 +3,7 @@ import type { ParsedTicket } from './parser';
 import type { TicketRow } from './layout';
 import type { SymbolCandidate, TicketPromotion } from './symbols';
 import { betanoHeader } from './header';
+import { superImproved } from './quotePromotion';
 import {
   isMarketLine as marketLine,
   isSelectionNotice,
@@ -37,6 +38,7 @@ function withoutSchedule(words: TicketRow['words'], right: number) {
 }
 
 export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] = []) {
+  const promoted = !!superImproved(rows.map((r) => r.text).join('\n'));
   const right = Math.max(...rows.flatMap((r) => r.words.map((w) => w.bbox.x1)));
   const header = rows.findIndex((r) => betanoHeader(r.text));
   const footer = rows.findIndex(
@@ -58,7 +60,12 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       right,
     );
     const odd = words.find((w) => w.bbox.x0 > right * 0.8 && /^\d+[.,]\d{2}$/.test(w.text));
-    const content = words.filter((w) => w !== odd && w.bbox.x0 < right * 0.8);
+    const content = words.filter(
+      (w) =>
+        w !== odd &&
+        w.bbox.x0 < right * 0.8 &&
+        !(promoted && odd && w.bbox.x0 > right * 0.68 && /^[\d.,]+$/.test(w.text)),
+    );
     const promotion = symbols.find(
       (s) =>
         s.promotion &&
@@ -105,14 +112,16 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       !title.text ||
       marketLine(title.text) ||
       (title.text.match(/\(/g)?.length ?? 0) <= (title.text.match(/\)/g)?.length ?? 0)
-    ) continue;
+    )
+      continue;
     const glyph = Math.max(...title.content.map((w) => w.bbox.y1 - w.bbox.y0), 1);
     let last = i + 1;
     while (
       last < candidates.length &&
       !candidates[last].text &&
       candidates[last].y - title.y <= glyph * 2.9
-    ) last++;
+    )
+      last++;
     const ending = candidates[last];
     if (
       !ending ||
@@ -121,7 +130,8 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       marketLine(ending.text) ||
       !ending.content.length ||
       Math.abs(ending.content[0].bbox.x0 - title.content[0].bbox.x0) > glyph * 1.5
-    ) continue;
+    )
+      continue;
     const floating = candidates.slice(i + 1, last + 1).filter((r) => r.odds !== null);
     if (title.odds === null && floating.length === 1) {
       title.odds = floating[0].odds;
@@ -141,11 +151,32 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
   const body = candidates.filter(
     (r) =>
       (r.text.length > 2 || isSelectionValue(r.text)) &&
+      !superImproved(r.text) &&
       // A live lightning icon can OCR as "4" beside the clock. Short picks
       // belong to the left selection column, not the right-hand widget.
       !(isSelectionValue(r.text) && r.content.every((w) => w.bbox.x0 >= right * 0.68)) &&
       !/^(?:hoy|ma[nñ]ana)\b/i.test(r.text),
   );
+  // Wrapped combat method title, followed by its explicit market. Keep every
+  // observed word; a promotion banner or crossed prior price is not a leg.
+  for (let i = 0; i < body.length - 2; i++) {
+    const a = body[i],
+      b = body[i + 1],
+      market = body[i + 2];
+    const glyph = Math.max(...a.content.map((w) => w.bbox.y1 - w.bbox.y0), 1);
+    if (
+      /\bpor$/i.test(a.text) &&
+      /^(?:KO|TKO|sumisi[oó]n|decisi[oó]n|descalificaci[oó]n)\b/i.test(b.text) &&
+      /^forma del triunfo\s*\(7-way\)$/i.test(market.text) &&
+      b.odds === null &&
+      b.y - a.y <= glyph * 2.4 &&
+      Math.abs(a.content[0].bbox.x0 - b.content[0].bbox.x0) <= glyph * 1.5
+    ) {
+      a.text += ' ' + b.text;
+      a.content.push(...b.content);
+      body.splice(i + 1, 1);
+    }
+  }
   // An odds badge is evidence, not the definition of a leg. The first body
   // row and separated outer titles survive a missing badge. Child bullets are
   // never outer titles. Ambiguous boundaries stay in the draft for review.
@@ -263,8 +294,11 @@ export function parseBetanoLayout(rows: TicketRow[], symbols: SymbolCandidate[] 
       if (ambiguousExtra) {
         review(
           basePath + '.pick',
-          'Selección ' + (n + 1) + ': aparece «' + rest[0].text +
-          '» entre el nombre principal y el mercado. Confirma a quién corresponde antes de guardar.',
+          'Selección ' +
+            (n + 1) +
+            ': aparece «' +
+            rest[0].text +
+            '» entre el nombre principal y el mercado. Confirma a quién corresponde antes de guardar.',
         );
         rest.shift();
       }

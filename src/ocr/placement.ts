@@ -1,12 +1,19 @@
 import { normalized } from './markets';
 import { settledTicketHeader } from './header';
+import { builderProductTitle } from './bet365';
 
 // Draft evidence only. This is independent of Pendiente/Ganada/Perdida/Cashout
 // and does not change the persisted Bet or financial schemas.
 export interface PlacementEvidence {
   status: 'preparation' | 'confirmed' | 'unknown';
   evidence: string[];
-  basis: 'creation-action' | 'receipt' | 'settled-header' | 'cashout-available' | 'conflicting' | 'insufficient';
+  basis:
+    | 'creation-action'
+    | 'receipt'
+    | 'settled-header'
+    | 'cashout-available'
+    | 'conflicting'
+    | 'insufficient';
 }
 
 export function classifyPlacement(text: string, cashoutAvailable: boolean): PlacementEvidence {
@@ -15,6 +22,7 @@ export function classifyPlacement(text: string, cashoutAvailable: boolean): Plac
     .map((line) => line.trim())
     .filter(Boolean);
   const preparation = lines.filter((line) => {
+    if (builderProductTitle(line)) return false;
     const value = normalized(line);
     return (
       /^(?:crear|confirmar|realizar|colocar|hacer) (?:la |mi )?apuesta\b/.test(value) ||
@@ -38,7 +46,11 @@ export function classifyPlacement(text: string, cashoutAvailable: boolean): Plac
     ? lines.filter((line) => settledTicketHeader(line) !== undefined)
     : [];
   if (preparation.length && (receipts.length || cashoutAvailable || settledHeaders.length))
-    return { status: 'unknown', basis: 'conflicting', evidence: [...preparation, ...receipts, ...settledHeaders] };
+    return {
+      status: 'unknown',
+      basis: 'conflicting',
+      evidence: [...preparation, ...receipts, ...settledHeaders],
+    };
   if (preparation.length)
     return { status: 'preparation', basis: 'creation-action', evidence: preparation };
   if (receipts.length) return { status: 'confirmed', basis: 'receipt', evidence: receipts };

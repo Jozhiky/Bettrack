@@ -1,18 +1,25 @@
 import { interpretMarket, type MarketInterpretation } from './semantics';
+import type { TicketPromotion } from './symbols';
 
 interface SelectionEvidence {
   event: string;
   market: string;
   pick: string;
   sport: string;
-  builderMarkets?: { market: string; pick: string }[];
+  promotion?: TicketPromotion;
+  builderMarkets?: { market: string; pick: string; promotion?: TicketPromotion }[];
 }
 
 export function interpretSelections(selections: SelectionEvidence[]) {
   return selections.flatMap((s, i) =>
     (s.builderMarkets ?? [s]).map((m, j) => ({
       path: `selections[${i}]${s.builderMarkets ? `.builderMarkets[${j}]` : ''}`,
-      value: interpretMarket(m.market, m.pick, s.event, s.sport),
+      value: interpretMarket(m.market, m.pick, s.event, s.sport, {
+        promotion: m.promotion,
+        ...(s.market === 'Crear apuesta' && s.builderMarkets
+          ? { product: 'bet365-builder' as const }
+          : {}),
+      }),
     })),
   );
 }
@@ -20,6 +27,7 @@ export function interpretSelections(selections: SelectionEvidence[]) {
 // Scope changes the meaning of these statistics. Missing optional sport/period,
 // or an operator not modelled for a named pick, is not by itself a veto.
 const scopeSensitiveStatistics = new Set([
+  'combat-method',
   'goals',
   'corners',
   'shots',
