@@ -7,12 +7,12 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 ## Estado de referencia
 
 - Repositorio: `https://github.com/Jozhiky/Bettrack.git`; rama actual de este trabajo:
-  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 → #9 → #10 fue integrada con autorización.
-  **SHA desplegado:** `783b4d9a104fca02abb95fa130e2d7eac6b6f6ae`, versión Hosting
-  `bce1137d10a9d022`. Los commits documentales posteriores no cambian esa versión.
+  `main`. La cadena #2 → #3 → #4 → #5 → #6 → #7 → #8 → #9 → #10 → #11 fue integrada con autorización.
+  **SHA desplegado:** `3493f5dc4cfc3091674c54fb9bb99f0f38fb475c`, versión Hosting
+  `341088c8027e5568`. Los commits documentales posteriores no cambian esa versión.
 - Workspace habitual Windows: `D:\Apuestas`, PowerShell; usar `npm.cmd` / `npx.cmd`.
 - Referencia histórica FASE 3: `915da4bab07c0b9fa11914683d92f9d678fc2c89`.
-  El despliegue actual incluye las correcciones y barreras de PR #2–#10;
+  El despliegue actual incluye las correcciones y barreras de PR #2–#11;
   consultar `git log -1 --oneline` para el HEAD, sin volver a la referencia histórica.
 - Hosting productivo: `https://bettrack-wostcloud1.web.app`. **Despliegue verificado
   el 24/10/2026**, con los ajustes de esquema Supabase autorizados de #8 y #9.
@@ -87,7 +87,7 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - [Detalles y límites](BETANO_LIVE_LIGHTNING.md).
   [Recibo de publicación y reversión](LIVE_LIGHTNING_DEPLOYMENT_2026_10_24.md).
 
-## Dos retenidas: recuperación del cobro preparada, pendiente de publicación
+## Dos retenidas: recuperación del cobro — PR #11 desplegado con autorización
 
 - Rama `codex/settled-footer-recovery`: reproducido decimal corrupto del cobro
   en un boleto Ganada; otro boleto es abierto, con oferta cashout y potencial.
@@ -96,8 +96,13 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   revisión individual; mantiene consentimiento antes de cualquier finanza.
 - **725/725**, TypeScript/build, seis grupos QA (18/18/36 sintéticos),
   OCR **1067/1089**, mismas 22 diferencias, cero regresiones de seguridad.
-- Ninguna migración ni modificación de apuestas/movimientos productivos.
-  No fusionado ni desplegado: requiere autorización específica nueva.
+- Usuario autorizó la fusión y publicación del [PR #11](https://github.com/Jozhiky/Bettrack/pull/11).
+  Ninguna migración ni modificación de apuestas/movimientos productivos.
+- Publicación verificada: 45 hashes, 15 activos OCR, cinco rutas, SW y tres tamaños;
+  recuperación del cobro desde imagen sintética existente, originales conservados,
+  dos peticiones de metadatos simuladas, cero backend real ni finanzas.
+- Versión anterior `bce1137d10a9d022` conservada y reversión compatible adicional
+  comprobada; [recibo de publicación](RECEIPT_OCR_DEPLOYMENT_2026_10_24.md).
 - [Causas, evidencia, pruebas y límites](RETAINED_CAPTURE_VALIDATION.md).
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado

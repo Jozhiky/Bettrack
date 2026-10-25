@@ -3,6 +3,8 @@
 24/10/2026. Base: `90af35be226ee38401316d95e0cd122a9e67ba20`, posterior al
 despliegue autorizado del PR #10. Rama: `codex/settled-footer-recovery`.
 
+Actualización: [PR #11 fusionado y desplegado con autorización](RECEIPT_OCR_DEPLOYMENT_2026_10_24.md).
+
 ## Causas comprobadas
 
 - **Caso A, liquidado Ganada:** stake S/20.00 y Ganancias S/31.00 visibles.
@@ -68,8 +70,8 @@ ni abrir la revisión individual. No se ha registrado en producción.
 ## Entrega y límites
 
 No hay migraciones, dependencias nuevas, cambios de Auth/RLS/Storage ni operaciones
-financieras productivas. La nueva implementación solo está preparada para revisión;
-no se ha fusionado ni desplegado. Publicarla requiere autorización específica.
+financieras productivas. La implementación se fusionó y publicó con autorización
+específica del usuario; el recibo enlazado documenta las comprobaciones de Hosting.
 
 El recorte es deliberadamente conservador. Si no contiene exactamente el pie,
 los contrastes discrepan o falta algún dígito original, conserva la revisión.
