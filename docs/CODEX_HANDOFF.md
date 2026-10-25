@@ -120,6 +120,23 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   como Ganada y el Builder sigue Pendiente hasta liquidación global.
 - [Reglas, fuentes oficiales, resultados y límites](PROMOTED_TICKET_LAYOUTS.md).
 
+## Registro automático por cuenta — preparado, no desplegado
+
+- Usuario eligió «Registro automático sin confirmación por lote». Rama
+  `codex/automatic-capture-registration`, sobre PR #12 (`b006c56`, abierto).
+  Autorización inicial por cuenta, revocable/auditada; solo capturas nuevas.
+  Pendientes y liquidadas sin edición; discrepancias sin cargos. Sin migraciones.
+- Referencia común explícita permite aplicar resultado posterior sin otro stake;
+  términos solos no liquidan una existente. OCR conservado ante fallo financiero;
+  reintentos limitados de conflictos y fecha contable desde auditoría del servidor.
+- **773/773**, TypeScript/build. Banco habitual **1068/1089**, mismas 21 diferencias,
+  cero nuevas regresiones; calificación automática **15/28**, trece retenidas.
+  No prometer registro universal. Tesseract local gratuito y oráculos intactos.
+- QA aislado del modo nuevo y regresión de lote manual. El banco FASE 3 termina
+  en una expectativa previa obsoleta de siete retenciones (`0 !== 7`): mismo
+  resultado reproducido con base PR #12. No se alteraron sus expectativas.
+- [Comportamiento, pruebas, límites y autorización pendiente](AUTOMATIC_CAPTURE_REGISTRATION.md).
+
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;

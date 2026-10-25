@@ -10,7 +10,7 @@ import { enrichCaptureReceipts } from '../data/captureReceipt';
 import { needsReceiptRead } from '../ocr/settlement';
 
 export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] }) {
-  const { run, data } = useApp();
+  const { run, data, settings } = useApp();
   const [recordedAt, setRecordedAt] = useState(timestamp);
   const [excluded, setExcluded] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -61,6 +61,16 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
     [uploads, recordedAt, data, excluded],
   );
   if (!rows.some((r) => r.evidence?.candidate)) return null;
+  if (settings?.automaticCaptures)
+    return (
+      <section className="panel" aria-label="Registro automático activo">
+        <h2>Registro automático activo</h2>
+        <p>
+          Las nuevas capturas con datos acreditados se registran al terminar la lectura. Las
+          excepciones se conservan sin cargos; este modo no pide confirmar lotes.
+        </p>
+      </section>
+    );
   const financial = ready.filter((r) => r.expectedOutcome === 'saved');
   const stake = financial.reduce((n, r) => n + r.historical!.closedStake, 0);
   const returned = financial.reduce((n, r) => n + r.historical!.returned, 0);

@@ -3,6 +3,8 @@ import type { OcrLine } from './layout';
 import { betanoHeader } from './header';
 import { readVisualMode } from './visualMode';
 const imageSymbols = new WeakMap<HTMLCanvasElement, SymbolCandidate[]>();
+export const recognitionScale = (width: number, height: number) =>
+  Math.min(4, Math.max(1, 1200 / width), Math.sqrt(24_000_000 / (width * height)));
 export async function hashImage(blob: Blob) {
   const bytes = await blob.arrayBuffer();
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
@@ -12,7 +14,7 @@ export async function hashImage(blob: Blob) {
 export async function preprocess(
   file: Blob,
   crop?: { x: number; y: number; width: number; height: number },
-  enhanced = false,
+  enhanced: boolean | 'soft' = false,
 ) {
   const bitmap = await createImageBitmap(file);
   try {
@@ -22,7 +24,7 @@ export async function preprocess(
       sw = (bitmap.width * c.width) / 100,
       sh = (bitmap.height * c.height) / 100;
     // Narrow, tall tickets need larger glyphs, not a height-based downscale.
-    const scale = Math.min(4, Math.max(1, 1200 / sw), Math.sqrt(24_000_000 / (sw * sh)));
+    const scale = recognitionScale(sw, sh);
     const canvas = document.createElement('canvas');
     canvas.width = Math.round(sw * scale);
     canvas.height = Math.round(sh * scale);
@@ -50,7 +52,13 @@ export async function preprocess(
       pixels.data[i] =
         pixels.data[i + 1] =
         pixels.data[i + 2] =
-          enhanced ? (value < 160 ? 0 : 255) : value;
+          enhanced === 'soft'
+            ? Math.max(0, Math.min(255, (value - 128) * 1.15 + 128))
+            : enhanced
+              ? value < 160
+                ? 0
+                : 255
+              : value;
     }
     ctx.putImageData(pixels, 0, 0);
     // Mask only compact colored badges, so OCR cannot turn +2 icons into names.
@@ -83,7 +91,7 @@ export async function createRecognizer() {
       file: Blob,
       progress: (p: number) => void,
       crop?: { x: number; y: number; width: number; height: number },
-      enhanced = false,
+      enhanced: boolean | 'soft' = false,
     ) {
       report = progress;
       try {
@@ -160,9 +168,10 @@ export async function createRecognizer() {
           }
         }
         const symbols = imageSymbols.get(image) ?? [];
-        const visualMode = header && !crop
-          ? await readVisualMode(file, await hashImage(file)).catch(() => undefined)
-          : undefined;
+        const visualMode =
+          header && !crop
+            ? await readVisualMode(file, await hashImage(file)).catch(() => undefined)
+            : undefined;
         return {
           text: lines.map((l) => l.text).join('\n'),
           confidence: data.confidence,

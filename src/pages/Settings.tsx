@@ -16,6 +16,7 @@ import { displayDate, toCents } from '../domain/model';
 import { Button, Field, Modal } from '../components/ui';
 import { BetForm } from '../components/BetForm';
 import { CaptureStorage } from '../components/CaptureStorage';
+import { AutomaticCaptureSettings } from '../components/AutomaticCaptureSettings';
 export function Settings() {
   const { data, settings, run, notify } = useApp();
   const file = useRef<HTMLInputElement>(null);
@@ -41,6 +42,7 @@ export function Settings() {
       </div>
       <div className="settings-grid">
         <CaptureStorage />
+        <AutomaticCaptureSettings />
         <section className="panel">
           <div className="section-heading">
             <h2>Preferencias</h2>
@@ -220,9 +222,18 @@ export function Settings() {
             <Cloud size={20} />
           </div>
           <span className="info-tag">Supabase · cuenta privada</span>
-          <p>Tus apuestas, banca, preferencias y capturas se guardan en Supabase y están disponibles al iniciar sesión desde otro dispositivo.</p>
-          <p>Se necesita conexión para guardar cambios. El OCR procesa la imagen en tu navegador y la captura se almacena en un bucket privado de tu cuenta.</p>
-          <p className="muted">Solo la sesión de acceso utiliza una cookie. No guardamos tus registros en localStorage ni IndexedDB.</p>
+          <p>
+            Tus apuestas, banca, preferencias y capturas se guardan en Supabase y están disponibles
+            al iniciar sesión desde otro dispositivo.
+          </p>
+          <p>
+            Se necesita conexión para guardar cambios. El OCR procesa la imagen en tu navegador y la
+            captura se almacena en un bucket privado de tu cuenta.
+          </p>
+          <p className="muted">
+            Solo la sesión de acceso utiliza una cookie. No guardamos tus registros en localStorage
+            ni IndexedDB.
+          </p>
         </section>
       </div>
       <section className="panel audit-panel">

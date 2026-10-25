@@ -18,6 +18,7 @@
     "test:persistence:qa": "node --test tests/persistence-qa/target.test.mjs && node scripts/persistence-qa/run.mjs",
     "test:settled:qa": "node --test tests/persistence-qa/target.test.mjs && node scripts/persistence-qa/settled.mjs",
     "test:automatic:qa": "node --test tests/persistence-qa/target.test.mjs && node scripts/persistence-qa/automatic.mjs",
+    "test:automatic-registration:qa": "node --test tests/persistence-qa/target.test.mjs && node scripts/persistence-qa/automatic-registration.mjs",
     "demo:persistence:qa": "node scripts/persistence-qa/server.mjs --serve",
     "test:ocr:baseline": "node scripts/ocr-phase1/run.mjs",
     "test:ocr:strict": "node scripts/ocr-phase1/run.mjs --strict",

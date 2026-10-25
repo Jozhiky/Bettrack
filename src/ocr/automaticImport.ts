@@ -1,5 +1,9 @@
 import type { CaptureUpload, Snapshot } from '../domain/model';
-import { sameCaptureTerms, type CaptureTerms, type CaptureRows } from '../domain/captureDuplicates';
+import {
+  sameCaptureIdentity,
+  type CaptureTerms,
+  type CaptureRows,
+} from '../domain/captureDuplicates';
 import { historicalTimingSchema, limaDay } from '../domain/model';
 import { selectionProduct } from '../domain/odds';
 import { readDraft, canReviewCapture, reviewSelectionSchema, type ReviewDraft } from './review';
@@ -181,11 +185,12 @@ export function previewAutomaticBatch(
       date: h.betDate,
       stake: h.header.stake,
       odds: h.header.odds,
+      ticketReference: row.draft!.ticketReference,
     };
     const match = seen.find(
       (b) =>
         b.imageId === row.upload.imageId ||
-        sameCaptureTerms(terms, row.draft!.selections, b.terms, b.selections),
+        sameCaptureIdentity(terms, row.draft!.selections, b.terms, b.selections),
     );
     row.duplicateOf = match?.id;
     row.expectedOutcome = match ? 'duplicate' : 'saved';
