@@ -136,6 +136,10 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   en una expectativa previa obsoleta de siete retenciones (`0 !== 7`): mismo
   resultado reproducido con base PR #12. No se alteraron sus expectativas.
 - [Comportamiento, pruebas, límites y autorización pendiente](AUTOMATIC_CAPTURE_REGISTRATION.md).
+- [Diagnóstico de las trece retenciones](AUTOMATIC_CAPTURE_RETENTION_DIAGNOSIS.md):
+  ocho relecturas locales y cotejo visual; tres bloqueos son solo Más/Mas,
+  siete incluyen colocación y los restantes requieren lecturas de región o
+  contexto de participante. Sin cambios de admisión ni mejora reclamada de 15/28.
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
