@@ -5,7 +5,16 @@ import { useCaptureInput } from '../app/useCaptureInput';
 import { workspaceItems } from '../domain/workspace';
 import { CapturePending } from '../components/CapturePending';
 import { useEffect, useRef, useState } from 'react';
-import { Plus, Search, Camera, Upload, Ticket, LayoutGrid, Rows3, SlidersHorizontal } from 'lucide-react';
+import {
+  Plus,
+  Search,
+  Camera,
+  Upload,
+  Ticket,
+  LayoutGrid,
+  Rows3,
+  SlidersHorizontal,
+} from 'lucide-react';
 import { useApp } from '../app/context';
 import { Button } from '../components/ui';
 import { BetDetail } from '../components/BetDetail';
@@ -162,7 +171,11 @@ export function Bets() {
         <div className="capture-drop-overlay">
           <Upload size={40} />
           <strong>Suelta tus capturas aquí</strong>
-          <span>Leeremos cada boleto para que lo revises antes de registrarlo.</span>
+          <span>
+            {settings.automaticCaptures
+              ? 'Registraremos las lecturas acreditadas y conservaremos las excepciones.'
+              : 'Leeremos cada boleto para que lo revises antes de registrarlo.'}
+          </span>
         </div>
       )}
       <div className="page-heading workspace-heading">
@@ -187,8 +200,14 @@ export function Bets() {
           </Button>
         </div>
       </div>
+      {settings.automaticCaptures && (
+        <p className="notice" role="status">
+          Registro automático activo. Las capturas nuevas con datos acreditados se guardan sin
+          confirmar lotes. Las ambiguas se conservan sin movimientos.
+        </p>
+      )}
       <BetOverview bets={scoped} settlements={data.settlements} currency={settings.currency} />
-      <HistoricalCaptureInbox uploads={unresolved}/>
+      <HistoricalCaptureInbox uploads={unresolved} />
       <div className="workspace-context">
         {unresolved.length > 0 && (
           <button className="processing-link" onClick={showCaptures}>

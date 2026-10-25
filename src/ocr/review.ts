@@ -6,6 +6,7 @@ import { settlementEvidence } from './settlement';
 import { visualModeSchema } from './visualMode';
 import { receiptOcrSchema } from './receiptOcr';
 import { quotePromotionSchema } from './quotePromotion';
+import { automaticEvidenceSchema } from './automaticEvidence';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -41,6 +42,8 @@ export function readPlacementHistory(json: string) {
 const draftSchema = z
   .object({
     text: z.string().max(500000),
+    ticketReference: z.string().min(6).max(100).optional(),
+    automaticEvidence: automaticEvidenceSchema.optional().catch(undefined),
     house: z.string().max(100).optional(),
     kind: z.string().optional(),
     stake: z.number().optional(),

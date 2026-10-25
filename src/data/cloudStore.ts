@@ -9,6 +9,9 @@ type Records = Record<Collection, Row[]>;
 type Envelope = { version: number; records: Records };
 const empty = () => Object.fromEntries(collections.map(name => [name, []])) as unknown as Records;
 type Predicate = (row: Row) => boolean;
+export class CloudConflictError extends Error {
+  constructor() { super('Hubo un cambio desde otro dispositivo. Actualizamos los datos; vuelve a intentar.'); this.name = 'CloudConflictError'; }
+}
 const serializable = (row: Row) => JSON.parse(JSON.stringify({ ...row, blob: undefined }));
 
 class Query {
@@ -83,13 +86,25 @@ export class CloudStore {
   private channel?: ReturnType<typeof supabase.channel>;
   private poll?: ReturnType<typeof setInterval>;
   private loaded = false;
+  private lastCommit?: { version: number; observedAt: number };
   status = 'Conectando';
   readonly tables = collections.map(name => new MemoryTable(this, name));
   constructor() { for (const table of this.tables) Object.assign(this, { [table.name]: table }); }
   table(name: Collection) { return this.tables.find(table => table.name === name)!; }
   subscribe = (callback: () => void) => { this.listeners.add(callback); return () => { this.listeners.delete(callback); }; };
   emit() { this.listeners.forEach(fn => fn()); }
-  reset() { this.generation++; this.loaded = false; this.imageCache.clear(); this.userId = ''; this.records = empty(); this.version = 0; if (this.channel) void supabase.removeChannel(this.channel); clearInterval(this.poll); this.emit(); }
+  reset() { this.generation++; this.loaded = false; this.lastCommit = undefined; this.imageCache.clear(); this.userId = ''; this.records = empty(); this.version = 0; if (this.channel) void supabase.removeChannel(this.channel); clearInterval(this.poll); this.emit(); }
+  async captureBookingTime() {
+    const anchor = this.lastCommit, generation = this.generation;
+    if (!anchor || !this.userId) throw Error('Falta una referencia horaria confirmada del servidor. La captura sigue conservada.');
+    const {data,error} = await supabase.from('bt_server_audit').select('occurred_at').eq('user_id',this.userId).eq('version',anchor.version).maybeSingle();
+    if (error || !data || generation !== this.generation || !Number.isFinite(Date.parse(data.occurred_at)))
+      throw Error('No se pudo comprobar la fecha contable del servidor. La captura sigue conservada.');
+    // PostgreSQL recorded this instant before our commit response arrived.
+    // Elapsed monotonic time keeps the result a conservative server-time bound,
+    // independent of a device clock slightly ahead of the database clock.
+    return new Date(Date.parse(data.occurred_at) + Math.max(0,performance.now()-anchor.observedAt)).toISOString();
+  }
   private serial<T>(fn: () => Promise<T>): Promise<T> { const result = this.tail.then(fn, fn); this.tail = result.catch(() => {}); return result; }
   async connect(userId: string) {
     this.reset(); this.userId = userId;
@@ -184,9 +199,10 @@ export class CloudStore {
               throw new Error('El backend todavía no admite históricos con cuota o potencial desconocidos. Se requiere la actualización autorizada de la base de datos; tu captura sigue en revisión.');
           }
           const { data, error } = await supabase.rpc('bt_commit', { expected_version: this.version, changes });
-          if (error) throw new Error(error.message.includes('BT_CONFLICT') ? 'Hubo un cambio desde otro dispositivo. Actualizamos los datos; vuelve a intentar.' : error.message);
+          if (error) throw error.message.includes('BT_CONFLICT') ? new CloudConflictError() : new Error(error.message);
           if (generation !== this.generation) throw new Error('La sesión cambió durante el guardado.');
           this.version = Number(data); this.records = working.records;
+          this.lastCommit = { version: this.version, observedAt: performance.now() };
           for (const row of this.records.images) if (row.blob instanceof Blob) { this.imageCache.put(String(row.path), row.blob); delete row.blob; }
           this.imageCache.retain(new Set(this.records.images.map(row => String(row.path))));
         }

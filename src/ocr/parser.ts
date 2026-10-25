@@ -27,6 +27,8 @@ export interface ParsedTicket {
   quotePromotion?: QuotePromotion;
   houseBasis?: 'superaumento-product-layout';
   displayedReturn?: { label: 'Ganancias'; amount: number; verified: false };
+  automaticEvidence?: import('./automaticEvidence').AutomaticEvidence;
+  ticketReference?: string;
   // Draft-only metadata; does not change historical selection schemas.
   placement?: PlacementEvidence;
   reviewReasons?: string[];
@@ -255,12 +257,23 @@ export function parseTicket(
   if (quotePromotion && selections.length === 1 && selections[0].odds !== null)
     quotePromotion.appliedOdds = selections[0].odds;
   const totalOdds = odds ?? (kind === 'Simple' ? quotePromotion?.appliedOdds : undefined);
+  const references = [
+    ...new Set(
+      lines.flatMap((line) => {
+        const m = line.match(
+          /^(?:(?:ID|1D) (?:de (?:la )?)?apuesta|referencia (?:de (?:la )?)?apuesta|n[úu]mero de apuesta)\s*[:#]\s*([A-Z0-9][A-Z0-9/_-]{5,99})$/i,
+        );
+        return m ? [m[1]] : [];
+      }),
+    ),
+  ];
   if (bet365)
     warnings.push(
       'Superaumento reconocido por su formato. «Crear apuesta» es el producto; los checks y Ganancias no acreditan por sí solos colocación, resultado global ni cobro.',
     );
   return {
     house,
+    ...(references.length === 1 ? { ticketReference: references[0] } : {}),
     ...(bet365 ? { houseBasis: bet365.houseBasis, displayedReturn: bet365.displayedReturn } : {}),
     ...(quotePromotion ? { quotePromotion } : {}),
     ...(house === 'Betano' && visualModeSchema.safeParse(visualMode).success ? { visualMode } : {}),

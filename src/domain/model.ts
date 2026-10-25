@@ -89,6 +89,7 @@ export const betSchema = z
     source: z.enum(['manual', 'ocr', 'import']),
     imageId: z.string().optional(),
     fingerprint: z.string(),
+    ticketReference: z.string().min(6).max(100).optional(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })
@@ -245,6 +246,7 @@ export interface Settings {
   currency: (typeof currencies)[number];
   exposureLimit: number;
   lossLimit: number;
+  automaticCaptures?: import('./automaticPolicy').AutomaticPolicy;
 }
 export interface Snapshot {
   houses: Master[];
