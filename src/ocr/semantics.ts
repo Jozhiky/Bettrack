@@ -1,4 +1,5 @@
 import { marketFamily, normalized } from './markets';
+import type { TicketPromotion } from './symbols';
 
 export interface MarketInterpretation {
   original: { market: string; pick: string; event: string };
@@ -29,26 +30,46 @@ export function interpretMarket(
   pick: string,
   event = '',
   sport = '',
+  context: { promotion?: TicketPromotion; product?: 'bet365-builder' } = {},
 ): MarketInterpretation {
   const label = normalized(market),
     value = normalized(pick);
+  const promotion = context.promotion;
+  const builderLabel =
+    context.product === 'bet365-builder' &&
+    label.match(/^(?:([12])[°ºªoa*"']?\s*(?:tiempo|tempo)\s*[-–]\s*)?(goles|tiros de esquina)\.?$/);
+  const builderPick =
+    builderLabel &&
+    value.match(
+      /^(mas de|menos de)\s+(\d+(?:[.,]\d+)?)\s+(goles|tiros de esquina)(?: en la ([12])[°ºªoa*"']? mitad)?$/,
+    );
+  const builderTotal =
+    builderLabel &&
+    builderPick &&
+    builderLabel[2] === builderPick[3] &&
+    !(builderLabel[1] && builderPick[4] && builderLabel[1] !== builderPick[4]);
+  const builderHalf = builderTotal && (builderLabel[1] || builderPick[4]);
   const family = marketFamily(market) ?? null;
   const period: MarketInterpretation['period'] =
-    /\b(?:primer|primera|1[ºoa]?) (?:tiempo|mitad)\b/.test(label)
+    builderHalf === '1'
       ? 'first-half'
-      : /\b(?:segundo|segunda|2[ºoa]?) (?:tiempo|mitad)\b/.test(label)
+      : builderHalf === '2'
         ? 'second-half'
-        : /\b(?:primer|primero|1[ºoa]?) (?:periodo|cuarto)\b/.test(label)
-          ? 'first-period'
-          : /\b(?:segundo|2[ºoa]?) (?:periodo|cuarto)\b/.test(label)
-            ? 'second-period'
-            : /\b(?:tercer|tercero|3[ºoa]?) (?:periodo|cuarto)\b/.test(label)
-              ? 'third-period'
-              : /\b(?:cuarto|4[ºoa]?) (?:periodo|cuarto)\b/.test(label)
-                ? 'fourth-period'
-                : /\b(?:partido completo|tiempo reglamentario)\b/.test(label)
-                  ? 'full-match'
-                  : 'unspecified';
+        : /\b(?:primer|primera|1[ºoa]?) (?:tiempo|mitad)\b/.test(label)
+          ? 'first-half'
+          : /\b(?:segundo|segunda|2[ºoa]?) (?:tiempo|mitad)\b/.test(label)
+            ? 'second-half'
+            : /\b(?:primer|primero|1[ºoa]?) (?:periodo|cuarto)\b/.test(label)
+              ? 'first-period'
+              : /\b(?:segundo|2[ºoa]?) (?:periodo|cuarto)\b/.test(label)
+                ? 'second-period'
+                : /\b(?:tercer|tercero|3[ºoa]?) (?:periodo|cuarto)\b/.test(label)
+                  ? 'third-period'
+                  : /\b(?:cuarto|4[ºoa]?) (?:periodo|cuarto)\b/.test(label)
+                    ? 'fourth-period'
+                    : /\b(?:partido completo|tiempo reglamentario)\b/.test(label)
+                      ? 'full-match'
+                      : 'unspecified';
   const statistic = !family
     ? null
     : /^jugador que anota o da una asistencia$/.test(label)
@@ -110,6 +131,16 @@ export function interpretMarket(
     /^(?:anotar en cualquier momento|jugador que anota o da una asistencia)$/.test(label)
       ? scorerPick[1]
       : null;
+  const fighter =
+    family === 'combat-method' && participants.length === 2
+      ? participants.filter(
+          (name) =>
+            identity(pick).startsWith(identity(name) + ' por ') &&
+            /^(?:KO,\s*TKO o descalificaci[oó]n|KO|TKO|sumisi[oó]n|decisi[oó]n(?: (?:un[aá]nime|dividida|mayoritaria))?|descalificaci[oó]n)$/i.test(
+              pick.slice(name.length + 5),
+            ),
+        )
+      : [];
   // "Jugador que..." explicitly qualifies the selection as a player. A
   // plain unparenthesized participant survives only as reviewable OCR text.
   const namedScorer =
@@ -120,7 +151,12 @@ export function interpretMarket(
       : null;
   let scope: MarketInterpretation['scope'] = 'unknown';
   let participant: string | null = null;
-  if (explicitPlayerPick || namedScorer) {
+  if (builderTotal) {
+    scope = 'match';
+  } else if (fighter.length === 1) {
+    scope = 'player';
+    participant = fighter[0];
+  } else if (explicitPlayerPick || namedScorer) {
     scope = 'player';
     participant = explicitPlayerPick || namedScorer;
   } else if (family && matches.length === 1 && participants.length === 2) {
@@ -143,9 +179,22 @@ export function interpretMarket(
     );
     if (at > 0) participant = originalLabel.slice(0, at).trim();
   }
+  // Suplente de Oro is explicitly a player-market offer, not an outcome.
+  // It disambiguates an observed leading name, never supplies a missing name,
+  // club or substitute. An exact event-team label still retains team scope.
+  const promotedPlayer =
+    promotion === 'Suplente de Oro' &&
+    scope === 'unknown' &&
+    family === 'shots' &&
+    participant &&
+    !participants.some((p) => identity(p) === identity(participant!)) &&
+    /^[\p{L}][\p{L}.'’\s−-]+$/u.test(participant) &&
+    participant.trim().split(/\s+/).length >= 2;
+  if (promotedPlayer) scope = 'player';
   let operator: MarketInterpretation['operator'] = null;
   let threshold: number | null = null;
-  const total = value.match(/^(mas de|menos de)\s+(\d+(?:[.,]\d+)?)$/);
+  const total =
+    value.match(/^(mas de|menos de)\s+(\d+(?:[.,]\d+)?)$/) || (builderTotal ? builderPick : null);
   const minimum = value.match(/^(\d+(?:[.,]\d+)?)\s*\+$/);
   const handicap = statistic === 'handicap' && value.match(/(?:^|\s)([+−-]\d+(?:[.,]\d+)?)$/);
   if (total) {
@@ -174,7 +223,8 @@ export function interpretMarket(
       market: family ? 'recognized' : market ? 'review' : 'missing',
       sport: sport ? 'recognized' : 'missing',
       participant:
-        participant && (matches.length === 1 || !!explicitPlayerPick)
+        participant &&
+        (matches.length === 1 || !!explicitPlayerPick || fighter.length === 1 || !!promotedPlayer)
           ? 'recognized'
           : participant
             ? 'review'

@@ -105,6 +105,21 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   comprobada; [recibo de publicación](RECEIPT_OCR_DEPLOYMENT_2026_10_24.md).
 - [Causas, evidencia, pruebas y límites](RETAINED_CAPTURE_VALIDATION.md).
 
+## Promociones y combate: corrección preparada, no desplegada
+
+- Rama `codex/promoted-ticket-layouts`: reproducción local de tres adjuntos;
+  Superaumento bet365 (un evento/tres mercados, cuota final), Super Mejorada
+  Betano con Forma del Triunfo (7-way), y contexto de jugador por Suplente de Oro.
+- No confunde un banner con una selección, porcentaje con dinero extra,
+  checks parciales con victoria global, ni oferta con cashout ejecutado.
+- **740/740**, TypeScript/build; banco **1068/1089**, 21 diferencias, una mejora
+  y cero regresiones, corpus/oráculos/modelos intactos. UI tres tamaños y seis
+  grupos QA aislados aprobados. Originales privados solo en localhost.
+- Sin migraciones, nuevas dependencias ni modificaciones productivas.
+  El caso bet365 conserva estado/cobro no acreditados; el combate es preparable
+  como Ganada y el Builder sigue Pendiente hasta liquidación global.
+- [Reglas, fuentes oficiales, resultados y límites](PROMOTED_TICKET_LAYOUTS.md).
+
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;

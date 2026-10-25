@@ -71,7 +71,11 @@ export function prepareAutomaticImport(upload: CaptureUpload, recordedAt: string
   const evidence = settlementEvidence(draft);
   if (!evidence.kind || evidence.manualState)
     reasons.push(
-      evidence.candidate ? 'Estado global ambiguo.' : 'Boleto abierto: ninguna oferta es un cobro.',
+      evidence.candidate
+        ? 'Estado global ambiguo.'
+        : draft.houseBasis === 'superaumento-product-layout'
+          ? 'Superaumento leído: falta acreditar el estado global y el cobro. Los checks de cada mercado no liquidan el boleto completo.'
+          : 'Boleto abierto: ninguna oferta es un cobro.',
     );
   if (!canReviewCapture(draft)) reasons.push('Falta evidencia de colocación.');
   if (evidence.partial) reasons.push('Cierre parcial o stake cerrado ambiguo.');

@@ -139,6 +139,21 @@ export function CapturePending({
           registrarla sin completar fechas.
         </p>
       )}
+      {draft?.quotePromotion && (
+        <p className="capture-reason">
+          {draft.quotePromotion.label}
+          {draft.quotePromotion.percent ? ` · ${draft.quotePromotion.percent}%` : ''}
+          {draft.quotePromotion.appliedOdds !== undefined
+            ? ` · Cuota aplicada ${draft.quotePromotion.appliedOdds.toFixed(2)}`
+            : ''}
+          . La mejora de cuota no es un abono adicional.
+        </p>
+      )}
+      {draft?.displayedReturn && (
+        <p className="capture-reason">
+          Ganancias mostradas: {money(draft.displayedReturn.amount)} · Cobro sin acreditar.
+        </p>
+      )}
       {upload.reason && !automatic && (
         <p className="capture-reason">
           {historical?.candidate && upload.reason.startsWith('El boleto ya muestra estado global')

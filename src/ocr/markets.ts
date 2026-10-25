@@ -11,6 +11,7 @@ export const normalized = (text: string) =>
     .trim();
 
 export const marketFamilies = [
+  { id: 'combat-method', pattern: /^forma del triunfo\s*\(7-way\)$/ },
   {
     id: 'result',
     pattern:

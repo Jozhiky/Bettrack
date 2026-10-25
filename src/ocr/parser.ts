@@ -10,6 +10,8 @@ import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { classifyPlacement, type PlacementEvidence } from './placement';
 import { visualModeSchema, type VisualMode } from './visualMode';
 import type { ReceiptOcr } from './receiptOcr';
+import { bet365SuperBoostLayout } from './bet365';
+import { superImproved, type QuotePromotion } from './quotePromotion';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -22,6 +24,9 @@ export interface ParsedTicket {
   bonusAmount?: number;
   visualMode?: VisualMode;
   receiptOcr?: ReceiptOcr;
+  quotePromotion?: QuotePromotion;
+  houseBasis?: 'superaumento-product-layout';
+  displayedReturn?: { label: 'Ganancias'; amount: number; verified: false };
   // Draft-only metadata; does not change historical selection schemas.
   placement?: PlacementEvidence;
   reviewReasons?: string[];
@@ -128,7 +133,8 @@ export function parseTicket(
     .map((x) => x.trim())
     .filter(Boolean);
   const adapter = selectAdapter(text);
-  const house = adapter.name === 'Genérico' ? undefined : adapter.name;
+  const bet365 = adapter.name !== 'Betano' ? bet365SuperBoostLayout(rows) : undefined;
+  const house = adapter.name === 'Genérico' ? bet365?.house : adapter.name;
   const header = lines.find((l) => betanoHeader(l));
   const headerInfo = betanoHeader(header ?? '');
   const headerMoney = header?.match(/[S$5]\s*\/\s*(\d+[.,]\d{2})/i);
@@ -136,13 +142,13 @@ export function parseTicket(
     /[S$5]\s*\/\s*\d+[.,]\d{2}\s+(?:[^\d\n]+\s+)?(\d+(?:[.,]\d+)+)\s*$/i,
   );
   const stake =
-    labeled(text, adapter.stake, true) ?? (headerMoney ? toCents(headerMoney[1]) : undefined);
-  const odds = labeled(text, adapter.odds) ?? (headerOdds ? decimal(headerOdds[1]) : undefined);
+    labeled(text, adapter.stake, true) ?? (headerMoney ? toCents(headerMoney[1]) : bet365?.stake);
+  const odds = labeled(text, adapter.odds) ?? (headerOdds ? decimal(headerOdds[1]) : bet365?.odds);
   const potential = labeled(text, adapter.potential, true);
   const cashoutOffer = availableCashout(text, lines);
   const layout = house === 'Betano' && rows.length ? parseBetanoLayout(rows, symbols) : undefined;
   const bonusAmount = labeled(text, ['bono\\s*\\+?'], true);
-  const selections: ParsedTicket['selections'] = layout?.selections ?? [];
+  const selections: ParsedTicket['selections'] = layout?.selections ?? bet365?.selections ?? [];
   const hasLayoutSelections = selections.length > 0;
   for (let i = 0; i < lines.length; i++) {
     if (
@@ -212,6 +218,7 @@ export function parseTicket(
     );
   const kind =
     headerInfo?.kind ??
+    bet365?.kind ??
     (/combinada|multiple|múltiple|acumulador/i.test(text)
       ? 'Combinada'
       : /bet builder|crear apuesta/i.test(header || lines.slice(0, 3).join(' '))
@@ -230,7 +237,9 @@ export function parseTicket(
       `Estado visible: ${visibleStatus}. Revisa la liquidación y el importe realizado antes de confirmar.`,
     );
   const expectedSelections =
-    headerInfo?.expectedSelections ?? text.match(/combinada\s+de\s+(\d+)/i)?.[1];
+    headerInfo?.expectedSelections ??
+    bet365?.expectedSelections ??
+    text.match(/combinada\s+de\s+(\d+)/i)?.[1];
   if (expectedSelections && selections.length !== Number(expectedSelections))
     warnings.push(
       `El boleto indica ${expectedSelections} selecciones; se reconocieron ${selections.length}. Revisa las faltantes antes de guardar.`,
@@ -241,12 +250,23 @@ export function parseTicket(
       'Bono visible: se conserva aparte del retorno. No se suma ni se contabiliza como ganancia realizada.',
     );
   const interpretations = interpretSelections(selections);
+  const quotePromotion =
+    bet365?.quotePromotion ?? (house === 'Betano' ? superImproved(text) : undefined);
+  if (quotePromotion && selections.length === 1 && selections[0].odds !== null)
+    quotePromotion.appliedOdds = selections[0].odds;
+  const totalOdds = odds ?? (kind === 'Simple' ? quotePromotion?.appliedOdds : undefined);
+  if (bet365)
+    warnings.push(
+      'Superaumento reconocido por su formato. «Crear apuesta» es el producto; los checks y Ganancias no acreditan por sí solos colocación, resultado global ni cobro.',
+    );
   return {
     house,
+    ...(bet365 ? { houseBasis: bet365.houseBasis, displayedReturn: bet365.displayedReturn } : {}),
+    ...(quotePromotion ? { quotePromotion } : {}),
     ...(house === 'Betano' && visualModeSchema.safeParse(visualMode).success ? { visualMode } : {}),
     kind,
     stake,
-    odds,
+    odds: totalOdds,
     potential,
     cashoutOffer,
     bonusAmount,
@@ -263,10 +283,10 @@ export function parseTicket(
     interpretations,
     text,
     confidence: {
-      house: house ? 'high' : 'missing',
+      house: bet365 && adapter.name === 'Genérico' ? 'review' : house ? 'high' : 'missing',
       kind: kind ? 'review' : 'missing',
       stake: stake !== undefined ? 'review' : 'missing',
-      odds: odds !== undefined ? 'review' : 'missing',
+      odds: totalOdds !== undefined ? 'review' : 'missing',
       potential: potential !== undefined ? 'review' : 'missing',
       ...layout?.fieldConfidence,
     },

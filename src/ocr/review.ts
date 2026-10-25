@@ -5,6 +5,7 @@ import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { settlementEvidence } from './settlement';
 import { visualModeSchema } from './visualMode';
 import { receiptOcrSchema } from './receiptOcr';
+import { quotePromotionSchema } from './quotePromotion';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -50,6 +51,17 @@ const draftSchema = z
     bonusAmount: z.number().optional(),
     visualMode: visualModeSchema.optional().catch(undefined),
     receiptOcr: receiptOcrSchema.optional().catch(undefined),
+    quotePromotion: quotePromotionSchema.optional().catch(undefined),
+    houseBasis: z.literal('superaumento-product-layout').optional().catch(undefined),
+    displayedReturn: z
+      .object({
+        label: z.literal('Ganancias'),
+        amount: z.number().int().nonnegative(),
+        verified: z.literal(false),
+      })
+      .strict()
+      .optional()
+      .catch(undefined),
     selections: z.array(draftSelection).max(100),
     warnings: z.array(z.string()).default([]),
     confidence: z.record(z.string(), z.enum(['high', 'review', 'missing'])).default({}),
