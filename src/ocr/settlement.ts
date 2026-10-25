@@ -3,6 +3,7 @@ import { betSchema, settlementSchema, historicalTimingSchema, toCents } from '..
 import { settledTicketHeader, betanoHeader } from './header';
 import type { ParsedTicket } from './parser';
 import { matchesSelectionProduct } from '../domain/odds';
+import { agreedFooter } from './receiptOcr';
 
 export const historicalImportSchema = z
   .object({
@@ -27,7 +28,7 @@ export const historicalImportSchema = z
   })
   .strict();
 export type HistoricalImport = z.infer<typeof historicalImportSchema>;
-type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds'>;
+type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds' | 'receiptOcr'>;
 const money = '(?:S\\s*\\/|PEN)\\s*([0-9]+(?:[.,][0-9]+)*)';
 // Whole affirmative execution receipts only. Buttons, instructions and conditions do not match.
 const execution = new RegExp(
@@ -146,6 +147,26 @@ export function settlementEvidence(draft: Draft) {
           settledTicketHeader(line) === single ||
           (single === 'Cashout' && headerCashout && betanoHeader(line)),
       );
+  const footer = agreedFooter(draft.receiptOcr);
+  // A new crop can recover punctuation, not invent a digit, state or stake.
+  // Require the original labelled row's complete digit sequence to agree too.
+  const unreadPaid = lines.filter((l) => /^ganancias\s+(?:[S$5]\s*\/|PEN)/i.test(l));
+  const sourceAmount = unreadPaid[0]?.replace(/^ganancias\s+(?:[S$5]\s*\/|PEN)/i, '').trim();
+  const sourceDigits =
+    sourceAmount && /^[0-9][0-9.,\s¿?]*$/.test(sourceAmount)
+      ? sourceAmount.replace(/\D/g, '')
+      : undefined;
+  const readDigits = draft.receiptOcr?.text
+    .match(/ganancias\s+(?:[S$5]\s*\/|PEN)\s*(\d+[.,]\d{2})/i)?.[1]
+    .replace(/\D/g, '');
+  if (
+    !suggestions.length &&
+    unreadPaid.length === 1 &&
+    footer &&
+    footer.stake === draft.stake &&
+    sourceDigits === readDigits
+  )
+    suggestions.push(footer.returned);
   const receiptPaid =
     draft.house === 'Betano' &&
     terminal &&
@@ -185,6 +206,22 @@ export function settlementEvidence(draft: Draft) {
     betDate: labeledDate(lines, 'apuesta'),
     settlementDate: labeledDate(lines, '(?:liquidación|liquidacion|cierre)'),
   };
+}
+export function needsReceiptRead(draft: Draft) {
+  const e = settlementEvidence(draft);
+  return (
+    draft.house === 'Betano' &&
+    !draft.receiptOcr &&
+    (e.kind === 'Ganada' || e.kind === 'Cashout') &&
+    !e.manualState &&
+    !e.partial &&
+    !e.conflictingAmounts &&
+    e.returned === undefined &&
+    e.receiptReturn === undefined &&
+    !/ganancias\s+(?:potenciales|posibles)|retorno\s+potencial|^(?:cash\s*out|cerrar apuesta)\s*(?:[S$5]\s*\/|PEN)\s*\d/im.test(
+      draft.text,
+    )
+  );
 }
 export function validateHistoricalImport(
   raw: unknown,

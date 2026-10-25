@@ -324,6 +324,8 @@ async function processCapture(
     if (!image) throw new Error('No se encuentra la captura original.');
     if (parsed.visualMode && parsed.visualMode.imageHash !== image.hash)
       throw Error('La evidencia visual no corresponde a esta imagen. Actualiza la lectura.');
+    if (parsed.receiptOcr && parsed.receiptOcr.imageHash !== image.hash)
+      throw Error('La lectura del cobro no corresponde a esta imagen. Actualiza la lectura.');
     const placement = placementFromText(parsed.text);
     const previousHistory = readPlacementHistory(upload.draftJson);
     const priorPlacement = previousHistory && placementFromText(previousHistory.text);

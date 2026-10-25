@@ -9,6 +9,7 @@ import type { MarketInterpretation } from './semantics';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { classifyPlacement, type PlacementEvidence } from './placement';
 import { visualModeSchema, type VisualMode } from './visualMode';
+import type { ReceiptOcr } from './receiptOcr';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -20,6 +21,7 @@ export interface ParsedTicket {
   expectedSelections?: number;
   bonusAmount?: number;
   visualMode?: VisualMode;
+  receiptOcr?: ReceiptOcr;
   // Draft-only metadata; does not change historical selection schemas.
   placement?: PlacementEvidence;
   reviewReasons?: string[];

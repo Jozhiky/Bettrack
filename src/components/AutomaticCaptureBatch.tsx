@@ -6,6 +6,8 @@ import { confirmAutomaticBatch, type AutomaticBatchItem } from '../data/captures
 import { Button } from './ui';
 import { readDraft } from '../ocr/review';
 import { enrichCaptureModes } from '../data/captureVisualMode';
+import { enrichCaptureReceipts } from '../data/captureReceipt';
+import { needsReceiptRead } from '../ocr/settlement';
 
 export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] }) {
   const { run, data } = useApp();
@@ -29,7 +31,7 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
     (u) =>
       ['review', 'error'].includes(u.status) &&
       readDraft(u.draftJson)?.house === 'Betano' &&
-      !readDraft(u.draftJson)?.visualMode,
+      (!readDraft(u.draftJson)?.visualMode || needsReceiptRead(readDraft(u.draftJson)!)),
   );
   const scanKey = candidates.map((u) => u.id + ':' + u.imageId).join('|');
   const pending = candidates.filter((u) => !scanned.current.has(u.id + ':' + u.imageId));
@@ -39,6 +41,10 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
     for (const u of pending) scanned.current.add(u.id + ':' + u.imageId);
     setScanning(true);
     void enrichCaptureModes(pending.map((u) => u.id))
+      .then(async (modes) => {
+        const receipts = await enrichCaptureReceipts(pending.map((u) => u.id));
+        return { failed: modes.failed + receipts.failed };
+      })
       .then((r) => {
         if (mounted.current) setScanFailed(r.failed > 0);
       })
@@ -193,11 +199,11 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
           {money(returned - stake)}
         </strong>
       </p>
-      {scanning && <p role="status">Comprobando los iconos de las capturas guardadas…</p>}
+      {scanning && <p role="status">Comprobando iconos y cobros de las capturas guardadas…</p>}
       {scanFailed && (
         <p>
-          Alguna modalidad no se pudo comprobar. Se conserva sin determinar; puedes actualizar el
-          resumen para reintentar.
+          Algún icono o cobro no se pudo comprobar. El boleto conserva su revisión; puedes
+          actualizar el resumen para reintentar.
         </p>
       )}
       <p>

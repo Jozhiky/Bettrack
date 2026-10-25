@@ -3,6 +3,7 @@ import { it, expect, vi, afterEach } from 'vitest';
 import type { CaptureUpload } from '../domain/model';
 import { AutomaticCaptureBatch } from '../components/AutomaticCaptureBatch';
 import { enrichCaptureModes } from '../data/captureVisualMode';
+import { enrichCaptureReceipts } from '../data/captureReceipt';
 const mocks = vi.hoisted(() => ({
   confirm: vi.fn().mockResolvedValue({ saved: 1, duplicates: 0 }),
   run: vi.fn(async (fn: () => Promise<unknown>) => {
@@ -13,6 +14,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock('../data/captures', () => ({ confirmAutomaticBatch: mocks.confirm }));
 vi.mock('../data/captureVisualMode', () => ({
   enrichCaptureModes: vi.fn().mockResolvedValue({ enriched: 0, failed: 0 }),
+}));
+vi.mock('../data/captureReceipt', () => ({
+  enrichCaptureReceipts: vi.fn().mockResolvedValue({ enriched: 0, failed: 0 }),
 }));
 vi.mock('../app/context', () => ({
   useApp: () => ({ run: mocks.run }),
@@ -74,6 +78,39 @@ it('lets the user exclude a ticket without editing it', () => {
   render(<AutomaticCaptureBatch uploads={[upload('Perdida', '')]} />);
   fireEvent.click(screen.getByRole('checkbox'));
   expect(screen.getByRole('button', { name: 'Confirmar y registrar 0 liquidadas' })).toBeDisabled();
+  expect(mocks.confirm).not.toHaveBeenCalled();
+});
+it('automatically rereads a retained payout and waits before enabling financial consent', async () => {
+  let finish!: (value: { enriched: number; failed: number }) => void;
+  vi.mocked(enrichCaptureReceipts).mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        finish = resolve;
+      }),
+  );
+  const u = upload('Ganada', 'Ganancias s/140 ¿00');
+  const d = JSON.parse(u.draftJson);
+  d.visualMode = {
+    mode: 'live',
+    basis: 'betano-orange-lightning-v1',
+    imageHash: 'a'.repeat(64),
+    bbox: { x0: 0.89, y0: 0.54, x1: 0.92, y1: 0.59 },
+  };
+  u.draftJson = JSON.stringify(d);
+  const view = render(<AutomaticCaptureBatch uploads={[u]} />);
+  await waitFor(() => expect(enrichCaptureReceipts).toHaveBeenCalledWith(['Ganada']));
+  expect(screen.getByRole('button', { name: 'Confirmar y registrar 0 liquidadas' })).toBeDisabled();
+  d.receiptOcr = {
+    basis: 'betano-footer-tesseract-v1',
+    imageHash: 'a'.repeat(64),
+    text: 'Apuesta S/100.00\nGanancias S/140.00',
+    enhancedText: 'Apuesta S/100.00\nGanancias S/140.00',
+  };
+  view.rerender(<AutomaticCaptureBatch uploads={[{ ...u, draftJson: JSON.stringify(d) }]} />);
+  const button = screen.getByRole('button', { name: 'Confirmar y registrar 1 liquidadas' });
+  expect(button).toBeDisabled();
+  finish({ enriched: 1, failed: 0 });
+  await waitFor(() => expect(button).toBeEnabled());
   expect(mocks.confirm).not.toHaveBeenCalled();
 });
 it('finishes the visual scan when the refreshed draft gains its icon evidence', async () => {

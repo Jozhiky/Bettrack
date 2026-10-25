@@ -87,6 +87,19 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
 - [Detalles y límites](BETANO_LIVE_LIGHTNING.md).
   [Recibo de publicación y reversión](LIVE_LIGHTNING_DEPLOYMENT_2026_10_24.md).
 
+## Dos retenidas: recuperación del cobro preparada, pendiente de publicación
+
+- Rama `codex/settled-footer-recovery`: reproducido decimal corrupto del cobro
+  en un boleto Ganada; otro boleto es abierto, con oferta cashout y potencial.
+- Relectura automática del pie en dos contrastes, hash y dígitos coincidentes;
+  conserva originales/retenciones y audita solo borradores. No exige fechas ni
+  revisión individual; mantiene consentimiento antes de cualquier finanza.
+- **725/725**, TypeScript/build, seis grupos QA (18/18/36 sintéticos),
+  OCR **1067/1089**, mismas 22 diferencias, cero regresiones de seguridad.
+- Ninguna migración ni modificación de apuestas/movimientos productivos.
+  No fusionado ni desplegado: requiere autorización específica nueva.
+- [Causas, evidencia, pruebas y límites](RETAINED_CAPTURE_VALIDATION.md).
+
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
