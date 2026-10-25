@@ -334,6 +334,134 @@ try {
   passed.push(
     'database rolls back reopening and falsified historical chronology without changing account version',
   );
+  // Synthetic equivalent of a retained settled receipt. Original cached OCR is
+  // corrupt; both real, local Tesseract crops must recover the printed payout.
+  const retainedDraft = {
+    house: 'Betano',
+    kind: 'Simple',
+    stake: 2000,
+    text: 'Betano\nSimple S/20.00 Ganada\nApuesta S/20.00\nGanancias s/31 ¿00',
+    selections: [
+      {
+        event: 'Equipo QR vs. Equipo QS',
+        market: 'Goles totales Más/Menos',
+        pick: 'Más 2.5',
+        odds: 1.55,
+        sport: '',
+        league: '',
+      },
+    ],
+    warnings: [],
+    confidence: {},
+  };
+  const retainedBytes = Buffer.from(
+    await a.p.evaluate(() => {
+      const c = document.createElement('canvas');
+      c.width = 800;
+      c.height = 800;
+      const x = c.getContext('2d');
+      x.fillStyle = '#202436';
+      x.fillRect(0, 0, 800, 800);
+      x.fillStyle = 'white';
+      x.font = 'bold 30px Arial';
+      x.fillText('Betano', 30, 50);
+      x.fillText('Simple S/20.00 Ganada', 30, 110);
+      x.fillText('Apuesta', 35, 635);
+      x.fillText('S/20.00', 620, 635);
+      x.fillText('Ganancias', 35, 725);
+      x.fillText('S/31.00', 620, 725);
+      return c.toDataURL('image/png').split(',')[1];
+    }),
+    'base64',
+  );
+  const retainedId = randomUUID(),
+    retainedImage = randomUUID(),
+    retainedPath = config.accounts[0].id + '/' + randomUUID();
+  assert.ifError(
+    (
+      await owner.storage
+        .from('bettrack-captures')
+        .upload(retainedPath, retainedBytes, { contentType: 'image/png', upsert: false })
+    ).error,
+  );
+  s = await snapshot();
+  assert.ifError(
+    (
+      await owner.rpc('bt_commit', {
+        expected_version: s.version,
+        changes: [
+          {
+            collection: 'images',
+            id: retainedImage,
+            payload: {
+              id: retainedImage,
+              path: retainedPath,
+              name: 'synthetic-retained-receipt.png',
+              hash: createHash('sha256').update(retainedBytes).digest('hex'),
+              bytes: retainedBytes.length,
+            },
+          },
+          {
+            collection: 'uploads',
+            id: retainedId,
+            payload: {
+              id: retainedId,
+              imageId: retainedImage,
+              createdAt: new Date().toISOString(),
+              status: 'review',
+              progress: 100,
+              reason: 'legacy',
+              draftJson: JSON.stringify(retainedDraft),
+            },
+          },
+        ],
+      })
+    ).error,
+  );
+  await a.p.goto('/apuestas');
+  const recoveredSubmit = region(a.p).getByRole('button', {
+    name: 'Confirmar y registrar 1 liquidadas',
+    exact: true,
+  });
+  await expect(recoveredSubmit).toBeEnabled();
+  s = await snapshot();
+  const recovered = JSON.parse(s.records.uploads.find((u) => u.id === retainedId).draftJson);
+  assert.equal(recovered.text, retainedDraft.text);
+  assert(recovered.receiptOcr.text.includes('31.00'));
+  assert.equal(
+    recovered.receiptOcr.imageHash,
+    createHash('sha256').update(retainedBytes).digest('hex'),
+  );
+  assert.equal(s.records.bets.length, 17);
+  assert.equal(s.records.movements.length, 34);
+  assert(
+    s.records.audit.some(
+      (a) => a.entityId === retainedId && a.action === 'Recuperar lectura de cobro de captura',
+    ),
+  );
+  for (const ctx of [a, b]) {
+    await ctx.p.goto('/apuestas');
+    await ctx.p.reload();
+    await expect(
+      region(ctx.p).getByRole('button', {
+        name: 'Confirmar y registrar 1 liquidadas',
+        exact: true,
+      }),
+    ).toBeEnabled();
+  }
+  await recoveredSubmit.click();
+  await expect.poll(async () => (await snapshot()).records.bets.length).toBe(18);
+  s = await snapshot();
+  assert.equal(s.records.settlements.length, 18);
+  assert.equal(s.records.movements.length, 36);
+  assert.equal(s.records.settlements.find((x) => x.betId === retainedId).returned, 3100);
+  assert.equal(
+    s.records.settlements.reduce((n, x) => n + x.returned - x.closedStake, 0),
+    -74900,
+  );
+  passed.push(
+    'real local OCR recovers a synthetic retained payout; original OCR and image preserved; metadata persists across reload and two sessions; no finances until consent; one stake and one return, net +11',
+  );
   assert.deepEqual(errors, []);
   assert.deepEqual(blocked, []);
   await writeFile(
@@ -344,12 +472,12 @@ try {
         synthetic: true,
         passed,
         final: {
-          bets: 17,
-          settlements: 17,
-          movements: 34,
+          bets: 18,
+          settlements: 18,
+          movements: 36,
           duplicates: 1,
           exceptions: 2,
-          netCents: -76000,
+          netCents: -74900,
         },
         errors,
         blocked,
