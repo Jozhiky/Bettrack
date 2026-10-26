@@ -39,6 +39,17 @@ it('does not invent a server clock when no local commit was confirmed', async ()
   await expect(store.captureBookingTime()).rejects.toThrow('referencia horaria');
   expect(mocks.from).not.toHaveBeenCalled();
 });
+it('keeps accounting valid when the server clock is ahead of the device', async () => {
+  const store = setup(),
+    clientNow = Date.now();
+  await store.table('settings').put({ id: 'settings' });
+  mocks.query.maybeSingle.mockResolvedValue({
+    data: { occurred_at: new Date(clientNow + 5000).toISOString() },
+    error: null,
+  });
+  vi.spyOn(Date, 'now').mockReturnValue(clientNow);
+  expect(Date.parse(await store.captureBookingTime())).toBe(clientNow);
+});
 it('rejects an unavailable server clock and a session changed during its read', async () => {
   const store = setup();
   await store.table('settings').put({ id: 'settings' });

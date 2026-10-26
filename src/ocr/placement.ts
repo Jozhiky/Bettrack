@@ -12,6 +12,7 @@ export interface PlacementEvidence {
     | 'receipt'
     | 'settled-header'
     | 'cashout-available'
+    | 'selection-result'
     | 'conflicting'
     | 'insufficient';
 }

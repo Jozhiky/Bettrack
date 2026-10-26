@@ -1,6 +1,7 @@
 import type { BettrackDB } from './db';
 import { supabase } from '../integrations/supabase';
 import { ImageCache } from './imageCache';
+import { conservativeBookingTime } from './captureClock';
 
 export const collections = ['houses', 'streamers', 'bets', 'selections', 'settlements', 'movements', 'audit', 'images', 'settings', 'uploads'] as const;
 type Collection = typeof collections[number];
@@ -102,8 +103,9 @@ export class CloudStore {
       throw Error('No se pudo comprobar la fecha contable del servidor. La captura sigue conservada.');
     // PostgreSQL recorded this instant before our commit response arrived.
     // Elapsed monotonic time keeps the result a conservative server-time bound,
-    // independent of a device clock slightly ahead of the database clock.
-    return new Date(Date.parse(data.occurred_at) + Math.max(0,performance.now()-anchor.observedAt)).toISOString();
+    // Bound by the device clock too: a server-ahead clock must not trip the
+    // unchanged future-date guard. Neither bound is a historical wager date.
+    return conservativeBookingTime(data.occurred_at, performance.now()-anchor.observedAt);
   }
   private serial<T>(fn: () => Promise<T>): Promise<T> { const result = this.tail.then(fn, fn); this.tail = result.catch(() => {}); return result; }
   async connect(userId: string) {

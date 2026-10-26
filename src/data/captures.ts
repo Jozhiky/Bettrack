@@ -6,7 +6,7 @@ import { hashImage } from '../ocr/engine';
 import { createOcrSession, ocrConcurrency } from '../ocr/session';
 import { optimizeImage } from '../ocr/optimize';
 import { captureActivity } from './captureActivity';
-import { placementFromText, type ParsedTicket } from '../ocr/parser';
+import { placementFromDraft, placementFromText, type ParsedTicket } from '../ocr/parser';
 import { settledTicketHeader } from '../ocr/header';
 import { placementReviewReason } from '../ocr/placement';
 import { interpretSelections, semanticReviewReasons } from '../ocr/semanticReview';
@@ -201,6 +201,10 @@ export async function registerCapture(
         historical = prepareAutomaticImport(u, at),
         pending = prepareAutomaticPending(u);
       const reasons = historical.evidence?.candidate ? historical.reasons : pending.reasons;
+      if (draft.selectionResults && draft.placementHold)
+        reasons.push(
+          'La nueva evidencia visual conserva la retención previa; no se registra automáticamente un borrador retenido.',
+        );
       if (draft.reviewReasons?.length || reasons.length) {
         await scope.uploads.update(uploadId, {
           reason: [...new Set([...(draft.reviewReasons ?? []), ...reasons])].join(' '),
@@ -578,11 +582,16 @@ async function processCapture(
     if (!image) throw new Error('No se encuentra la captura original.');
     if (parsed.visualMode && parsed.visualMode.imageHash !== image.hash)
       throw Error('La evidencia visual no corresponde a esta imagen. Actualiza la lectura.');
+    if (parsed.selectionResults && parsed.selectionResults.imageHash !== image.hash)
+      throw Error('Los resultados visuales no corresponden a esta imagen. Actualiza la lectura.');
     if (parsed.receiptOcr && parsed.receiptOcr.imageHash !== image.hash)
       throw Error('La lectura del cobro no corresponde a esta imagen. Actualiza la lectura.');
-    const placement = placementFromText(parsed.text);
+    const placement = placementFromDraft(parsed);
     const previousHistory = readPlacementHistory(upload.draftJson);
-    const priorPlacement = previousHistory && placementFromText(previousHistory.text);
+    const previousDraft = readDraft(upload.draftJson);
+    const priorPlacement = previousDraft
+      ? placementFromDraft(previousDraft)
+      : previousHistory && placementFromText(previousHistory.text);
     const samePixels = await d.images
       .filter(
         (i) =>

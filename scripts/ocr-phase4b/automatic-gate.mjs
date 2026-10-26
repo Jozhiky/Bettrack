@@ -102,6 +102,8 @@ try {
         id: entry.id,
         eligible,
         agreement: !!parsed.automaticEvidence,
+        derivedResult: historical.evidence?.kind ?? 'Pendiente',
+        visualMarks: parsed.selectionResults?.marks,
         reasons,
         supplemental: passes.slice(2).map((p) => ({ text: p.text, offer: p.cashoutOffer })),
         differences: differences(left, right),
@@ -140,6 +142,22 @@ try {
   await writeFile('test-results/automatic-gate/report.json', JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report.summary, null, 2));
   assert(results.every((r) => !r.omitted && !r.extra && !Object.values(r.safety).some(Boolean)));
+  // Additional user-confirmed visual contract (26/10/2026), separate from the
+  // unchanged literal OCR oracles. A selection check is never a global win.
+  for (const [id, expected] of [
+    ['failed-leg-juventus', 'Perdida'],
+    ['failed-leg-three-goals', 'Perdida'],
+    ['brugge-builder-later', 'Pendiente'],
+  ]) {
+    const row = results.find((r) => r.id === id);
+    if (!row) continue;
+    assert.equal(row.derivedResult, expected, id);
+    assert.equal(row.eligible, true, id);
+    assert(
+      row.visualMarks?.some((m) => m.status === (expected === 'Perdida' ? 'lost' : 'won')),
+      id,
+    );
+  }
 } finally {
   await browser.close();
   await server.close();

@@ -5,6 +5,7 @@ import { agreedAutomaticEvidence } from './automaticEvidence';
 import { needsReceiptRead } from './settlement';
 import { readReceiptFooter } from './receiptOcr';
 import { visualRows } from './layout';
+import { readSelectionResults } from './selectionResults';
 export function completeness(p: ParsedTicket) {
   const valid = p.selections.filter(
     (s) => selectionSchema.safeParse({ ...s, id: 'ocr', betId: 'ocr' }).success,
@@ -81,6 +82,10 @@ export async function readCapture(
   };
   const first = await reader.recognize(file, (p) => report(Math.round(p * 0.7)));
   let parsed = parseTicket(first.text, first.lines, first.symbols, first.visualMode);
+  const imageHash = automatic ? await hashImage(file) : undefined;
+  parsed.selectionResults = await readSelectionResults(file, parsed, first.lines, imageHash).catch(
+    () => undefined,
+  );
   const initial = parsed;
   let alternate: ParsedTicket | undefined;
   if (automatic || enhanced || completeness(parsed) < 150 || missingBadge(parsed)) {
@@ -91,6 +96,12 @@ export async function readCapture(
       automatic ? 'soft' : true,
     );
     const alternative = parseTicket(second.text, second.lines, second.symbols, second.visualMode);
+    alternative.selectionResults = await readSelectionResults(
+      file,
+      alternative,
+      second.lines,
+      imageHash,
+    ).catch(() => undefined);
     alternate = alternative;
     // A reread cannot erase an observed global settlement or a placement conflict.
     const retainsSafety =
@@ -98,7 +109,22 @@ export async function readCapture(
       (parsed.placement?.basis !== 'conflicting' ||
         alternative.placement?.basis === 'conflicting') &&
       (parsed.placement?.status !== 'preparation' ||
-        alternative.placement?.status === 'preparation');
+        alternative.placement?.status === 'preparation') &&
+      (!parsed.selectionResults?.marks.some((m) => m.status === 'lost') ||
+        JSON.stringify(
+          parsed.selectionResults.marks.map(({ selection, child, status }) => ({
+            selection,
+            child,
+            status,
+          })),
+        ) ===
+          JSON.stringify(
+            alternative.selectionResults?.marks.map(({ selection, child, status }) => ({
+              selection,
+              child,
+              status,
+            })),
+          ));
     const before = completeness(parsed),
       after = completeness(alternative);
     if (
@@ -107,8 +133,7 @@ export async function readCapture(
     )
       parsed = alternative;
   }
-  if (automatic && alternate) {
-    const imageHash = await hashImage(file);
+  if (automatic && alternate && imageHash) {
     if (needsReceiptRead(parsed)) {
       const receipt = await readReceiptFooter(file, imageHash).catch(() => undefined);
       if (receipt) {
