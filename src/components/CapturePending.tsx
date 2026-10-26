@@ -11,6 +11,7 @@ import { money, displayDate, type CaptureUpload } from '../domain/model';
 import { Button } from './ui';
 import { CaptureComparison } from './CaptureComparison';
 import { useCaptureActivity } from '../data/captureActivity';
+import { hasLiveMatchEvidence } from '../ocr/visualMode';
 export function CapturePending({
   upload,
   onSelect,
@@ -108,6 +109,7 @@ export function CapturePending({
             }
           </p>
           <small>Fecha de carga: {displayDate(upload.createdAt)}</small>
+          {draft && hasLiveMatchEvidence(draft) && <small>⚡ Partido en vivo en la captura</small>}
           {upload.status === 'linked' && (
             <small className="info-tag">Actualización del mismo boleto</small>
           )}

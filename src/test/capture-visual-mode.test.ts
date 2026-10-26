@@ -81,7 +81,7 @@ it('recovers live evidence from existing pixels, preserving originals and holds 
     expect(prepareAutomaticImport(u, new Date().toISOString()).historical).toMatchObject({
       kind: 'Cashout',
       returned: 14000,
-      timing: { mode: 'live' },
+      timing: { mode: 'unknown' },
     });
     expect(await d.bets.count()).toBe(0);
     expect(await d.settlements.count()).toBe(0);

@@ -3,7 +3,7 @@ import type { ParsedTicket } from './parser';
 import { placementFromText, parseTicket } from './parser';
 import type { PlacementEvidence } from './placement';
 import { settlementEvidence } from './settlement';
-import { captureMode } from './visualMode';
+import { betPlacementMode, captureMode } from './visualMode';
 export const automaticEvidenceSchema = z
   .object({
     version: z.literal('critical-fields-v1'),
@@ -28,6 +28,7 @@ export function automaticTerms(d: ParsedTicket, verifiedPlacement?: PlacementEvi
     expectedSelections: d.expectedSelections,
     bonusAmount: d.bonusAmount,
     mode: captureMode(d),
+    placementMode: betPlacementMode(d),
     placement: { status: placement.status, basis: placement.basis },
     result: {
       kind: e.kind,

@@ -4,12 +4,12 @@ import {
   type CaptureTerms,
   type CaptureRows,
 } from '../domain/captureDuplicates';
-import { historicalTimingSchema, limaDay } from '../domain/model';
+import { historicalTimingSchema } from '../domain/model';
 import { selectionProduct } from '../domain/odds';
 import { readDraft, canReviewCapture, reviewSelectionSchema, type ReviewDraft } from './review';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { settlementEvidence, validateHistoricalImport, type HistoricalImport } from './settlement';
-import { captureMode } from './visualMode';
+import { betPlacementMode } from './visualMode';
 
 // Match minutes (66:14, 70:00) and scoreboard clocks are never calendar evidence.
 export function captureTiming(draft: ReviewDraft, upload: CaptureUpload, recordedAt: string) {
@@ -32,12 +32,10 @@ export function captureTiming(draft: ReviewDraft, upload: CaptureUpload, recorde
     const selection = matches.length === 1 ? matches[0] : null;
     for (const m of line.matchAll(relative)) {
       if (+m[2] > 23 || +m[3] > 59) continue;
-      const day = new Date(limaDay(upload.createdAt) + 'T12:00:00Z');
-      if (m[1].toLowerCase() === 'mañana') day.setUTCDate(day.getUTCDate() + 1);
-      const at = new Date(
-        `${day.toISOString().slice(0, 10)}T${m[2].padStart(2, '0')}:${m[3]}:00-05:00`,
-      ).toISOString();
-      events.push({ selection, label: m[0], at, relative: true, basis: 'upload-reference' });
+      // Upload time does not establish when the screenshot was taken. Preserve
+      // the visible label without inventing a day. The legacy basis value stays
+      // compatible with stored records; at:null explicitly makes no date claim.
+      events.push({ selection, label: m[0], at: null, relative: true, basis: 'upload-reference' });
     }
     for (const m of line.matchAll(calendar)) {
       const iso = `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}T${m[4].padStart(2, '0')}:${m[5]}:00-05:00`;
@@ -63,7 +61,7 @@ export function captureTiming(draft: ReviewDraft, upload: CaptureUpload, recorde
     uploadedAt: upload.createdAt,
     betAt: evidence.betDate ?? null,
     settledAt: evidence.settlementDate ?? null,
-    mode: captureMode(draft),
+    mode: betPlacementMode(draft),
     events,
   });
 }

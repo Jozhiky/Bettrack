@@ -328,6 +328,18 @@ it('retries only explicit cloud conflicts, caps attempts and never retries an un
   await expect(retryCaptureConflict(persistent)).rejects.toBeInstanceOf(CloudConflictError);
   expect(persistent).toHaveBeenCalledTimes(4);
 });
+it('keeps an empty stored promotion equivalent to no promotion when settling the same reference', async () =>
+  fixture(async (d, r) => {
+    const first = await seed(d, automaticDraft(), 'first');
+    await registerCapture('first', first.p, r);
+    const selection = (await d.selections.toArray())[0];
+    await d.selections.update(selection.id, { promotion: '' });
+    const result = await seed(d, automaticDraft('Ganada'), 'result');
+    await registerCapture('result', result.p, r);
+    expect(await d.bets.count()).toBe(1);
+    expect(await d.settlements.count()).toBe(1);
+    expect(await d.movements.count()).toBe(2);
+  }));
 it('preserves full OCR if financial persistence fails, then safely retries the draft', async () =>
   fixture(async (d, r) => {
     const { p } = await seed(d, automaticDraft('Ganada'));
