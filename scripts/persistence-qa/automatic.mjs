@@ -201,7 +201,10 @@ try {
   const submit = (p) =>
     region(p).getByRole('button', { name: 'Confirmar y registrar 18 liquidadas', exact: true });
   await expect(submit(a.p)).toBeEnabled();
-  await expect(region(a.p).getByText('⚡ En vivo', { exact: true })).toBeVisible();
+  await expect(
+    region(a.p).getByText('⚡ Partido en vivo en la captura', { exact: true }),
+  ).toBeVisible();
+  await expect(region(a.p).getByText('Apuesta colocada en vivo', { exact: true })).toHaveCount(0);
   await expect(region(a.p)).toContainText('17 nuevas · 1 posibles duplicadas sin cargo.');
   await expect(region(a.p)).toContainText('Neto -S/ 760.00');
   assert.equal((await snapshot()).records.movements.length, 0);
@@ -259,8 +262,14 @@ try {
   s = await snapshot();
   assert(lost);
   assert.equal(s.records.settlements.length, 17);
-  assert.equal(s.records.bets.find((b) => b.id === ids[10]).live, true);
-  assert.equal(s.records.bets.find((b) => b.id === ids[10]).historicalTiming.mode, 'live');
+  assert.equal(s.records.bets.find((b) => b.id === ids[10]).live, false);
+  assert.equal(s.records.bets.find((b) => b.id === ids[10]).timingUnknown, true);
+  assert.equal(s.records.bets.find((b) => b.id === ids[10]).historicalTiming.mode, 'unknown');
+  assert(
+    s.records.bets.every((b) =>
+      b.historicalTiming.events.filter((e) => e.relative).every((e) => e.at === null),
+    ),
+  );
   assert.equal(s.records.movements.length, 34);
   assert.equal(s.records.uploads.filter((u) => u.status === 'duplicate').length, 1);
   assert.equal(s.records.uploads.filter((u) => u.status === 'review').length, 2);

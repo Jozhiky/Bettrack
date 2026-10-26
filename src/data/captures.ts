@@ -15,7 +15,7 @@ import { runBatch } from './batch';
 import { prepareAutomaticImport } from '../ocr/automaticImport';
 import type { BettrackDB } from './db';
 import { sameCaptureTerms, sameCaptureIdentity } from '../domain/captureDuplicates';
-import { captureMode } from '../ocr/visualMode';
+import { betPlacementMode } from '../ocr/visualMode';
 import { automaticCapturePolicy } from './automaticCapturePolicy';
 import { verifyAutomaticEvidence, automaticTerms } from '../ocr/automaticEvidence';
 import { prepareAutomaticPending } from '../ocr/automaticPending';
@@ -235,7 +235,16 @@ export async function registerCapture(
         if (
           automaticTerms({
             ...draft,
-            selections: [...rows].sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+            selections: [...rows]
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((s) => ({
+                ...s,
+                promotion: s.promotion || undefined,
+                builderMarkets: s.builderMarkets?.map((m) => ({
+                  ...m,
+                  promotion: m.promotion || undefined,
+                })),
+              })),
           }) !== automaticTerms(draft) ||
           !sameCaptureTerms(
             existing,
@@ -723,11 +732,13 @@ async function processCapture(
       historicalTiming: historical?.timing,
       timingUnknown: historical?.timing
         ? historical.timing.mode === 'unknown'
-        : captureMode(parsed) === 'unknown' && !historical,
+        : betPlacementMode(parsed) === 'unknown' && !historical,
       houseId: house!.id,
       streamerId: '',
       kind: parsed.kind,
-      live: historical?.timing ? historical.timing.mode === 'live' : captureMode(parsed) === 'live',
+      live: historical?.timing
+        ? historical.timing.mode === 'live'
+        : betPlacementMode(parsed) === 'live',
       stake: parsed.stake,
       odds: historical ? historical.header.odds : parsed.odds,
       potential: historical ? historical.header.potential : parsed.potential,

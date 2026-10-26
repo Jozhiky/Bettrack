@@ -232,8 +232,8 @@ describe('automatic historical preparation', () => {
     expect(t.settledAt).toBeNull();
     expect(t.mode).toBe('unknown');
     expect(t.events.map((e) => e.at)).toEqual([
-      '2026-10-20T23:00:00.000Z',
-      '2026-10-21T14:30:00.000Z',
+      null,
+      null,
       '2026-10-24T23:15:00.000Z',
     ]);
     expect(t.events[0].basis).toBe('upload-reference');

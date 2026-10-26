@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { hasLiveMatchEvidence } from '../ocr/visualMode';
 import { useApp } from '../app/context';
 import { money, displayDate, timestamp, emptySnapshot, type CaptureUpload } from '../domain/model';
 import { previewAutomaticBatch } from '../ocr/automaticImport';
@@ -155,8 +156,13 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
                 <td>
                   {r.draft?.house} · {r.draft?.kind}
                   <strong>{r.draft?.selections[0]?.event ?? 'Sin reconocer'}</strong>
-                  {r.historical?.timing?.mode === 'live' && <small>⚡ En vivo</small>}
-                  {r.historical?.timing?.mode === 'prematch' && <small>Prepartido</small>}
+                  {r.draft && hasLiveMatchEvidence(r.draft) && (
+                    <small>⚡ Partido en vivo en la captura</small>
+                  )}
+                  {r.historical?.timing?.mode === 'live' && <small>Apuesta colocada en vivo</small>}
+                  {r.historical?.timing?.mode === 'prematch' && (
+                    <small>Apuesta colocada antes del partido</small>
+                  )}
                   <small>
                     {r.draft?.selections.length ?? 0} selecciones · Cuota{' '}
                     {r.historical?.header.odds ?? r.draft?.odds ?? 'no visible'}
@@ -193,7 +199,7 @@ export function AutomaticCaptureBatch({ uploads }: { uploads: CaptureUpload[] })
                     ? r.historical.timing.events.map((e, i) => (
                         <small key={i}>
                           {e.label} · {e.at ? displayDate(e.at) : 'fecha desconocida'}
-                          {e.relative ? ' (referencia de carga)' : ''}
+                          {e.relative && e.at ? ' (estimación anterior desde la carga)' : ''}
                         </small>
                       ))
                     : 'Fecha no visible'}

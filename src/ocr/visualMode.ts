@@ -145,10 +145,30 @@ export async function readVisualMode(
   }
 }
 
-export function captureMode(draft: { text: string; house?: string; visualMode?: VisualMode }) {
-  const live =
-    /\bapuesta\s+en\s+vivo\b/i.test(draft.text) ||
-    (draft.house === 'Betano' && visualModeSchema.safeParse(draft.visualMode).success);
+type ModeInput = { text: string; house?: string; visualMode?: VisualMode };
+export function hasLiveMatchEvidence(draft: ModeInput) {
+  return draft.house === 'Betano' && visualModeSchema.safeParse(draft.visualMode).success;
+}
+
+// A screenshot can be taken long after acceptance. The event widget describes
+// the match at capture time, never the mode in which the wager was placed.
+export function betPlacementMode(draft: Pick<ModeInput, 'text'>) {
+  const labels = draft.text.split(/\r?\n/).map((line) => line.trim());
+  const live = labels.some((line) =>
+    /^(?:apuesta en vivo|(?:tipo de apuesta|modalidad):\s*en vivo)[.!]?$/i.test(line),
+  );
+  const pre = labels.some((line) =>
+    /^(?:apuesta |(?:tipo de apuesta|modalidad):\s*)(?:prematch|prepartido|pre-match)[.!]?$/i.test(
+      line,
+    ),
+  );
+  return live === pre ? 'unknown' : live ? 'live' : 'prematch';
+}
+
+// Existing capture-context classifier: retained for OCR evidence compatibility.
+// Financial records must use betPlacementMode instead.
+export function captureMode(draft: ModeInput) {
+  const live = /\bapuesta\s+en\s+vivo\b/i.test(draft.text) || hasLiveMatchEvidence(draft);
   const pre = /\bapuesta\s+(?:prematch|prepartido|pre-match)\b/i.test(draft.text);
   return live === pre ? 'unknown' : live ? 'live' : 'prematch';
 }

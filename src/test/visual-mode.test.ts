@@ -30,7 +30,7 @@ it('recognizes user-confirmed Betano lightning independently from its executed c
       },
       new Date().toISOString(),
     ).mode,
-  ).toBe('live');
+  ).toBe('unknown');
   expect(settlementEvidence(draft)).toMatchObject({ kind: 'Cashout', receiptReturn: 6630 });
   expect(6630 - 1617).toBe(5013);
 });

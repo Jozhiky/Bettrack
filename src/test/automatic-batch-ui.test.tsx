@@ -135,5 +135,6 @@ it('finishes the visual scan when the refreshed draft gains its icon evidence', 
   view.rerender(<AutomaticCaptureBatch uploads={[{ ...u, draftJson: JSON.stringify(draft) }]} />);
   finish({ enriched: 1, failed: 0 });
   await waitFor(() => expect(button).toBeEnabled());
-  expect(screen.getByText('⚡ En vivo')).toBeVisible();
+  expect(screen.getByText('⚡ Partido en vivo en la captura')).toBeVisible();
+  expect(screen.queryByText('Apuesta colocada en vivo')).not.toBeInTheDocument();
 });

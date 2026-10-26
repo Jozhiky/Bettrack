@@ -140,6 +140,13 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   ocho relecturas locales y cotejo visual; tres bloqueos son solo Más/Mas,
   siete incluyen colocación y los restantes requieren lecturas de región o
   contexto de participante. Sin cambios de admisión ni mejora reclamada de 15/28.
+- Aclaración del usuario: captura tras aceptación, subida posiblemente tardía;
+  jugador tachado original y nombre superior sustituto mediante Suplente de Oro.
+  [Corrección de fechas relativas y modalidad de colocación](DELAYED_CAPTURE_CONTEXT.md),
+  rama `codex/delayed-capture-context`: **790/790**, TypeScript/build, OCR
+  **1068/1089**, calificación **15/28** y QA aislados **6 + 9 grupos**. Preparada
+  para revisión, sin despliegue. No acredita colocación automáticamente ni elimina
+  todavía los bloqueos de sustitución.
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
