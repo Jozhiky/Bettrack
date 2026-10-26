@@ -1,6 +1,6 @@
 import type { CaptureUpload } from '../domain/model';
 import { readDraft, reviewSelectionSchema } from './review';
-import { placementFromText } from './parser';
+import { placementFromDraft } from './parser';
 import { settlementEvidence } from './settlement';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 export function prepareAutomaticPending(upload: CaptureUpload) {
@@ -9,7 +9,7 @@ export function prepareAutomaticPending(upload: CaptureUpload) {
   if (!draft) return { reasons: ['Lectura incompleta.'] };
   if (settlementEvidence(draft).candidate)
     reasons.push('El boleto requiere liquidación histórica.');
-  if (placementFromText(draft.text).status !== 'confirmed' || draft.placementHold)
+  if (placementFromDraft(draft).status !== 'confirmed' || draft.placementHold)
     reasons.push('Falta acreditar la colocación sin retenciones previas.');
   if (
     !['Betano', 'Bet365'].includes(draft.house ?? '') ||

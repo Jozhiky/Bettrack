@@ -147,6 +147,15 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   **1068/1089**, calificación **15/28** y QA aislados **6 + 9 grupos**. Preparada
   para revisión, sin despliegue. No acredita colocación automáticamente ni elimina
   todavía los bloqueos de sustitución.
+- Aclaración posterior (26/10): cruz roja de las dos simples/combinadas mostradas
+  significa pérdida; check verde de un Builder es progreso, no victoria global.
+  [Detector y validación](BETANO_SELECTION_RESULTS.md), rama
+  `codex/betano-selection-results`: **829/829**, TypeScript/build, OCR **1068/1089**;
+  calificación **18/28** (exactamente tres recuperadas). Conserva retenciones previas
+  y no liquida cashouts/sistemas por iconos. Corrige además el bloqueo por reloj
+  del servidor adelantado. QA aislado: **10 grupos**, 10 apuestas/9 liquidaciones/
+  19 movimientos sintéticos; recarga, concurrencia, duplicados y revocación aprobados.
+  Sin despliegue ni cambios productivos.
 
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 

@@ -4,6 +4,7 @@ import { settledTicketHeader, betanoHeader } from './header';
 import type { ParsedTicket } from './parser';
 import { matchesSelectionProduct } from '../domain/odds';
 import { agreedFooter } from './receiptOcr';
+import { verifiedSelectionResults, visualFullLoss } from './selectionResults';
 
 export const historicalImportSchema = z
   .object({
@@ -28,7 +29,8 @@ export const historicalImportSchema = z
   })
   .strict();
 export type HistoricalImport = z.infer<typeof historicalImportSchema>;
-type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds' | 'receiptOcr'>;
+type Draft = Pick<ParsedTicket, 'text' | 'house' | 'stake' | 'odds' | 'receiptOcr'> &
+  Partial<Pick<ParsedTicket, 'kind' | 'potential' | 'selections' | 'selectionResults'>>;
 const money = '(?:S\\s*\\/|PEN)\\s*([0-9]+(?:[.,][0-9]+)*)';
 // Whole affirmative execution receipts only. Buttons, instructions and conditions do not match.
 const execution = new RegExp(
@@ -61,6 +63,10 @@ export function settlementEvidence(draft: Draft) {
   const evidence: string[] = [];
   let manualState = false;
   let headerCashout = false;
+  if (visualFullLoss(draft)) {
+    kinds.add('Perdida');
+    evidence.push('Cruz roja de selección y retorno potencial cero en boleto ordinario Betano.');
+  }
   if (draft.house === 'Betano') {
     for (const line of lines) {
       if (
@@ -185,7 +191,11 @@ export function settlementEvidence(draft: Draft) {
     kinds: [...kinds],
     kind: single,
     evidence,
-    candidate: kinds.size > 0 || partial || ambiguousStake,
+    candidate:
+      kinds.size > 0 ||
+      partial ||
+      ambiguousStake ||
+      !!verifiedSelectionResults(draft)?.marks.some((m) => m.status === 'lost'),
     manualState,
     executionNeedsConfirmation: headerCashout && receipts.length === 0,
     receiptPaid,

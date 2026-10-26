@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { selectionSchema, promotions, type CaptureUpload } from '../domain/model';
-import { placementFromText, type ParsedTicket } from './parser';
+import { placementFromDraft, placementFromText, type ParsedTicket } from './parser';
 import { interpretSelections, semanticReviewReasons } from './semanticReview';
 import { settlementEvidence } from './settlement';
 import { visualModeSchema } from './visualMode';
 import { receiptOcrSchema } from './receiptOcr';
 import { quotePromotionSchema } from './quotePromotion';
 import { automaticEvidenceSchema } from './automaticEvidence';
+import { selectionResultsSchema } from './selectionResults';
 
 export const reviewSelectionSchema = selectionSchema.omit({ id: true, betId: true, order: true });
 // A draft can be incomplete; final financial writes still use selectionSchema.
@@ -53,6 +54,7 @@ const draftSchema = z
     expectedSelections: z.number().optional(),
     bonusAmount: z.number().optional(),
     visualMode: visualModeSchema.optional().catch(undefined),
+    selectionResults: selectionResultsSchema.optional().catch(undefined),
     receiptOcr: receiptOcrSchema.optional().catch(undefined),
     quotePromotion: quotePromotionSchema.optional().catch(undefined),
     houseBasis: z.literal('superaumento-product-layout').optional().catch(undefined),
@@ -96,7 +98,7 @@ export function readDraft(json: string): ReviewDraft | undefined {
 export function needsNewProof(draft: ReviewDraft) {
   const hold = draft.placementHold && placementFromText(draft.placementHold.text);
   return (
-    placementFromText(draft.text).status !== 'confirmed' ||
+    placementFromDraft(draft).status !== 'confirmed' ||
     !!(hold && (hold.status === 'preparation' || hold.basis === 'conflicting'))
   );
 }

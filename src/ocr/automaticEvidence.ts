@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import type { ParsedTicket } from './parser';
-import { placementFromText, parseTicket } from './parser';
+import { placementFromDraft, placementFromText, parseTicket } from './parser';
 import type { PlacementEvidence } from './placement';
 import { settlementEvidence } from './settlement';
 import { betPlacementMode, captureMode } from './visualMode';
+import { verifiedSelectionResults } from './selectionResults';
 export const automaticEvidenceSchema = z
   .object({
     version: z.literal('critical-fields-v1'),
@@ -16,7 +17,8 @@ export type AutomaticEvidence = z.infer<typeof automaticEvidenceSchema>;
 const text = (s: string) => s.normalize('NFC').replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
 export function automaticTerms(d: ParsedTicket, verifiedPlacement?: PlacementEvidence) {
   const e = settlementEvidence(d);
-  const placement = verifiedPlacement ?? placementFromText(d.text);
+  const placement = verifiedPlacement ?? placementFromDraft(d);
+  const visual = verifiedSelectionResults(d);
   return JSON.stringify({
     house: d.house,
     kind: d.kind,
@@ -30,6 +32,15 @@ export function automaticTerms(d: ParsedTicket, verifiedPlacement?: PlacementEvi
     mode: captureMode(d),
     placementMode: betPlacementMode(d),
     placement: { status: placement.status, basis: placement.basis },
+    ...(visual
+      ? {
+          selectionResults: visual.marks.map(({ selection, child, status }) => ({
+            selection,
+            child,
+            status,
+          })),
+        }
+      : {}),
     result: {
       kind: e.kind,
       returned: e.returned ?? e.receiptReturn,
@@ -102,6 +113,8 @@ export function verifyAutomaticEvidence(d: ParsedTicket, imageHash: string) {
   return (
     proof.success &&
     proof.data.imageHash === imageHash &&
+    (!d.selectionResults ||
+      (d.selectionResults.imageHash === imageHash && !!verifiedSelectionResults(d))) &&
     proof.data.terms === automaticTerms(d) &&
     (!proof.data.placementRead || agreesPlacementFooter(d, proof.data.placementRead))
   );

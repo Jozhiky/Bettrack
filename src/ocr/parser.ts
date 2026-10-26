@@ -12,6 +12,7 @@ import { visualModeSchema, type VisualMode } from './visualMode';
 import type { ReceiptOcr } from './receiptOcr';
 import { bet365SuperBoostLayout } from './bet365';
 import { superImproved, type QuotePromotion } from './quotePromotion';
+import { verifiedSelectionResults, type SelectionResults } from './selectionResults';
 export interface ParsedTicket {
   house?: string;
   kind?: string;
@@ -23,6 +24,7 @@ export interface ParsedTicket {
   expectedSelections?: number;
   bonusAmount?: number;
   visualMode?: VisualMode;
+  selectionResults?: SelectionResults;
   receiptOcr?: ReceiptOcr;
   quotePromotion?: QuotePromotion;
   houseBasis?: 'superaumento-product-layout';
@@ -94,6 +96,15 @@ export function placementFromText(text: string): PlacementEvidence {
     .map((line) => line.trim())
     .filter(Boolean);
   return classifyPlacement(text, availableCashout(text, lines) !== undefined);
+}
+export function placementFromDraft(draft: ParsedTicket): PlacementEvidence {
+  const literal = placementFromText(draft.text);
+  if (literal.basis !== 'insufficient' || !verifiedSelectionResults(draft)) return literal;
+  return {
+    status: 'confirmed',
+    basis: 'selection-result',
+    evidence: ['Resultado visual de selección en boleto Betano con cabecera y stake coincidentes.'],
+  };
 }
 export function classifyMarket(text: string) {
   const t = normalized(text);

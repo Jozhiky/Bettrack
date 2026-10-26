@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { configuration, api, qaOrigin } from './target.mjs';
 import { server } from './server.mjs';
+import { selectionResultImage } from './selection-result-fixtures.mjs';
 
 const config = await configuration(),
   owner = api(config),
@@ -328,6 +329,51 @@ try {
   passed.push(
     'Two-session reload/settings/dashboard agree; private image retrieval and account isolation verified',
   );
+  await a.page.goto('/apuestas');
+  const visualFiles = await Promise.all(
+    ['Simple', 'Combinada', 'Builder'].map((kind) => selectionResultImage(a.page, kind)),
+  );
+  await upload(a.page, visualFiles);
+  await finished();
+  s = await snapshot();
+  await writeFile(
+    out + '/visual-result.json',
+    JSON.stringify(
+      s.records.uploads.map((u) => ({
+        status: u.status,
+        reason: u.reason,
+        draft: JSON.parse(u.draftJson || '{}'),
+      })),
+      null,
+      2,
+    ),
+  );
+  assert.equal(s.records.bets.length, 10);
+  assert.equal(s.records.settlements.length, 9);
+  assert.equal(s.records.movements.length, 19);
+  for (const reference of ['QAVISUALA', 'QAVISUALB']) {
+    const bet = s.records.bets.find((b) => b.ticketReference === reference);
+    assert(bet);
+    const settlement = s.records.settlements.find((x) => x.betId === bet.id);
+    assert.equal(settlement.kind, 'Perdida');
+    assert.equal(settlement.returned, 0);
+  }
+  const builder = s.records.bets.find((b) => b.ticketReference === 'QAVISUALC');
+  assert(builder);
+  assert(!s.records.settlements.some((x) => x.betId === builder.id));
+  await upload(a.page, visualFiles);
+  await finished();
+  assert.equal((await snapshot()).records.movements.length, 19);
+  for (const ctx of [a, b]) {
+    await ctx.page.reload();
+    await ctx.page.goto('/');
+    await expect(ctx.page.locator('.kpi').filter({ hasText: 'Resultado neto' })).toContainText(
+      '24.00',
+    );
+  }
+  passed.push(
+    'Synthetic visual cross + zero footer: simple/accumulator losses and one-check pending Builder; atomic amounts, repeat upload and two-session reload verified',
+  );
   await a.page.goto('/configuracion');
   for (const width of [375, 768, 1440]) {
     await a.page.setViewportSize({ width, height: 950 });
@@ -350,8 +396,8 @@ try {
   await upload(a.page, await image('Ganada', 'QAAUTO008'));
   await finished();
   s = await snapshot();
-  assert.equal(s.records.bets.length, 7);
-  assert.equal(s.records.movements.length, 14);
+  assert.equal(s.records.bets.length, 10);
+  assert.equal(s.records.movements.length, 19);
   passed.push(
     'Responsive desktop/tablet/mobile; disabling synchronizes and stops future automatic financial writes',
   );
