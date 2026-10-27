@@ -157,6 +157,15 @@ para implementar los pendientes. No hace falta recuperar conversaciones antiguas
   19 movimientos sintéticos; recarga, concurrencia, duplicados y revocación aprobados.
   Sin despliegue ni cambios productivos.
 
+- Aclaración de mercado/selección: [acuerdo Más/Mas](OVER_UNDER_OCR_AGREEMENT.md),
+  rama `codex/over-under-ocr-agreement`, sobre PR #15. Canoniza solo vocabulario
+  reconocido, conserva nombres, línea, ámbito, período y textos originales.
+  **862/862**, TypeScript/build, OCR **1068/1089** idéntico por check; calificación
+  **21/28**, tres recuperadas y siete pendientes detalladas en el informe.
+  QA aislado: **10 grupos**, 10 apuestas/9 liquidaciones/19 movimientos sintéticos.
+  No registra borradores antiguos; pruebas previas no compatibles requieren nuevo
+  acuerdo OCR. Sin migraciones ni despliegue; integración depende de #12 → #15.
+
 ## Revalidación histórica — PR #8 desplegado y esquema autorizado aplicado
 
 - Lectura inicial de 20 borradores reales: todos sin cuota/potencial globales;
