@@ -5,6 +5,7 @@ import type { PlacementEvidence } from './placement';
 import { settlementEvidence } from './settlement';
 import { betPlacementMode, captureMode } from './visualMode';
 import { verifiedSelectionResults } from './selectionResults';
+import { interpretMarket } from './semantics';
 export const automaticEvidenceSchema = z
   .object({
     version: z.literal('critical-fields-v1'),
@@ -15,6 +16,34 @@ export const automaticEvidenceSchema = z
   .strict();
 export type AutomaticEvidence = z.infer<typeof automaticEvidenceSchema>;
 const text = (s: string) => s.normalize('NFC').replace(/\s+/g, ' ').trim().toLocaleLowerCase('es');
+// Agreement keys only: retain the original market/pick and every qualifier.
+// The market's Más/Menos names two alternatives; only the numeric pick chooses
+// over or under. Never fold accents in participants or use semantics alone as a key.
+function selectionTerms(market: string, pick: string, event: string) {
+  const m = text(market),
+    p = text(pick),
+    meaning = interpretMarket(market, pick, event);
+  if (
+    !['over', 'under'].includes(meaning.operator ?? '') ||
+    !(
+      meaning.scope === 'match' ||
+      (meaning.scope === 'team' && meaning.confidence.participant === 'recognized')
+    ) ||
+    !/^(?:más|mas|menos) de \d+(?:[.,]\d+)?$/.test(p)
+  )
+    return { market: m, pick: p };
+  const participant = meaning.participant ? text(meaning.participant) : '';
+  const prefix = participant && m.startsWith(participant + ' ') ? participant.length : 0;
+  const suffix =
+    participant && m.endsWith(' de ' + participant) ? m.length - participant.length : m.length;
+  return {
+    market:
+      m.slice(0, prefix) +
+      m.slice(prefix, suffix).replace(/(^|[ (])mas(?=\s*\/\s*menos(?:[ )]|$))/g, '$1más') +
+      m.slice(suffix),
+    pick: p.replace(/^mas de /, 'más de '),
+  };
+}
 export function automaticTerms(d: ParsedTicket, verifiedPlacement?: PlacementEvidence) {
   const e = settlementEvidence(d);
   const placement = verifiedPlacement ?? placementFromDraft(d);
@@ -52,13 +81,11 @@ export function automaticTerms(d: ParsedTicket, verifiedPlacement?: PlacementEvi
     },
     selections: d.selections.map((s) => ({
       event: text(s.event),
-      market: text(s.market),
-      pick: text(s.pick),
+      ...selectionTerms(s.market, s.pick, s.event),
       odds: s.odds,
       promotion: s.promotion,
       builderMarkets: s.builderMarkets?.map((m) => ({
-        market: text(m.market),
-        pick: text(m.pick),
+        ...selectionTerms(m.market, m.pick, s.event),
         promotion: m.promotion,
       })),
     })),

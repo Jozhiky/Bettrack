@@ -119,6 +119,34 @@ it('automatically records a complete pending wager, with one stake and no return
     });
     expect(JSON.parse((await d.uploads.get('u'))!.draftJson).humanReviewed).toBe(false);
   }));
+it('records agreeing Más/Mas reads once, preserving the original fields and excluding potential return from profit', async () =>
+  fixture(async (d, r) => {
+    const a = automaticDraft(),
+      b = structuredClone(a);
+    b.selections[0].market = 'Goles totales Mas/Menos';
+    b.selections[0].pick = 'Mas de 2.5';
+    const { hash } = await seed(d, a, 'accented', false);
+    a.automaticEvidence = agreedAutomaticEvidence(a, b, hash);
+    expect(a.automaticEvidence).toBeDefined();
+    await registerCapture('accented', a, r);
+    const next = await seed(d, b, 'unaccented', false);
+    b.automaticEvidence = agreedAutomaticEvidence(b, a, next.hash);
+    await registerCapture('unaccented', b, r);
+    await registerCapture('accented', a, r);
+    const s = await r.snapshot();
+    expect(s.bets).toHaveLength(1);
+    expect(s.movements).toHaveLength(1);
+    expect(s.settlements).toHaveLength(0);
+    expect(totals(s)).toMatchObject({ pending: 1, committed: 1000, profit: 0 });
+    expect(JSON.parse((await d.uploads.get('accented'))!.draftJson).selections[0]).toMatchObject({
+      market: 'Goles totales Más/Menos',
+      pick: 'Más de 2.5',
+    });
+    expect(JSON.parse((await d.uploads.get('unaccented'))!.draftJson).selections[0]).toMatchObject({
+      market: 'Goles totales Mas/Menos',
+      pick: 'Mas de 2.5',
+    });
+  }));
 it.each([
   ['Ganada', 1500, 500],
   ['Perdida', 0, -1000],
